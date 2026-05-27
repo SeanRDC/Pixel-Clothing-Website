@@ -1,0 +1,74 @@
+.about-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.about-us {
+  position: relative;
+  width: 1201px;
+  height: 1024px;
+}
+
+.about-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-title-img {
+  position: absolute;
+  top: 68px;
+  left: 408px;
+  width: 386px;
+}
+
+.welcome-text {
+  position: absolute;
+  top: 310px;
+  left: 177px;
+  width: 897px;
+  font-family: "Jersey 10", sans-serif;
+  font-size: 36px;
+  color: #000;
+}
+
+.close-x {
+  position: absolute;
+  top: 173px;
+  left: 25px;
+  width: 152px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.close-x:hover { transform: scale(1.1); }
+
+.return-button-about {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: transparent;
+  border: none;
+  font-family: "Jersey 10", sans-serif;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.return-button-about:hover {
+  transform: translateX(-50%) scale(1.1);
+}

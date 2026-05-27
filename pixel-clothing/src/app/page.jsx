@@ -1,6 +1,9 @@
 "use client";
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import AudioController from '../components/AudioController/AudioController';
+import QuestPopup from '../components/Popups/QuestPopup';
+import AboutPopup from '../components/Popups/AboutPopup';
 import './StartPage.css';
 
 export default function Home() {
@@ -41,6 +44,8 @@ export default function Home() {
           </div>
         )}
       </main>
+
+      <AudioController isVisible={isStarted} />
 
     </div>
   );
