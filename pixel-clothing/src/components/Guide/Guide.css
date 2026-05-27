@@ -1,0 +1,117 @@
+.guide-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.guide-faq-box {
+  position: relative;
+  width: 460px;
+}
+
+.faq-bg {
+  width: 100%;
+  height: auto;
+  display: block;
+  image-rendering: pixelated;
+}
+
+.guide-faq-questions {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  padding: 20px;
+  text-align: left;
+}
+
+.guide-faq-question {
+  font-size: 18px;
+  color: #3a1e05;
+  margin: 15px 0;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+  line-height: 1.5;
+}
+
+.guide-faq-question::before { 
+  content: '> '; 
+  color: #d58f00; 
+  font-weight: bold; 
+}
+
+.guide-faq-question:hover { 
+  transform: scale(1.05); 
+  color: #8B4513; 
+}
+
+.guide-faq-question.active { 
+  color: #d58f00; 
+  text-shadow: 1px 1px 0 #000; 
+  font-weight: bold; 
+}
+
+.guide-faq-question.active::before { 
+  content: '▶ '; 
+}
+
+.guide-speech-box {
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 520px;
+  z-index: 1001;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.guide-speech-box.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(10px);
+}
+
+.guide-speech-text {
+  display: block;
+  width: 100%;
+  font-size: 18px;
+  color: #000;
+  line-height: 1.6;
+  text-align: center;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 4px solid #000;
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 #000;
+}
+
+.close-guide-btn {
+  position: absolute;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: transparent;
+  border: none;
+  font-family: 'Depixel', monospace;
+  font-size: 20px;
+  color: #fff;
+  text-shadow: 2px 2px 0 #000;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.close-guide-btn:hover {
+  transform: translateX(-50%) scale(1.1);
+  color: #d58f00;
+}
