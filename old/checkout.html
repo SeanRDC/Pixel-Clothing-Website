@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Items Checkout</title>
+  <link href="https://fonts.cdnfonts.com/css/depixel" rel="stylesheet">
+  <link rel="stylesheet" href="checkout.css">
+</head>
+<body>
+  <div class="checkout-container">
+    <h1 class="page-title">Items Checkout</h1>
+
+    <div class="checkout-content">
+      <!-- LEFT SIDE -->
+      <div class="left-side">
+        <!-- PLAYER SCROLL -->
+        <div class="section player-scroll">
+          <h2>📜 PLAYER SCROLL</h2>
+          <div class="form-row">
+            <label>Full Name</label>
+            <input type="text" id="full-name" placeholder="Enter thy name...">
+            <label>(Email)</label>
+            <input type="email" id="email" placeholder="hero@realm.com">
+          </div>
+          <div class="form-row">
+            <label>(Address)</label>
+            <input type="text" id="address" placeholder="123 Castle Lane, Kingdom City">
+          </div>
+          <div class="form-row">
+            <label>Province</label>
+            <select id="province">
+              <option>Northern Realm</option>
+              <option>Eastern Sands</option>
+              <option>Western Peaks</option>
+            </select>
+            <label>Postal Code</label>
+            <input type="text" id="postal" placeholder="12345">
+          </div>
+        </div>
+
+        <!-- SHIPPING SPEED -->
+        <div class="section shipping-speed">
+          <h2>📜 Shipping Speed</h2>
+          <div class="shipping-options">
+            <div class="ship-option">🐎 SWIFT HORSE<br><small>2–3 DAYS</small></div>
+            <div class="ship-option">🐉 DRAGON EXPRESS<br><small>NEXT DAY</small></div>
+            <div class="ship-option">🚶 MERCHANT WALK<br><small>5–7 DAYS</small></div>
+          </div>
+        </div>
+
+        <!-- PAYMENT -->
+        <div class="section payment">
+          <h2>💰 Payment</h2>
+          <div class="payment-box">
+            <label>GCASH NUMBER</label>
+            <input type="text" id="gcash-number" placeholder="1234 5678 9012 3456h">
+            <label>GCASH NAME</label>
+            <input type="text" id="gcash-name" placeholder="Hero of the Realm">
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE -->
+      <div class="right-side">
+        <div class="inventory-bag">
+          <h2>🎒 INVENTORY BAG</h2>
+          <div id="checkout-items" class="checkout-items"></div>
+          <div class="totals">
+            <p>Subtotal: <span id="subtotal">₱0.00</span></p>
+            <p>Delivery: <span id="delivery">₱0.00</span></p>
+            <p>Guild Tax: <span id="tax">₱0.00</span></p>
+            <p class="total">TOTAL: <span id="total">₱0.00</span></p>
+          </div>
+          <button id="complete-btn">⚔️ COMPLETE QUEST</button>
+        </div>
+      </div>
+    </div>
+  </div>
+ <!-- Quest Complete Screen (Hidden by default) -->
+  <div id="quest-complete" class="quest-complete hidden">
+    <div class="complete-box">
+      <h2>📜 Quest Complete!</h2>
+      <p>"Your item is now getting ready to be shipped. Check your email to track shipping and item."</p>
+      <button id="return-btn">🚶 Return to Merchant</button>
+    </div>
+  </div>
+
+  <script src="checkout.js"></script>
+</body>
+</html>

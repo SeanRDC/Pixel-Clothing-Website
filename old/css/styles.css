@@ -17,7 +17,7 @@ body {
   display: flex;
   flex-direction: column;
   font-family: 'Depixel', monospace;
-  background: url('D:/html/Clothing website/code/img/bg.png') no-repeat center center fixed;
+  background: url('../assets/images/bg.png') no-repeat center center fixed;
   background-size: cover;
   position: relative;
   overflow: hidden;
