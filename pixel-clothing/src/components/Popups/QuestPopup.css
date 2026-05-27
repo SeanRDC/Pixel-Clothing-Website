@@ -13,9 +13,18 @@
   animation: fadeInOverlay 0.3s ease-in-out;
 }
 
+.quest-popup.closing {
+  animation: fadeOutOverlay 0.7s ease-in-out forwards;
+}
+
 @keyframes fadeInOverlay {
   from { background: rgba(0, 0, 0, 0); backdrop-filter: blur(0px); }
   to { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); }
+}
+
+@keyframes fadeOutOverlay {
+  from { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); }
+  to { background: rgba(0, 0, 0, 0); backdrop-filter: blur(0px); }
 }
 
 .scroll-paper {
@@ -32,10 +41,20 @@
   animation: unrollScroll 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
+.quest-popup.closing .scroll-paper {
+  animation: rollUpScroll 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
 @keyframes unrollScroll {
   0% { transform: scaleY(0) scaleX(0.5); opacity: 0; }
   60% { transform: scaleY(1.05) scaleX(1); opacity: 1; }
   100% { transform: scaleY(1) scaleX(1); opacity: 1; }
+}
+
+@keyframes rollUpScroll {
+  0% { transform: scaleY(1) scaleX(1); opacity: 1; }
+  40% { transform: scaleY(1.05) scaleX(1); opacity: 1; }
+  100% { transform: scaleY(0) scaleX(0.5); opacity: 0; }
 }
 
 .quest-content {
@@ -54,6 +73,10 @@
   scrollbar-width: none; 
 }
 
+.quest-popup.closing .quest-content {
+  animation: fadeOutText 0.3s ease forwards;
+}
+
 .quest-content::-webkit-scrollbar {
   display: none; 
 }
@@ -63,11 +86,16 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes fadeOutText {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-10px); }
+}
+
 .quest-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  width: 90%;
+  width: 100%;
 }
 
 .quest-item {
@@ -81,6 +109,7 @@
   border-radius: 2px;
   transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s ease;
   flex-shrink: 0; 
+  cursor: pointer;
 }
 
 .quest-item:hover {
@@ -120,7 +149,6 @@
 .social-icon-btn {
   background: transparent;
   border: none;
-  cursor: pointer;
   width: 45px;
   height: 45px;
   display: flex;
@@ -135,14 +163,14 @@
   object-fit: contain;
 }
 
-.social-icon-btn:hover {
-  transform: scale(1.2) rotate(5deg);
+.quest-item:hover .social-icon-btn {
+  transform: scale(1.1) rotate(5deg);
   filter: drop-shadow(0 0 5px rgba(255,255,255,0.8));
 }
 
 .quest-return-btn {
-  margin-top: 10px;
-  margin-bottom: 0;
+  margin-top: auto;
+  margin-bottom: 10px;
   font-family: 'Depixel', monospace;
   font-size: 18px;
   color: #fff;
@@ -169,16 +197,16 @@
 @media (max-width: 600px) {
   .scroll-paper {
     width: 100vw;
-    height: 80vh;
+    height: 100vh;
     max-width: 100vw;
     border-radius: 0;
     background-size: 100% 100%;
   }
   
   .quest-content { 
-    margin-top: 240px; 
+    margin-top: 180px; 
     height: calc(100% - 210px);
-    width: 80%;
+    width: 85%;
     padding-bottom: 0;
   }
   
