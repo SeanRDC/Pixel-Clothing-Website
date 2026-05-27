@@ -1,34 +1,61 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 import './QuestPopup.css';
 
 export default function QuestPopup({ onClose }) {
+  const [quests, setQuests] = useState({
+    tiktok: false,
+    ig: false,
+    discord: false
+  });
+
   const handleOverlayClick = (e) => {
     if (e.target.classList.contains('quest-popup')) {
       onClose();
     }
   };
 
+  const handleQuest = (platform, url) => {
+    window.open(url, '_blank');
+    setQuests(prev => ({ ...prev, [platform]: true }));
+  };
+
   return (
     <div className="quest-popup" onClick={handleOverlayClick}>
-      <div className="quest-content">
-        <img className="quest-image" alt="Quest Background" src="/assets/images/Quest.png" />
+      <div className="scroll-paper">
+        <div className="quest-content">
+          <h2 className="quest-title">Daily Quests</h2>
+          
+          <div className="quest-list">
+            <div className="quest-item">
+              <span className="quest-checkbox">{quests.tiktok ? '[X]' : '[ ]'}</span>
+              <span className="quest-text">Follow on TikTok</span>
+              <button className="social-icon-btn" onClick={() => handleQuest('tiktok', 'https://tiktok.com')}>
+                <img src="/assets/images/tiktok.png" alt="TikTok" />
+              </button>
+            </div>
 
-        <button className="social-button btn-tiktok" onClick={() => window.open('https://tiktok.com', '_blank')}>
-          <img alt="TikTok" src="/assets/images/tiktok.png" width="100%" />
-        </button>
+            <div className="quest-item">
+              <span className="quest-checkbox">{quests.ig ? '[X]' : '[ ]'}</span>
+              <span className="quest-text">Follow on IG</span>
+              <button className="social-icon-btn" onClick={() => handleQuest('ig', 'https://instagram.com')}>
+                <img src="/assets/images/instagram.png" alt="Instagram" />
+              </button>
+            </div>
 
-        <button className="social-button btn-ig" onClick={() => window.open('https://instagram.com', '_blank')}>
-          <img alt="Instagram" src="/assets/images/instagram.png" width="100%" />
-        </button>
+            <div className="quest-item">
+              <span className="quest-checkbox">{quests.discord ? '[X]' : '[ ]'}</span>
+              <span className="quest-text">Join Discord</span>
+              <button className="social-icon-btn" onClick={() => handleQuest('discord', 'https://discord.com')}>
+                <img src="/assets/images/discord.png" alt="Discord" />
+              </button>
+            </div>
+          </div>
 
-        <button className="social-button btn-discord" onClick={() => window.open('https://discord.com', '_blank')}>
-          <img alt="Discord" src="/assets/images/discord.png" width="100%" />
-        </button>
-
-        <button className="return-button" onClick={onClose}>
-          <span>&lt;--</span> Return
-        </button>
+          <button className="quest-return-btn" onClick={onClose}>
+            &lt;-- Return
+          </button>
+        </div>
       </div>
     </div>
   );

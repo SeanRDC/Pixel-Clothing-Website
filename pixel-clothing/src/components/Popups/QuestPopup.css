@@ -8,64 +8,161 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(5px);
-  animation: fadeIn 0.3s ease-in-out;
+  animation: fadeInOverlay 0.3s ease-in-out;
+}
+
+@keyframes fadeInOverlay {
+  from { background: rgba(0, 0, 0, 0); backdrop-filter: blur(0px); }
+  to { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); }
+}
+
+.scroll-paper {
+  position: relative;
+  width: 90vw;
+  max-width: 550px;
+  aspect-ratio: 0.7; 
+  background: url('/assets/images/Quest.png') center/contain no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform-origin: top center;
+  animation: unrollScroll 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes unrollScroll {
+  0% { transform: scaleY(0) scaleX(0.5); opacity: 0; }
+  60% { transform: scaleY(1.05) scaleX(1); opacity: 1; }
+  100% { transform: scaleY(1) scaleX(1); opacity: 1; }
 }
 
 .quest-content {
-  position: relative;
-  width: 722px;
-  height: 1024px;
+  width: 70%; 
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  opacity: 0;
+  animation: fadeInText 0.5s ease forwards;
+  animation-delay: 0.5s; 
 }
 
-.quest-image {
-  position: absolute;
-  top: 0;
-  left: 0;
+@keyframes fadeInText {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.quest-title {
+  font-family: 'Depixel', monospace;
+  color: #4f1a03;
+  font-size: 28px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.quest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  width: 100%;
+}
+
+.quest-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.4);
+  border: 2px solid #8b6b2a;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.quest-item:hover {
+  transform: scale(1.02);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.quest-checkbox {
+  font-family: 'Depixel', monospace;
+  font-size: 20px;
+  color: #4f1a03;
+  font-weight: bold;
+  min-width: 40px;
+}
+
+.quest-text {
+  font-family: 'Depixel', monospace;
+  font-size: 16px;
+  color: #000;
+  flex: 1;
+  margin-left: 10px;
+}
+
+.social-icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.social-icon-btn img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
-.social-button {
-  position: absolute;
-  background: transparent;
-  border: none;
+.social-icon-btn:hover {
+  transform: scale(1.2) rotate(5deg);
+  filter: drop-shadow(0 0 5px rgba(255,255,255,0.8));
+}
+
+.quest-return-btn {
+  margin-top: 20px;
+  font-family: 'Depixel', monospace;
+  font-size: 18px;
+  color: #fff;
+  background: linear-gradient(180deg, #d8b45d, #c09b45);
+  border: 3px solid #5a3a0a;
+  box-shadow: 3px 3px 0 #000;
+  padding: 12px 25px;
   cursor: pointer;
-  transition: transform 0.3s ease, filter 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.social-button:hover {
-  transform: scale(1.15);
-  filter: drop-shadow(0 0 8px #fff);
+.quest-return-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 #000;
+  background: linear-gradient(180deg, #e0bf68, #cfa54d);
 }
 
-.btn-tiktok { top: 362px; left: 348px; width: 56px; }
-.btn-ig { top: 435px; left: 351px; width: 50px; }
-.btn-discord { top: 507px; left: 267px; width: 70px; }
-
-.return-button {
-  position: absolute;
-  bottom: 150px;
-  left: 84px;
-  font-family: 'Dogica Pixel', monospace;
-  font-size: 20px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: #000;
-  transition: transform 0.2s ease, text-shadow 0.2s ease;
+.quest-return-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #000;
 }
 
-.return-button span { color: #4f1a03; }
-
-.return-button:hover {
-  transform: scale(1.1);
-  text-shadow: 0 0 6px #000;
+@media (max-width: 600px) {
+  .quest-title { font-size: 22px; }
+  .quest-list { gap: 15px; }
+  .quest-item { padding: 8px 10px; }
+  .quest-checkbox { font-size: 16px; min-width: 30px; }
+  .quest-text { font-size: 14px; }
+  .social-icon-btn { width: 35px; height: 35px; }
+  .quest-return-btn { font-size: 16px; padding: 10px 20px; }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+@media (max-width: 400px) {
+  .quest-title { font-size: 18px; }
+  .quest-list { gap: 10px; }
+  .quest-text { font-size: 12px; }
+  .social-icon-btn { width: 30px; height: 30px; }
 }
