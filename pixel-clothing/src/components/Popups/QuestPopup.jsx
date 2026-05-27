@@ -27,7 +27,9 @@ export default function QuestPopup({ onClose }) {
         <div className="quest-content">
           <div className="quest-list">
             <div className="quest-item">
-              <span className="quest-checkbox">{quests.tiktok ? '[X]' : '[ ]'}</span>
+              <span className={`quest-checkbox ${quests.tiktok ? 'completed' : ''}`}>
+                {quests.tiktok ? '[X]' : '[ ]'}
+              </span>
               <span className="quest-text">Follow on TikTok</span>
               <button className="social-icon-btn" onClick={() => handleQuest('tiktok', 'https://tiktok.com')}>
                 <img src="/assets/images/tiktok.png" alt="TikTok" />
@@ -35,7 +37,9 @@ export default function QuestPopup({ onClose }) {
             </div>
 
             <div className="quest-item">
-              <span className="quest-checkbox">{quests.ig ? '[X]' : '[ ]'}</span>
+              <span className={`quest-checkbox ${quests.ig ? 'completed' : ''}`}>
+                {quests.ig ? '[X]' : '[ ]'}
+              </span>
               <span className="quest-text">Follow on IG</span>
               <button className="social-icon-btn" onClick={() => handleQuest('ig', 'https://instagram.com')}>
                 <img src="/assets/images/instagram.png" alt="Instagram" />
@@ -43,7 +47,9 @@ export default function QuestPopup({ onClose }) {
             </div>
 
             <div className="quest-item">
-              <span className="quest-checkbox">{quests.discord ? '[X]' : '[ ]'}</span>
+              <span className={`quest-checkbox ${quests.discord ? 'completed' : ''}`}>
+                {quests.discord ? '[X]' : '[ ]'}
+              </span>
               <span className="quest-text">Join Discord</span>
               <button className="social-icon-btn" onClick={() => handleQuest('discord', 'https://discord.com')}>
                 <img src="/assets/images/discord.png" alt="Discord" />
@@ -51,7 +57,9 @@ export default function QuestPopup({ onClose }) {
             </div>
 
             <div className="quest-item">
-              <span className="quest-checkbox">{quests.linkedin ? '[X]' : '[ ]'}</span>
+              <span className={`quest-checkbox ${quests.linkedin ? 'completed' : ''}`}>
+                {quests.linkedin ? '[X]' : '[ ]'}
+              </span>
               <span className="quest-text">Connect on LinkedIn</span>
               <button className="social-icon-btn" onClick={() => handleQuest('linkedin', 'https://linkedin.com')}>
                 <img src="/assets/images/linkedin-logo.png" alt="LinkedIn" />
