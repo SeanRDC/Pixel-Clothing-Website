@@ -10,9 +10,13 @@ export default function Home() {
   const router = useRouter();
   const [isStarted, setIsStarted] = useState(false);
   const [activePopup, setActivePopup] = useState(null);
+  const [isHidingButton, setIsHidingButton] = useState(false);
 
   const handleStart = () => {
-    setIsStarted(true);
+    setIsHidingButton(true);
+    setTimeout(() => {
+      setIsStarted(true);
+    }, 400); 
   };
 
   const navigateToHouse = () => {
@@ -34,6 +38,7 @@ export default function Home() {
             alt="Touch to Start" 
             className="start-button"
             onClick={handleStart} 
+            style={{ opacity: isHidingButton ? 0 : '', transition: 'opacity 0.4s ease' }}
           />
         ) : (
           <div className={`menu-text ${isStarted ? 'show' : ''}`}>
