@@ -22,12 +22,12 @@
   position: relative;
   width: 90vw;
   max-width: 550px;
-  aspect-ratio: 0.7; 
-  background: url('/assets/images/Quest.png') center/contain no-repeat;
+  height: 85vh; 
+  background: url('/assets/images/Quest.png') center/100% 100% no-repeat;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   transform-origin: top center;
   animation: unrollScroll 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
@@ -40,28 +40,26 @@
 
 .quest-content {
   width: 75%; 
-  height: 80%;
+  height: calc(100% - 150px);
+  margin-top: 110px; 
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding-top: 45px;
   opacity: 0;
   animation: fadeInText 0.5s ease forwards;
   animation-delay: 0.5s; 
+  overflow-y: auto;
+  scrollbar-width: none; 
+}
+
+.quest-content::-webkit-scrollbar {
+  display: none; 
 }
 
 @keyframes fadeInText {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-.quest-title {
-  font-family: 'Depixel', monospace;
-  color: #4f1a03;
-  font-size: 28px;
-  margin-bottom: 20px;
-  text-align: center;
 }
 
 .quest-list {
@@ -80,6 +78,7 @@
   padding: 8px 15px;
   border-radius: 5px;
   transition: transform 0.2s ease, background 0.2s ease;
+  flex-shrink: 0; 
 }
 
 .quest-item:hover {
@@ -128,7 +127,7 @@
 
 .quest-return-btn {
   margin-top: auto;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   font-family: 'Depixel', monospace;
   font-size: 18px;
   color: #fff;
@@ -138,6 +137,7 @@
   padding: 12px 25px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex-shrink: 0; 
 }
 
 .quest-return-btn:hover {
@@ -152,18 +152,30 @@
 }
 
 @media (max-width: 600px) {
-  .quest-content { padding-top: 30px; }
-  .quest-title { font-size: 22px; }
+  .scroll-paper {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    border-radius: 0;
+    background-size: 100% 100%;
+  }
+  
+  .quest-content { 
+    margin-top: 130px; 
+    height: calc(100% - 150px);
+    width: 85%;
+  }
+  
   .quest-list { gap: 10px; }
-  .quest-item { padding: 6px 10px; }
-  .quest-checkbox { font-size: 16px; min-width: 30px; }
+  .quest-item { padding: 10px 10px; }
+  .quest-checkbox { font-size: 18px; min-width: 35px; }
   .quest-text { font-size: 14px; }
-  .social-icon-btn { width: 35px; height: 35px; }
-  .quest-return-btn { font-size: 16px; padding: 10px 20px; }
+  .social-icon-btn { width: 40px; height: 40px; }
+  .quest-return-btn { font-size: 16px; padding: 10px 20px; margin-bottom: 30px; }
 }
 
 @media (max-width: 400px) {
-  .quest-title { font-size: 18px; }
+  .quest-content { margin-top: 110px; height: calc(100% - 130px); }
   .quest-list { gap: 8px; }
   .quest-text { font-size: 12px; }
   .social-icon-btn { width: 30px; height: 30px; }

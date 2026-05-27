@@ -25,8 +25,6 @@ export default function QuestPopup({ onClose }) {
     <div className="quest-popup" onClick={handleOverlayClick}>
       <div className="scroll-paper">
         <div className="quest-content">
-          <h2 className="quest-title">Daily Quests</h2>
-          
           <div className="quest-list">
             <div className="quest-item">
               <span className="quest-checkbox">{quests.tiktok ? '[X]' : '[ ]'}</span>
