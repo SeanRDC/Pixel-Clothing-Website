@@ -27,40 +27,50 @@ const faqData = [
 
 export default function Guide({ onClose }) {
   const [activeQuestion, setActiveQuestion] = useState(null);
+  const [isClosing, setIsClosing] = useState(false);
+
+  const triggerClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+    }, 700); 
+  };
 
   const handleOverlayClick = (e) => {
     if (e.target.classList.contains('guide-overlay')) {
-      onClose();
+      triggerClose();
     }
   };
 
   return (
-    <div className="guide-overlay" onClick={handleOverlayClick}>
+    <div className={`guide-overlay ${isClosing ? 'closing' : ''}`} onClick={handleOverlayClick}>
       
-      <div className={`guide-speech-box ${activeQuestion !== null ? 'visible' : ''}`}>
-        <div className="guide-speech-text">
-          {activeQuestion !== null ? faqData[activeQuestion].answer : ''}
-        </div>
-      </div>
+      <div className="guide-paper">
+        <div className="guide-content">
+          <h2 className="guide-title">Guide</h2>
 
-      <div className="guide-faq-box">
-        <img className="faq-bg" src="/assets/images/question.png" alt="Guide Menu" />
-        
-        <div className="guide-faq-questions">
-          {faqData.map((faq, index) => (
-            <div 
-              key={faq.id}
-              className={`guide-faq-question ${activeQuestion === index ? 'active' : ''}`}
-              onClick={() => setActiveQuestion(index)}
-            >
-              {faq.question}
+          <div className="guide-speech-box">
+            <div className="guide-speech-text">
+              {activeQuestion !== null ? faqData[activeQuestion].answer : "EJ: You seem that you needed help. What is it that you need to ask?"}
             </div>
-          ))}
-        </div>
+          </div>
 
-        <button className="close-guide-btn" onClick={onClose}>
-          &lt;-- Close Guide
-        </button>
+          <div className="guide-faq-questions">
+            {faqData.map((faq, index) => (
+              <div 
+                key={faq.id}
+                className={`guide-faq-question ${activeQuestion === index ? 'active' : ''}`}
+                onClick={() => setActiveQuestion(index)}
+              >
+                {faq.question}
+              </div>
+            ))}
+          </div>
+
+          <button className="guide-return-btn" onClick={triggerClose}>
+            &lt;-- Return
+          </button>
+        </div>
       </div>
 
     </div>
