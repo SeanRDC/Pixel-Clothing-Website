@@ -8,13 +8,13 @@ export default function AudioController({ isVisible }) {
 
   useEffect(() => {
     if (isVisible && audioRef.current) {
-      audioRef.current.play().catch((err) => console.log("Autoplay blocked:", err));
+      audioRef.current.play().catch(() => {});
     }
   }, [isVisible]);
 
   const toggleSound = () => {
     if (isMuted) {
-      audioRef.current.play();
+      audioRef.current.play().catch(() => {});
     } else {
       audioRef.current.pause();
     }
