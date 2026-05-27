@@ -98,14 +98,13 @@
 .menu-text p {
   cursor: pointer;
   opacity: 0;
-  transform: translateX(-20px);
-  transition: transform 0.2s ease, text-shadow 0.2s ease, color 0.2s ease;
+  transform: translateX(-20px) translateY(0);
+  transition: text-shadow 0.2s ease, color 0.2s ease;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
   margin: 0;
 }
 
 .menu-text p:hover {
-  transform: scale(1.15) !important;
   color: #f4c26f;
   text-shadow: 0 0 10px rgba(244, 194, 111, 0.8), 2px 2px 4px rgba(0,0,0,0.8);
 }
@@ -115,7 +114,7 @@
 }
 
 .menu-text.show p {
-  animation: slideRightFade 0.5s forwards ease-out, minimalFloat 3s ease-in-out infinite alternate;
+  animation: slideRightFade 0.5s forwards ease-out, minimalFloat 3s ease-in-out infinite;
 }
 
 .menu-text.show p:nth-child(1) { animation-delay: 0.1s, 0.6s; }
@@ -124,13 +123,18 @@
 .menu-text.show p:nth-child(4) { animation-delay: 0.4s, 0.9s; }
 
 @keyframes slideRightFade {
-  0% { opacity: 0; transform: translateX(-20px); }
-  100% { opacity: 1; transform: translateX(0); }
+  0% { opacity: 0; transform: translateX(-20px) translateY(0); }
+  100% { opacity: 1; transform: translateX(0) translateY(0); }
 }
 
 @keyframes minimalFloat {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-5px); }
+  0%, 100% { transform: translateX(0) translateY(0) scale(1); }
+  50% { transform: translateX(0) translateY(-6px) scale(1); }
+}
+
+.menu-text.show p:hover {
+  animation-play-state: paused;
+  transform: translateX(0) translateY(0) scale(1.15) !important;
 }
 
 @media (max-width: 768px) {
