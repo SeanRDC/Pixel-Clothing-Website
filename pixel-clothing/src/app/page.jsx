@@ -47,6 +47,13 @@ export default function Home() {
 
       <AudioController isVisible={isStarted} />
 
+      {activePopup === 'quest' && (
+        <QuestPopup onClose={() => setActivePopup(null)} />
+      )}
+      
+      {activePopup === 'about' && (
+        <AboutPopup onClose={() => setActivePopup(null)} />
+      )}
     </div>
   );
 }
