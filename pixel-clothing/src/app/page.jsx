@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import AudioController from '../components/AudioController/AudioController';
 import QuestPopup from '../components/Popups/QuestPopup';
 import AboutPopup from '../components/Popups/AboutPopup';
+import Guide from '../components/Guide/Guide';
 import './StartPage.css';
 
 export default function Home() {
@@ -42,9 +43,9 @@ export default function Home() {
           />
         ) : (
           <div className={`menu-text ${isStarted ? 'show' : ''}`}>
-            <p onClick={() => setActivePopup('quest')}>Quest</p>
             <p onClick={navigateToHouse}>Enter House</p>
-            <p onClick={() => router.push('/house#guide')}>Guide</p>
+            <p onClick={() => setActivePopup('quest')}>Quest</p>
+            <p onClick={() => setActivePopup('guide')}>Guide</p>
             <p onClick={() => setActivePopup('about')}>About Us</p>
           </div>
         )}
@@ -58,6 +59,10 @@ export default function Home() {
       
       {activePopup === 'about' && (
         <AboutPopup onClose={() => setActivePopup(null)} />
+      )}
+
+      {activePopup === 'guide' && (
+        <Guide onClose={() => setActivePopup(null)} />
       )}
     </div>
   );
