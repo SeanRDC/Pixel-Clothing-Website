@@ -16,7 +16,7 @@ const faqData = [
   {
     id: 3,
     question: "Do you ship globally?",
-    answer: "Yes! Our couriers deliver across realms. Shipping fees will be calculated at checkout."
+    answer: "Yes! Our couriers deliver across realms. Shipping fees will be calculated at checkout worldwide, swiftly, reliably."
   },
   {
     id: 4,
