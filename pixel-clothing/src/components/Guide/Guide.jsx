@@ -47,7 +47,6 @@ export default function Guide({ onClose }) {
       
       <div className="guide-paper">
         <div className="guide-content">
-          <h2 className="guide-title">Guide</h2>
 
           <div className="guide-speech-box">
             <div className="guide-speech-text">
