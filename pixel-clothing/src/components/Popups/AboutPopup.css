@@ -30,46 +30,55 @@
 .about-paper {
   position: relative;
   width: 90vw;
-  max-width: 800px; 
-  height: 85vh;
-  max-height: 750px;
-  background: url('/assets/images/comm.png') center/100% 100% no-repeat;
+  max-width: 550px;
+  height: 88vh; 
+  background: url('/assets/images/aboutusscroll.png') center/100% 100% no-repeat;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  transform-origin: center;
-  animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  transform-origin: top center;
+  animation: unrollScroll 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 .about-popup.closing .about-paper {
-  animation: popOut 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation: rollUpScroll 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-@keyframes popIn {
-  0% { transform: scale(0.8); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+@keyframes unrollScroll {
+  0% { transform: scaleY(0) scaleX(0.5); opacity: 0; }
+  60% { transform: scaleY(1.05) scaleX(1); opacity: 1; }
+  100% { transform: scaleY(1) scaleX(1); opacity: 1; }
 }
 
-@keyframes popOut {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(0.8); opacity: 0; }
+@keyframes rollUpScroll {
+  0% { transform: scaleY(1) scaleX(1); opacity: 1; }
+  40% { transform: scaleY(1.05) scaleX(1); opacity: 1; }
+  100% { transform: scaleY(0) scaleX(0.5); opacity: 0; }
 }
 
 .about-content {
-  width: 80%;
-  height: calc(100% - 160px);
-  margin-top: 80px;
+  width: 75%; 
+  height: calc(100% - 290px);
+  margin-top: 260px; 
+  padding-bottom: 0;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   opacity: 0;
-  animation: fadeInText 0.4s ease forwards;
-  animation-delay: 0.4s;
+  animation: fadeInText 0.5s ease forwards;
+  animation-delay: 0.5s; 
+  overflow-y: auto;
+  scrollbar-width: none; 
 }
 
 .about-popup.closing .about-content {
   animation: fadeOutText 0.3s ease forwards;
+}
+
+.about-content::-webkit-scrollbar {
+  display: none; 
 }
 
 @keyframes fadeInText {
@@ -83,17 +92,16 @@
 }
 
 .about-title-img {
-  width: 280px;
+  width: 240px;
   max-width: 100%;
   margin-bottom: 20px;
-  margin-top: -55px;
   flex-shrink: 0;
   filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.3));
 }
 
 .about-text-container {
-  flex: 1;
   width: 100%;
+  margin-top: 115px;
   overflow-y: auto;
   scrollbar-width: none; 
   padding: 0 15px;
@@ -109,16 +117,16 @@
 
 .welcome-text {
   font-family: "Jersey 10", sans-serif;
-  font-size: 26px;
+  font-size: 24px;
   color: #3a1e05;
-  line-height: 1.4;
+  line-height: 1.3;
   margin: 0;
   text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
 }
 
 .about-return-btn {
-  margin-top: auto;
-  margin-bottom: 95px;
+  margin-top: 30px;
+  margin-bottom: 0;
   font-family: 'Depixel', monospace;
   font-size: 18px;
   color: #fff;
@@ -142,39 +150,21 @@
   box-shadow: 1px 1px 0 #000;
 }
 
-@media (max-width: 768px) {
-  .about-paper {
-    width: 95vw;
-    height: 85vh;
-  }
-  .about-content {
-    width: 85%;
-    height: calc(100% - 120px);
-    margin-top: 60px;
-  }
-  .about-title-img {
-    width: 220px;
-    margin-bottom: 15px;
-  }
-  .welcome-text {
-    font-size: 22px;
-  }
-}
-
 @media (max-width: 600px) {
   .about-paper {
     width: 100vw;
-    height: 100vh;
+    height: 80vh;
+    max-height: 80vh !important;
     max-width: 100vw;
-    max-height: 100vh;
     border-radius: 0;
     background-size: 100% 100%;
   }
   
   .about-content {
-    margin-top: 100px;
-    height: calc(100% - 150px);
+    margin-top: 170px;
+    height: calc(100% - 210px);
     width: 85%;
+    padding: 0 10 0 10;
   }
 
   .about-title-img {
@@ -188,14 +178,14 @@
   .about-return-btn {
     font-size: 16px;
     padding: 10px 20px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
   }
 }
 
 @media (max-width: 400px) {
   .about-content {
-    margin-top: 80px;
-    height: calc(100% - 120px);
+    margin-top: 140px;
+    height: calc(100% - 170px);
   }
   .about-title-img {
     width: 160px;

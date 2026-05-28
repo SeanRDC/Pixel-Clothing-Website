@@ -22,7 +22,6 @@ export default function AboutPopup({ onClose }) {
     <div className={`about-popup ${isClosing ? 'closing' : ''}`} onClick={handleOverlayClick}>
       <div className="about-paper">
         <div className="about-content">
-          <img className="about-title-img" src="/assets/images/aboutus.png" alt="About Us" />
           
           <div className="about-text-container">
             <p className="welcome-text">
