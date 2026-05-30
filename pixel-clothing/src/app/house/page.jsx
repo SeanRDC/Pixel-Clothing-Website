@@ -36,22 +36,17 @@ export default function HousePage() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [activePopup, setActivePopup] = useState(null);
 
-  // New state to track if the user has inspected a shirt
   const [hasLookedAtItems, setHasLookedAtItems] = useState(false);
-
   const [dialogue, setDialogue] = useState("");
 
   useEffect(() => {
-    // Pause dialogue if an item is selected or a popup is open
     if (selectedItem || activePopup) return; 
 
-    // If the user has already looked at an item, instantly show the new text
     if (hasLookedAtItems) {
       setDialogue("EJ: Have you chosen your choice?");
-      return; // Skip the typing animation
+      return; 
     }
     
-    // Otherwise, run the initial typing animation
     const initialText = "EJ: Oh, Would you like to see these clothes? I'm actually selling these, I'm happy if you would pick one.";
     let i = 0;
     setDialogue("");
@@ -67,11 +62,9 @@ export default function HousePage() {
 
   const handleItemClick = (itemId) => {
     if (selectedItem === itemId) {
-      // User clicked the item again to close it
       setSelectedItem(null);
-      setHasLookedAtItems(true); // Flag that they have now looked at something
+      setHasLookedAtItems(true); 
     } else {
-      // User opens an item
       setSelectedItem(itemId);
       setPanelMode('desc');
     }
@@ -94,7 +87,6 @@ export default function HousePage() {
   return (
     <div className="house-container">
       
-      {/* Conditionally render EJ's sprite based on whether the user has looked at items yet */}
       {!selectedItem && !activePopup && (
         <img 
           src={hasLookedAtItems ? "/assets/images/ej.png" : "/assets/images/ejexplaining.png"} 
@@ -112,22 +104,25 @@ export default function HousePage() {
 
       <img src="/assets/images/kart.png" className="shopping-cart-icon" onClick={() => setIsCartOpen(true)} alt="Cart" />
 
-      <div className="keepers-inventory" style={{ display: activePopup ? 'none' : 'block' }}>
-        <img src="/assets/images/inventory.png" className="inventory-bg" alt="Inventory" />
-        <div className="inventory-items">
-          <div className="item-slot slot-1" onClick={() => handleItemClick('iroha')}>
-            <img src="/assets/images/irohapixel.png" alt="Iroha" />
-            {selectedItem === 'iroha' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
-          </div>
-          <div className="item-slot slot-2" onClick={() => handleItemClick('wonhee')}>
-            <img src="/assets/images/wonheepixel.png" alt="Wonhee" />
-            {selectedItem === 'wonhee' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
-          </div>
-          <div className="item-slot slot-3">
-            <img src="/assets/images/question.png" alt="Mystery" />
+      {/* Hide Inventory when popup is open */}
+      {!activePopup && (
+        <div className="keepers-inventory">
+          <img src="/assets/images/inventory.png" className="inventory-bg" alt="Inventory" />
+          <div className="inventory-items">
+            <div className="item-slot slot-1" onClick={() => handleItemClick('iroha')}>
+              <img src="/assets/images/irohapixel.png" alt="Iroha" />
+              {selectedItem === 'iroha' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
+            </div>
+            <div className="item-slot slot-2" onClick={() => handleItemClick('wonhee')}>
+              <img src="/assets/images/wonheepixel.png" alt="Wonhee" />
+              {selectedItem === 'wonhee' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
+            </div>
+            <div className="item-slot slot-3">
+              <img src="/assets/images/question.png" alt="Mystery" />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {!selectedItem && !activePopup && (
         <div className="dialogue-box">
@@ -136,11 +131,13 @@ export default function HousePage() {
         </div>
       )}
 
-      {selectedItem && (
+      {/* Hide Shirt Image when popup is open */}
+      {selectedItem && !activePopup && (
         <img src={activeItemData.img} className="center-display-image" alt="Selected Item" />
       )}
 
-      {selectedItem && (
+      {/* Hide Item Panel when popup is open */}
+      {selectedItem && !activePopup && (
         <div className="item-panel">
           <img src="/assets/images/descriptionbox.png" className="panel-bg" alt="Panel Box" />
           <h2 className="item-title">{activeItemData.name}</h2>
