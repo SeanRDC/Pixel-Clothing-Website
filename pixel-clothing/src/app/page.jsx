@@ -36,7 +36,7 @@ export default function Home() {
     if (isNavigating) return;
     const interval = setInterval(() => {
       setBgIndex((prev) => (prev + 1) % backgrounds.length);
-    }, 1500);
+    }, 2000);
     return () => clearInterval(interval);
   }, [isNavigating]);
 
@@ -53,10 +53,15 @@ export default function Home() {
   };
 
   return (
-    <div 
-      className="start-page-container"
-      style={{ backgroundImage: `url('/assets/images/${backgrounds[bgIndex]}')` }}
-    >
+    <div className="start-page-container">
+      {backgrounds.map((bg, index) => (
+        <div
+          key={bg}
+          className={`bg-layer ${index === bgIndex ? 'active' : ''}`}
+          style={{ backgroundImage: `url('/assets/images/${bg}')` }}
+        />
+      ))}
+
       <div className={`blur-overlay ${isStarted && !activePopup ? 'remove-blur' : ''}`}></div>
 
       <div className="logo-container">

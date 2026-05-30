@@ -4,8 +4,9 @@ import { useRouter } from 'next/navigation';
 import './House.css';
 import AudioController from '../../components/AudioController/AudioController';
 import Guide from '../../components/Guide/Guide';
+import QuestPopup from '../../components/Popups/QuestPopup';
+import AboutPopup from '../../components/Popups/AboutPopup';
 
-// Item Database (Easy to update!)
 const shopItems = {
   iroha: {
     id: 'iroha',
@@ -28,19 +29,19 @@ const shopItems = {
 export default function HousePage() {
   const router = useRouter();
   
-  // States
   const [selectedItem, setSelectedItem] = useState(null);
   const [panelMode, setPanelMode] = useState('desc'); 
   const [selectedSize, setSelectedSize] = useState('M');
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [activePopup, setActivePopup] = useState(null); // 'quest', 'guide', 'about', or null
 
   const [dialogue, setDialogue] = useState("");
   const fullText = "EJ: Oh, Would you like to see these clothes? I'm actually selling these, I'm happy if you would pick one.";
 
   useEffect(() => {
-    if (selectedItem || isGuideOpen) return; 
+    // Pause dialogue if an item is selected or a popup is open
+    if (selectedItem || activePopup) return; 
     
     let i = 0;
     setDialogue("");
@@ -50,9 +51,8 @@ export default function HousePage() {
       if (i === fullText.length) clearInterval(timer);
     }, 40);
     return () => clearInterval(timer);
-  }, [selectedItem, isGuideOpen]);
+  }, [selectedItem, activePopup]);
 
-  // Handlers
   const handleItemClick = (itemId) => {
     if (selectedItem === itemId) {
       setSelectedItem(null);
@@ -81,15 +81,15 @@ export default function HousePage() {
       <img src="/assets/images/ej.png" className="merchant-character" alt="EJ" />
 
       <nav className="top-menu">
-        <div className="menu-item" onClick={() => router.push('/#quest')}>Quest</div>
+        <div className="menu-item" onClick={() => setActivePopup('quest')}>Quest</div>
+        <div className="menu-item" onClick={() => setActivePopup('guide')}>Guide</div>
+        <div className="menu-item" onClick={() => setActivePopup('about')}>About</div>
         <div className="menu-item" onClick={() => router.push('/')}>Exit</div>
-        <div className="menu-item" onClick={() => setIsGuideOpen(true)}>Guide</div>
-        <div className="menu-item" onClick={() => router.push('/#about')}>About Us</div>
       </nav>
 
       <img src="/assets/images/kart.png" className="shopping-cart-icon" onClick={() => setIsCartOpen(true)} alt="Cart" />
 
-      <div className="keepers-inventory" style={{ display: isGuideOpen ? 'none' : 'block' }}>
+      <div className="keepers-inventory" style={{ display: activePopup ? 'none' : 'block' }}>
         <img src="/assets/images/inventory.png" className="inventory-bg" alt="Inventory" />
         <div className="inventory-items">
           <div className="item-slot slot-1" onClick={() => handleItemClick('iroha')}>
@@ -106,7 +106,7 @@ export default function HousePage() {
         </div>
       </div>
 
-      {!selectedItem && !isGuideOpen && (
+      {!selectedItem && !activePopup && (
         <div className="dialogue-box">
           <img src="/assets/images/speechbox.png" className="dialogue-bg" alt="Speech Box" />
           <p className="dialogue-text">{dialogue}</p>
@@ -191,8 +191,12 @@ export default function HousePage() {
       </div>
 
       <AudioController isVisible={true} />
-      {isGuideOpen && <Guide onClose={() => setIsGuideOpen(false)} />}
       
+      {/* Popups */}
+      {activePopup === 'quest' && <QuestPopup onClose={() => setActivePopup(null)} />}
+      {activePopup === 'guide' && <Guide onClose={() => setActivePopup(null)} />}
+      {activePopup === 'about' && <AboutPopup onClose={() => setActivePopup(null)} />}
+
     </div>
   );
 }
