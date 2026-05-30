@@ -17,9 +17,32 @@ body {
   overflow: hidden;
   font-family: 'Depixel', monospace;
   background-color: #000; 
+  /* Default Custom Cursor */
+  cursor: url('/assets/images/mousecursor.png'), auto;
 }
 
 .remove-blur {
   backdrop-filter: blur(0px) !important;
   background: rgba(0, 0, 0, 0) !important;
+}
+
+/* Custom Click Cursor for all interactive elements */
+button, 
+a, 
+p,
+.start-button, 
+.menu-item, 
+.item-slot, 
+.social-icon-btn, 
+.quest-item,
+.shopping-cart-icon,
+.quest-return-btn,
+.guide-return-btn,
+.about-return-btn,
+.checkout-btn,
+.panel-btn,
+.size-list li,
+.guide-faq-question,
+.cart-item-remove {
+  cursor: url('/assets/images/mouseclick.png'), pointer !important;
 }
