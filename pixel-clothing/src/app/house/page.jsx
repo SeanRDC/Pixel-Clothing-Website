@@ -165,11 +165,11 @@ export default function HousePage() {
         </div>
       )}
 
-      {selectedItem && !activePopup && (
-        <img src={activeItemData.img} className="center-display-image" alt="Selected Item" />
+      {selectedItem && !activePopup && activeItemData && (
+        <img src={activeItemData?.img} className="center-display-image" alt="Selected Item" />
       )}
 
-      {selectedItem && !activePopup && (
+      {selectedItem && !activePopup && activeItemData && (
         <div className="item-panel">
           <img src="/assets/images/descriptionbox.png" className="panel-bg" alt="Panel Box" />
           <h2 className="item-title">{activeItemData.name}</h2>
