@@ -32,15 +32,19 @@ export default function HousePage() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [panelMode, setPanelMode] = useState('desc'); 
   const [selectedSize, setSelectedSize] = useState('M');
+  
+  // Cart & Checkout States
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [activePopup, setActivePopup] = useState(null);
+  const [checkoutStep, setCheckoutStep] = useState('cart'); // 'cart', 'details', 'processing', 'success'
+  const [shippingInfo, setShippingInfo] = useState({ name: '', address: '', realm: 'Earth' });
 
+  const [activePopup, setActivePopup] = useState(null);
   const [hasLookedAtItems, setHasLookedAtItems] = useState(false);
   const [dialogue, setDialogue] = useState("");
 
   useEffect(() => {
-    if (selectedItem || activePopup) return; 
+    if (selectedItem || activePopup || isCartOpen) return; 
 
     if (hasLookedAtItems) {
       setDialogue("EJ: Have you chosen your choice?");
@@ -58,7 +62,7 @@ export default function HousePage() {
     }, 40);
     
     return () => clearInterval(timer);
-  }, [selectedItem, activePopup, hasLookedAtItems]);
+  }, [selectedItem, activePopup, isCartOpen, hasLookedAtItems]);
 
   const handleItemClick = (itemId) => {
     if (selectedItem === itemId) {
@@ -74,6 +78,7 @@ export default function HousePage() {
     const item = shopItems[selectedItem];
     setCartItems([...cartItems, { ...item, size: selectedSize }]);
     setIsCartOpen(true); 
+    setCheckoutStep('cart'); // Reset to cart view when adding new items
   };
 
   const removeCartItem = (indexToRemove) => {
@@ -81,6 +86,23 @@ export default function HousePage() {
   };
 
   const calculateTotal = () => cartItems.reduce((total, item) => total + item.price, 0);
+
+  // Simulated Async Checkout Process
+  const handlePlaceOrder = (e) => {
+    e.preventDefault();
+    setCheckoutStep('processing');
+    
+    // Simulate server request/payment gateway delay
+    setTimeout(() => {
+      setCheckoutStep('success');
+      setCartItems([]); // Empty the cart on success
+    }, 2500);
+  };
+
+  const closeCart = () => {
+    setIsCartOpen(false);
+    setTimeout(() => setCheckoutStep('cart'), 300); // Reset after slide animation finishes
+  };
 
   const activeItemData = selectedItem ? shopItems[selectedItem] : null;
 
@@ -104,7 +126,6 @@ export default function HousePage() {
 
       <img src="/assets/images/kart.png" className="shopping-cart-icon" onClick={() => setIsCartOpen(true)} alt="Cart" />
 
-      {/* Hide Inventory when popup is open */}
       {!activePopup && (
         <div className="keepers-inventory">
           <img src="/assets/images/inventory.png" className="inventory-bg" alt="Inventory" />
@@ -131,12 +152,10 @@ export default function HousePage() {
         </div>
       )}
 
-      {/* Hide Shirt Image when popup is open */}
       {selectedItem && !activePopup && (
         <img src={activeItemData.img} className="center-display-image" alt="Selected Item" />
       )}
 
-      {/* Hide Item Panel when popup is open */}
       {selectedItem && !activePopup && (
         <div className="item-panel">
           <img src="/assets/images/descriptionbox.png" className="panel-bg" alt="Panel Box" />
@@ -186,28 +205,110 @@ export default function HousePage() {
       )}
 
       <div className={`cart-sidebar ${isCartOpen ? 'open' : ''}`}>
-        <h2 className="cart-title">CART</h2>
-        <button onClick={() => setIsCartOpen(false)} style={{marginBottom: '20px'}}>Close Cart</button>
-        
-        {cartItems.length === 0 ? (
-          <p>YOUR CART IS CURRENTLY EMPTY</p>
-        ) : (
-          cartItems.map((item, idx) => (
-            <div key={idx} className="cart-item">
-              <div>
-                <strong>{item.name}</strong><br/>
-                <span>Size: {item.size} - ₱{item.price.toFixed(2)}</span>
-              </div>
-              <span className="cart-item-remove" onClick={() => removeCartItem(idx)}>Remove</span>
-            </div>
-          ))
-        )}
-
-        <div className="cart-total">
-          <span>Total:</span>
-          <span>₱{calculateTotal().toFixed(2)}</span>
+        <div className="cart-header">
+          <h2 className="cart-title">
+            {checkoutStep === 'cart' ? "MERCHANT'S LEDGER" : 
+             checkoutStep === 'details' ? "SHIPPING MANIFEST" : 
+             checkoutStep === 'processing' ? "COMMUNICATING..." : "TRANSACTION COMPLETE"}
+          </h2>
+          <button className="cart-close-btn" onClick={closeCart}>[X]</button>
         </div>
-        <button className="checkout-btn" onClick={() => router.push('/checkout')}>Checkout</button>
+
+        <div className="cart-content-scroll">
+          
+          {checkoutStep === 'cart' && (
+            <>
+              {cartItems.length === 0 ? (
+                <div className="empty-cart-msg">
+                  <p>Your satchel is empty.</p>
+                  <p>Equip some gear before departing!</p>
+                </div>
+              ) : (
+                <div className="cart-items-list">
+                  {cartItems.map((item, idx) => (
+                    <div key={idx} className="cart-item-retro">
+                      <img src={item.img} alt={item.name} className="cart-item-thumb" />
+                      <div className="cart-item-details">
+                        <strong className="cart-item-name">{item.name}</strong>
+                        <span className="cart-item-size">Size: {item.size}</span>
+                        <span className="cart-item-price">₱{item.price.toFixed(2)}</span>
+                      </div>
+                      <button className="cart-item-remove" onClick={() => removeCartItem(idx)}>Drop</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+
+          {checkoutStep === 'details' && (
+            <form className="retro-checkout-form" onSubmit={handlePlaceOrder}>
+              <label className="retro-label">Hero's Name</label>
+              <input 
+                type="text" 
+                className="retro-input" 
+                required 
+                placeholder="Enter your name..."
+                value={shippingInfo.name}
+                onChange={(e) => setShippingInfo({...shippingInfo, name: e.target.value})}
+              />
+
+              <label className="retro-label">Delivery Coordinates (Address)</label>
+              <textarea 
+                className="retro-input textarea" 
+                required 
+                placeholder="Where should the courier pigeon fly?"
+                value={shippingInfo.address}
+                onChange={(e) => setShippingInfo({...shippingInfo, address: e.target.value})}
+              ></textarea>
+
+              <div className="summary-box">
+                <p>Items: {cartItems.length}</p>
+                <p>Total Due: <span className="highlight">₱{calculateTotal().toFixed(2)}</span></p>
+              </div>
+            </form>
+          )}
+
+          {checkoutStep === 'processing' && (
+            <div className="processing-state">
+              <div className="pixel-spinner"></div>
+              <p>Forging your order...</p>
+              <p>Consulting the Guild Bank...</p>
+            </div>
+          )}
+
+          {checkoutStep === 'success' && (
+            <div className="success-state">
+              <img src="/assets/images/Equip.png" className="success-icon" alt="Success" />
+              <h3>Purchase Successful!</h3>
+              <p>Thank you, {shippingInfo.name || 'Traveler'}.</p>
+              <p>Your gear will arrive shortly.</p>
+            </div>
+          )}
+        </div>
+
+        <div className="cart-footer">
+          {checkoutStep === 'cart' && cartItems.length > 0 && (
+            <>
+              <div className="cart-total-retro">
+                <span>Total Due:</span>
+                <span className="cart-total-price">₱{calculateTotal().toFixed(2)}</span>
+              </div>
+              <button className="retro-btn-primary" onClick={() => setCheckoutStep('details')}>Proceed to Checkout</button>
+            </>
+          )}
+
+          {checkoutStep === 'details' && (
+            <div className="checkout-actions">
+              <button className="retro-btn-secondary" onClick={() => setCheckoutStep('cart')}>&lt; Back</button>
+              <button className="retro-btn-primary" onClick={handlePlaceOrder}>Confirm Payment</button>
+            </div>
+          )}
+
+          {checkoutStep === 'success' && (
+            <button className="retro-btn-primary w-full" onClick={closeCart}>Return to Shop</button>
+          )}
+        </div>
       </div>
 
       <AudioController isVisible={true} />
