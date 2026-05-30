@@ -33,6 +33,13 @@ export default function HousePage() {
       try {
         const res = await fetch('/api/items');
         const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || 'Server returned an error');
+        }
+        if (!Array.isArray(data)) {
+          throw new Error('Expected an array of items but got something else.');
+        }
         
         const itemsMap = data.reduce((acc, item) => {
           acc[item.id] = item;
@@ -43,6 +50,7 @@ export default function HousePage() {
         setIsLoadingItems(false);
       } catch (error) {
         console.error("Failed to load shop items:", error);
+        setShopItems({});
         setIsLoadingItems(false);
       }
     };

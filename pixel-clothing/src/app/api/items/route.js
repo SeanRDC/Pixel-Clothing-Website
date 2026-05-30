@@ -8,6 +8,7 @@ export async function GET() {
     const items = await Item.find({});
     return NextResponse.json(items);
   } catch (error) {
+    console.error("CRITICAL MONGODB ERROR:", error);
     return NextResponse.json({ error: 'Failed to fetch items' }, { status: 500 });
   }
 }
