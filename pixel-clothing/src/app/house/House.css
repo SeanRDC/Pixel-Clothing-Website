@@ -71,17 +71,16 @@
   animation: fadeIn 0.5s ease;
 }
 
-.dialogue-bg { width: 100%; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); image-rendering: pixelated; }
+.dialogue-bg { width: 90%; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); image-rendering: pixelated; }
 .dialogue-text {
   position: absolute;
-  top: 40%;
-  left: 51%;
+  top: 42%;
+  left: 47%;
   transform: translate(-50%, -50%);
-  width: 60%;
-  font-size: 18px;
+  width: 50%;
+  font-size: 22px;
   color: #000;
   line-height: 1.6;
-  font-size: 24px;
 }
 
 /* Center Item Display */

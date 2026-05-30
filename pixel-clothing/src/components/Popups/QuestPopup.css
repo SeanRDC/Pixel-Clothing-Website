@@ -60,7 +60,7 @@
 .quest-content {
   width: 75%; 
   height: calc(100% - 290px);
-  margin-top: 300px; 
+  margin-top: 260px; 
   padding-bottom: 0;
   display: flex;
   flex-direction: column;
