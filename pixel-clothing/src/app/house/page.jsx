@@ -34,29 +34,44 @@ export default function HousePage() {
   const [selectedSize, setSelectedSize] = useState('M');
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [activePopup, setActivePopup] = useState(null); // 'quest', 'guide', 'about', or null
+  const [activePopup, setActivePopup] = useState(null);
+
+  // New state to track if the user has inspected a shirt
+  const [hasLookedAtItems, setHasLookedAtItems] = useState(false);
 
   const [dialogue, setDialogue] = useState("");
-  const fullText = "EJ: Oh, Would you like to see these clothes? I'm actually selling these, I'm happy if you would pick one.";
 
   useEffect(() => {
     // Pause dialogue if an item is selected or a popup is open
     if (selectedItem || activePopup) return; 
+
+    // If the user has already looked at an item, instantly show the new text
+    if (hasLookedAtItems) {
+      setDialogue("EJ: Have you chosen your choice?");
+      return; // Skip the typing animation
+    }
     
+    // Otherwise, run the initial typing animation
+    const initialText = "EJ: Oh, Would you like to see these clothes? I'm actually selling these, I'm happy if you would pick one.";
     let i = 0;
     setDialogue("");
+    
     const timer = setInterval(() => {
-      setDialogue((prev) => prev + fullText.charAt(i));
+      setDialogue((prev) => prev + initialText.charAt(i));
       i++;
-      if (i === fullText.length) clearInterval(timer);
+      if (i === initialText.length) clearInterval(timer);
     }, 40);
+    
     return () => clearInterval(timer);
-  }, [selectedItem, activePopup]);
+  }, [selectedItem, activePopup, hasLookedAtItems]);
 
   const handleItemClick = (itemId) => {
     if (selectedItem === itemId) {
+      // User clicked the item again to close it
       setSelectedItem(null);
+      setHasLookedAtItems(true); // Flag that they have now looked at something
     } else {
+      // User opens an item
       setSelectedItem(itemId);
       setPanelMode('desc');
     }
@@ -79,14 +94,19 @@ export default function HousePage() {
   return (
     <div className="house-container">
       
+      {/* Conditionally render EJ's sprite based on whether the user has looked at items yet */}
       {!selectedItem && !activePopup && (
-        <img src="/assets/images/ej.png" className="merchant-character" alt="EJ" />
+        <img 
+          src={hasLookedAtItems ? "/assets/images/ej.png" : "/assets/images/ejexplaining.png"} 
+          className="merchant-character" 
+          alt="EJ" 
+        />
       )}
 
       <nav className="top-menu">
         <div className="menu-item" onClick={() => setActivePopup('quest')}>Quest</div>
         <div className="menu-item" onClick={() => setActivePopup('guide')}>Guide</div>
-        <div className="menu-item" onClick={() => setActivePopup('about')}>About</div>
+        <div className="menu-item" onClick={() => setActivePopup('about')}>About Us</div>
         <div className="menu-item" onClick={() => router.push('/')}>Exit</div>
       </nav>
 

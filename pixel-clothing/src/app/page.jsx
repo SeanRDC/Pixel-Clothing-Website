@@ -24,8 +24,20 @@ export default function Home() {
   const [isHidingButton, setIsHidingButton] = useState(false);
   const [bgIndex, setBgIndex] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
+  
+  // New state to prevent the "Start" button from flashing on the screen for a millisecond when returning
+  const [isInitialized, setIsInitialized] = useState(false); 
 
   useEffect(() => {
+    // 1. Check if the user is returning from the house!
+    if (sessionStorage.getItem('hasStarted') === 'true') {
+      setIsStarted(true);
+      setIsHidingButton(true);
+    }
+    
+    // Tell React it's safe to show the UI
+    setIsInitialized(true);
+
     backgrounds.forEach((bg) => {
       const img = new Image();
       img.src = `/assets/images/${bg}`;
@@ -42,6 +54,10 @@ export default function Home() {
 
   const handleStart = () => {
     setIsHidingButton(true);
+    
+    // 2. Save their progress so they don't have to click start again!
+    sessionStorage.setItem('hasStarted', 'true');
+    
     setTimeout(() => {
       setIsStarted(true);
     }, 400); 
@@ -68,7 +84,8 @@ export default function Home() {
         <img src="/assets/images/logo.png" alt="Retro Mc Logo" className="logo" />
       </div>
 
-      <main className="main-content">
+      {/* We wrap the main content in a visibility check so it doesn't glitch while checking storage */}
+      <main className="main-content" style={{ visibility: isInitialized ? 'visible' : 'hidden' }}>
         {!isStarted ? (
           <img 
             src="/assets/images/start.png" 
