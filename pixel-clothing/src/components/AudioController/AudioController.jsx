@@ -7,18 +7,25 @@ export default function AudioController({ isVisible }) {
   const audioRef = useRef(null);
 
   useEffect(() => {
-    if (isVisible && audioRef.current) {
-      audioRef.current.play().catch(() => {});
+    const savedMuteState = localStorage.getItem('musicMuted') === 'true';
+    setIsMuted(savedMuteState);
+
+    if (isVisible && audioRef.current && !savedMuteState) {
+      audioRef.current.play().catch(() => {}); 
     }
   }, [isVisible]);
 
   const toggleSound = () => {
-    if (isMuted) {
-      audioRef.current.play().catch(() => {});
-    } else {
+    const newMuteState = !isMuted;
+    setIsMuted(newMuteState);
+    
+    localStorage.setItem('musicMuted', newMuteState);
+
+    if (newMuteState) {
       audioRef.current.pause();
+    } else {
+      audioRef.current.play().catch(() => {});
     }
-    setIsMuted(!isMuted);
   };
 
   return (

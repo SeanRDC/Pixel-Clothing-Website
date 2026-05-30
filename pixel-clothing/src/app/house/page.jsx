@@ -78,7 +78,10 @@ export default function HousePage() {
 
   return (
     <div className="house-container">
-      <img src="/assets/images/ej.png" className="merchant-character" alt="EJ" />
+      
+      {!selectedItem && !activePopup && (
+        <img src="/assets/images/ej.png" className="merchant-character" alt="EJ" />
+      )}
 
       <nav className="top-menu">
         <div className="menu-item" onClick={() => setActivePopup('quest')}>Quest</div>

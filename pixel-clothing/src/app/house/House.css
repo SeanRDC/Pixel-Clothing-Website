@@ -63,12 +63,14 @@
 /* Dialogue Box */
 .dialogue-box {
   position: fixed;
-  top: 100px;
-  left: 63%;
+  top: 75px;
+  left: 68%;
   transform: translateX(-50%);
   width: 600px;
   z-index: 25;
-  animation: fadeIn 0.5s ease;
+  /* Updated to use the bouncy pop-up animation */
+  animation: popUpDialogue 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  transform-origin: bottom center;
 }
 
 .dialogue-bg { width: 90%; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); image-rendering: pixelated; }
@@ -170,3 +172,19 @@
 .checkout-btn { margin-top: 15px; font-size: 20px; padding: 10px 20px; background: #000; color: #fff; cursor: pointer; }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* New Bouncy Pop-Up Animation for Dialogue Box */
+@keyframes popUpDialogue {
+  0% { 
+    opacity: 0; 
+    transform: translateX(-50%) scale(0.6); 
+  }
+  60% { 
+    opacity: 1; 
+    transform: translateX(-50%) scale(1.05); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateX(-50%) scale(1); 
+  }
+}
