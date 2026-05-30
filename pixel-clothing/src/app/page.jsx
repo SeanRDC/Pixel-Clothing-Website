@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import AudioController from '../components/AudioController/AudioController';
 import QuestPopup from '../components/Popups/QuestPopup';
@@ -7,11 +7,38 @@ import AboutPopup from '../components/Popups/AboutPopup';
 import Guide from '../components/Guide/Guide';
 import './StartPage.css';
 
+const backgrounds = [
+  'bg.png',
+  'bgimg2.png',
+  'bgimg3.png',
+  'bgimg4.png',
+  'bgimg5.png',
+  'bgimg6.png',
+  'bgimg7.png'
+];
+
 export default function Home() {
   const router = useRouter();
   const [isStarted, setIsStarted] = useState(false);
   const [activePopup, setActivePopup] = useState(null);
   const [isHidingButton, setIsHidingButton] = useState(false);
+  const [bgIndex, setBgIndex] = useState(0);
+  const [isNavigating, setIsNavigating] = useState(false);
+
+  useEffect(() => {
+    backgrounds.forEach((bg) => {
+      const img = new Image();
+      img.src = `/assets/images/${bg}`;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (isNavigating) return;
+    const interval = setInterval(() => {
+      setBgIndex((prev) => (prev + 1) % backgrounds.length);
+    }, 1500);
+    return () => clearInterval(interval);
+  }, [isNavigating]);
 
   const handleStart = () => {
     setIsHidingButton(true);
@@ -21,12 +48,16 @@ export default function Home() {
   };
 
   const navigateToHouse = () => {
+    setIsNavigating(true);
     router.push('/house');
   };
 
   return (
-    <div className="start-page-container">
-      <div className={`blur-overlay ${isStarted ? 'remove-blur' : ''}`}></div>
+    <div 
+      className="start-page-container"
+      style={{ backgroundImage: `url('/assets/images/${backgrounds[bgIndex]}')` }}
+    >
+      <div className={`blur-overlay ${isStarted && !activePopup ? 'remove-blur' : ''}`}></div>
 
       <div className="logo-container">
         <img src="/assets/images/logo.png" alt="Retro Mc Logo" className="logo" />
