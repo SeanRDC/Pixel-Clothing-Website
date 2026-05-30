@@ -7,28 +7,13 @@ import Guide from '../../components/Guide/Guide';
 import QuestPopup from '../../components/Popups/QuestPopup';
 import AboutPopup from '../../components/Popups/AboutPopup';
 
-const shopItems = {
-  iroha: {
-    id: 'iroha',
-    name: 'Iroha Oversized Navy Blue Tee',
-    price: 450,
-    desc: 'A soft navy blue oversized shirt featuring a monochrome Iroha print on the lower right.',
-    passive: '60% Huzz spawnrate boost when worn in urban zones.\n10% chance to appear as if wearing a good fragrance',
-    img: '/assets/images/Iroha.png'
-  },
-  wonhee: {
-    id: 'wonhee',
-    name: 'Wonhee Black AcidWash Tee',
-    price: 450,
-    desc: 'A clean oversized white tee inspired by Wonhee minimalist vibe. Soft cotton fabric with a casual silhouette.',
-    passive: '+15% charm boost during social interactions.\nSlightly increases confidence aura.',
-    img: '/assets/images/Wonhee.png'
-  }
-};
-
 export default function HousePage() {
   const router = useRouter();
   
+  // --- NEW: Database States ---
+  const [shopItems, setShopItems] = useState({});
+  const [isLoadingItems, setIsLoadingItems] = useState(true);
+
   const [selectedItem, setSelectedItem] = useState(null);
   const [panelMode, setPanelMode] = useState('desc'); 
   const [selectedSize, setSelectedSize] = useState('M');
@@ -36,7 +21,7 @@ export default function HousePage() {
   // Cart & Checkout States
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [checkoutStep, setCheckoutStep] = useState('cart'); // 'cart', 'details', 'processing', 'success'
+  const [checkoutStep, setCheckoutStep] = useState('cart'); 
   const [shippingInfo, setShippingInfo] = useState({ name: '', address: '', realm: 'Earth' });
 
   const [activePopup, setActivePopup] = useState(null);
@@ -44,7 +29,29 @@ export default function HousePage() {
   const [dialogue, setDialogue] = useState("");
 
   useEffect(() => {
-    if (selectedItem || activePopup || isCartOpen) return; 
+    const fetchItems = async () => {
+      try {
+        const res = await fetch('/api/items');
+        const data = await res.json();
+        
+        const itemsMap = data.reduce((acc, item) => {
+          acc[item.id] = item;
+          return acc;
+        }, {});
+        
+        setShopItems(itemsMap);
+        setIsLoadingItems(false);
+      } catch (error) {
+        console.error("Failed to load shop items:", error);
+        setIsLoadingItems(false);
+      }
+    };
+    
+    fetchItems();
+  }, []);
+
+  useEffect(() => {
+    if (selectedItem || activePopup || isCartOpen || isLoadingItems) return; 
 
     if (hasLookedAtItems) {
       setDialogue("EJ: Have you chosen your choice?");
@@ -62,7 +69,7 @@ export default function HousePage() {
     }, 40);
     
     return () => clearInterval(timer);
-  }, [selectedItem, activePopup, isCartOpen, hasLookedAtItems]);
+  }, [selectedItem, activePopup, isCartOpen, hasLookedAtItems, isLoadingItems]);
 
   const handleItemClick = (itemId) => {
     if (selectedItem === itemId) {
@@ -78,7 +85,7 @@ export default function HousePage() {
     const item = shopItems[selectedItem];
     setCartItems([...cartItems, { ...item, size: selectedSize }]);
     setIsCartOpen(true); 
-    setCheckoutStep('cart'); // Reset to cart view when adding new items
+    setCheckoutStep('cart'); 
   };
 
   const removeCartItem = (indexToRemove) => {
@@ -87,25 +94,31 @@ export default function HousePage() {
 
   const calculateTotal = () => cartItems.reduce((total, item) => total + item.price, 0);
 
-  // Simulated Async Checkout Process
   const handlePlaceOrder = (e) => {
     e.preventDefault();
     setCheckoutStep('processing');
     
-    // Simulate server request/payment gateway delay
     setTimeout(() => {
       setCheckoutStep('success');
-      setCartItems([]); // Empty the cart on success
+      setCartItems([]); 
     }, 2500);
   };
 
   const closeCart = () => {
     setIsCartOpen(false);
-    setTimeout(() => setCheckoutStep('cart'), 300); // Reset after slide animation finishes
+    setTimeout(() => setCheckoutStep('cart'), 300); 
   };
 
   const activeItemData = selectedItem ? shopItems[selectedItem] : null;
 
+  
+  if (isLoadingItems) {
+    return (
+      <div className="house-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <h1 style={{ color: '#f4c26f', fontFamily: "'Depixel', monospace" }}>Loading Inventory...</h1>
+      </div>
+    );
+  }
   return (
     <div className="house-container">
       
