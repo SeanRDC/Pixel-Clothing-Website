@@ -25,6 +25,8 @@
   transform: translateY(-50%);
   width: 410px;
   z-index: 10;
+  /* Added the left-to-right slide animation! */
+  animation: inventorySlideIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 .inventory-bg { width: 100%; display: block; }
@@ -199,6 +201,7 @@
   }
 }
 
+/* Original: Slides in from the Right */
 @keyframes panelSlideIn {
   0% { 
     opacity: 0; 
@@ -206,6 +209,20 @@
   }
   100% { 
     opacity: 1; 
+    transform: translateY(-50%) translateX(0); 
+  }
+}
+
+/* NEW: Slides in from the Left */
+@keyframes inventorySlideIn {
+  0% { 
+    opacity: 0; 
+    /* Starts at -100px to the left */
+    transform: translateY(-50%) translateX(-100px); 
+  }
+  100% { 
+    opacity: 1; 
+    /* Ends exactly where it should be */
     transform: translateY(-50%) translateX(0); 
   }
 }
