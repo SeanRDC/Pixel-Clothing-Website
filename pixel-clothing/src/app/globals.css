@@ -17,8 +17,8 @@ body {
   overflow: hidden;
   font-family: 'Depixel', monospace;
   background-color: #000; 
-  /* Default Custom Cursor */
-  cursor: url('/assets/images/mousecursor.png'), auto;
+  /* Hotspot set to top-left (0, 0) assuming your arrow tip is there */
+  cursor: url('/assets/images/mousecursor.png') 0 0, auto;
 }
 
 .remove-blur {
@@ -26,7 +26,9 @@ body {
   background: rgba(0, 0, 0, 0) !important;
 }
 
-/* Custom Click Cursor for all interactive elements */
+/* Custom Click Cursor:
+  Change "12 5" to the exact pixel coordinates of the finger's tip!
+*/
 button, 
 a, 
 p,
@@ -43,6 +45,7 @@ p,
 .panel-btn,
 .size-list li,
 .guide-faq-question,
-.cart-item-remove {
-  cursor: url('/assets/images/mouseclick.png'), pointer !important;
+.cart-item-remove,
+.sound-icon {
+  cursor: url('/assets/images/mouseclick.png') 12 5, pointer !important;
 }
