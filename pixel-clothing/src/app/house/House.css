@@ -142,7 +142,7 @@
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: clamp(15px, 8vw, 170px);
+  gap: clamp(15px, 10vw, 170px);
   justify-content: center;
   z-index: 20;
 }
