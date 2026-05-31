@@ -490,37 +490,36 @@
     display: none; 
   }
   
-  /* 1. The Logical Box: Shrunk by 50px on all sides (600x650 instead of 700x750) */
+  /* 1. Shrunk by 50px MORE on all sides (Now 500x550) */
   .keepers-inventory.open-modal {
     display: block; 
     position: fixed;
-    width: 600px;
-    height: 650px;
+    width: 500px;
+    height: 550px;
     
-    /* Perfect Dead-Center Math */
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
     
-    animation: popUpDialogueLocked 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    z-index: 100; /* Forces it above EVERYTHING else */
+    /* We changed the animation to the NEW one that won't break the centering! */
+    animation: popUpCentered 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    z-index: 100;
   }
 
-  /* 2. The Bleed: We let the original 700x750 image hang 50px outside our box */
+  /* 2. Increased the bleed to -100px to account for the extra 50px shrink */
   .keepers-inventory.open-modal .inventory-bg {
     width: 700px;
     height: 750px;
     position: absolute;
-    top: -50px;  /* Pulls the transparent top edge out of the box */
-    left: -50px; /* Pulls the transparent left edge out of the box */
+    top: -100px;  
+    left: -100px; 
     pointer-events: none; 
   }
 
-  /* 3. The Close Button now anchors perfectly to the top-right of the VISIBLE parchment */
+  /* 3. The Close Button now hugs the new, tighter 500px box */
   .close-inventory-btn {
     position: absolute;
     top: 0px;
-    right: 15px;
+    right: 0px;
     background: transparent;
     border: none;
     color: #ff4444;
@@ -532,7 +531,7 @@
   }
   .close-inventory-btn:hover { transform: scale(1.1); color: #ff6666; }
 
-  /* 4. Align the item slots inside the new smaller 600px width */
+  /* 4. Formatting items inside the tighter 500px boundary */
   .inventory-items {
     position: absolute;
     width: 100%;
@@ -544,16 +543,23 @@
 
   .keepers-inventory.open-modal .item-slot {
     margin-top: 0;
-    top: 200px; /* Adjust this slightly if the items don't sit perfectly in the drawn squares */
+    top: 150px; /* Shifted slightly up for the tighter box */
   }
   
-  /* Spaced evenly across the new 600px width */
-  .keepers-inventory.open-modal .slot-1 { left: 60px; }
-  .keepers-inventory.open-modal .slot-2 { left: 240px; }
-  .keepers-inventory.open-modal .slot-3 { left: 420px; }
+  /* Evenly spaced horizontally within 500px */
+  .keepers-inventory.open-modal .slot-1 { left: 35px; }
+  .keepers-inventory.open-modal .slot-2 { left: 190px; }
+  .keepers-inventory.open-modal .slot-3 { left: 345px; }
 
   .center-display-image {
     left: 50%;
   }
+}
+
+/* NEW: This animation keeps the translation intact while scaling! */
+@keyframes popUpCentered {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+  60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
