@@ -467,11 +467,11 @@
 .mobile-back-btn {
   display: none;
   position: fixed;
-  top: 195px; 
-  right: 19px;
-  width: 83px;
+  top: 181px; 
+  right: 23px;
+  width: 74px;
   cursor: pointer;
-  z-index: 20;
+  z-index: 99999;
   transition: transform 0.1s;
 }
 
