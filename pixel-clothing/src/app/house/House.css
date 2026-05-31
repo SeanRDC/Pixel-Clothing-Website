@@ -78,8 +78,7 @@
 .inventory-items { 
   width: 100%;
   position: absolute;
-  top: -250px;
-  right: 400px;
+  top: 0px;
 }
 
 .item-slot {
@@ -469,8 +468,8 @@
 
 .close-inventory-btn {
   position: absolute;
-  top: -40px;
-  right: 0;
+  top: -240px;
+  left: 770px;
   background: transparent;
   border: none;
   color: #ff4444;
@@ -493,19 +492,21 @@
   
   .keepers-inventory.open-modal {
     display: block; 
-    left: 50%;
-    top: 50%;
     transform: translate(-50%, -50%);
-    width: 800px;
     animation: popUpDialogueLocked 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
   }
+
+  .close-inventory-btn {
+  top: -250px;
+  right: 590;
+}
  
   .keepers-inventory.open-modal .inventory-bg {
     width: 700px;
     height: 750px;
     position: relative;
     bottom: 350px;
-    right: 350px;
+    left: 250px;
   }
   
   .keepers-inventory.open-modal .item-slot {
@@ -513,7 +514,12 @@
     top: 115px;
   }
   
-  .keepers-inventory.open-modal .slot-1 { left: 100px; }
+  .keepers-inventory.open-modal .slot-1 { left: 200px; }
   .keepers-inventory.open-modal .slot-2 { left: 340px; }
-  .keepers-inventory.open-modal .slot-3 { left: 580px; }
+  .keepers-inventory.open-modal .slot-3 { left: 480px; }
+
+  .inventory-items {
+    top: -240px;
+    left: 200px;
+  }
 }
