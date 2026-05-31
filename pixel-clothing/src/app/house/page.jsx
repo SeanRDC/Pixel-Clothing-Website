@@ -30,6 +30,8 @@ export default function HousePage() {
 
   // Inventory States
   const [isInventoryOpen, setIsInventoryOpen] = useState(false);
+  const [dockState, setDockState] = useState('none'); // Tracks: 'none', 'docked', or 'returning'
+  const [isExitingItem, setIsExitingItem] = useState(false);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -83,14 +85,22 @@ export default function HousePage() {
   }, [selectedItem, activePopup, isCartOpen, hasLookedAtItems, isLoadingItems]);
 
   const handleItemClick = (itemId) => {
-    if (selectedItem === itemId) {
+    setSelectedItem(itemId);
+    setPanelMode('desc');
+    setDockState('docked'); 
+    setIsExitingItem(false); 
+  };
+
+  const handlePullInventory = () => {
+    setIsExitingItem(true);    
+    setDockState('returning'); 
+
+    
+    setTimeout(() => {
       setSelectedItem(null);
-      setHasLookedAtItems(true); 
-    } else {
-      setSelectedItem(itemId);
-      setPanelMode('desc');
-      setIsInventoryOpen(false);
-    }
+      setDockState('none');
+      setIsExitingItem(false);
+    }, 500);
   };
 
   const handleAddToCart = () => {
@@ -151,20 +161,31 @@ export default function HousePage() {
       />
 
       {!activePopup && (
-        <div className={`keepers-inventory ${isInventoryOpen ? 'open-modal' : ''}`}>
-          {isInventoryOpen && (
+        <div className={`keepers-inventory ${isInventoryOpen ? 'open-modal' : ''} ${dockState === 'docked' ? 'docked' : ''} ${dockState === 'returning' ? 'returning' : ''}`}>
+          
+          {/* NEW: The Pull-Tab Button that appears when docked */}
+          {dockState === 'docked' && (
+            <button className="pull-inventory-btn" onClick={handlePullInventory}>
+              PULL
+            </button>
+          )}
+
+          {isInventoryOpen && dockState !== 'docked' && (
             <button className="close-inventory-btn" onClick={() => setIsInventoryOpen(false)}>[X]</button>
           )}
           <img src="/assets/images/inventory.png" className="inventory-bg" alt="Inventory" />
           <div className="inventory-items">
+            {/* Slot 1 */}
             <div className="item-slot slot-1" onClick={() => handleItemClick('iroha')}>
               <img src="/assets/images/irohapixel.png" alt="Iroha" />
               {selectedItem === 'iroha' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
             </div>
+            {/* Slot 2 */}
             <div className="item-slot slot-2" onClick={() => handleItemClick('wonhee')}>
               <img src="/assets/images/wonheepixel.png" alt="Wonhee" />
               {selectedItem === 'wonhee' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
             </div>
+            {/* Slot 3 */}
             <div className="item-slot slot-3">
               <img src="/assets/images/question.png" alt="Mystery" />
             </div>
@@ -188,11 +209,15 @@ export default function HousePage() {
       )}
 
       {selectedItem && !activePopup && activeItemData && (
-        <img src={activeItemData?.img} className="center-display-image" alt="Selected Item" />
+        <img 
+          src={activeItemData?.img} 
+          className={`center-display-image ${isExitingItem ? 'exiting' : ''}`} 
+          alt="Selected Item" 
+        />
       )}
 
       {selectedItem && !activePopup && activeItemData && (
-        <div className="item-panel">
+        <div className={`item-panel ${isExitingItem ? 'exiting' : ''}`}>
           <img src="/assets/images/descriptionbox.png" className="panel-bg" alt="Panel Box" />
           <h2 className="item-title">{activeItemData.name}</h2>
           
