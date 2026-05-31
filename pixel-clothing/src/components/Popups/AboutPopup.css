@@ -20,8 +20,9 @@
 }
 
 .popup-paper {
-  position: relative; width: 90vw; max-width: 550px; 
-  height: var(--target-height); /* Uses the variable specific to each scroll */
+  position: relative; 
+  width: 550px; 
+  height: var(--target-height); 
   background-position: center; background-size: 100% 100%; background-repeat: no-repeat;
   display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
   animation: unrollScroll 0.4s ease-out forwards;
@@ -72,15 +73,15 @@
 .popup-return-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #000; }
 
 .about-layout { 
-  --target-height: 88vh; 
+  --target-height: 750px; 
   background-image: url('/assets/images/aboutusscroll.png'); 
 }
 .quest-layout { 
-  --target-height: 88vh; 
+  --target-height: 750px; 
   background-image: url('/assets/images/Quest.png'); 
 }
 .guide-layout { 
-  --target-height: 100vh; 
+  --target-height: 850px; 
   background-image: url('/assets/images/Guide.png'); 
 }
 

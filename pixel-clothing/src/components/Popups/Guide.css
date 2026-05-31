@@ -1,7 +1,7 @@
 /* =======================================
    GUIDE-SPECIFIC STYLES
    ======================================= */
-.guide-layout { background-image: url('/assets/images/Guide.png'); height: 100vh; }
+.guide-layout { background-image: url('/assets/images/Guide.png'); }
 .guide-content-spacing { margin-top: 277px; height: calc(100% - 240px); }
 
 .guide-speech-box { width: 95%; background: rgba(255, 255, 255, 0.4); border: 2px solid #8b6b2a; border-radius: 5px; padding: 12px 15px; margin-bottom: 15px; min-height: 90px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
