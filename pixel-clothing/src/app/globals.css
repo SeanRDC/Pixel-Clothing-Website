@@ -46,6 +46,8 @@ p,
 .size-list li,
 .guide-faq-question,
 .cart-item-remove,
-.sound-icon {
+.sound-icon,
+.mobile-inventory-icon,
+.mobile-back-btn {
   cursor: url('/assets/images/mouseclick.png') 12 5, pointer !important;
 }
