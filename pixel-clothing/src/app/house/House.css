@@ -68,7 +68,6 @@
   transform: translateY(-50%);
   width: 410px;
   z-index: 10;
-  /* Added the left-to-right slide animation! */
   animation: inventorySlideIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
@@ -103,17 +102,6 @@
   width: 50px;
   z-index: 10;
   pointer-events: none;
-}
-
-.dialogue-box {
-  position: fixed;
-  top: 75px;
-  left: 68%;
-  transform: translateX(-50%);
-  width: 600px;
-  z-index: 25;
-  animation: popUpDialogue 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  transform-origin: bottom center;
 }
 
 .dialogue-bg { width: 90%; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); image-rendering: pixelated; }
@@ -197,22 +185,9 @@
   position: fixed;
   top: 0;
   right: -700px;
-  width: 700px;
+  width: 600px; 
   height: 100vh;
-  background: #f5deb3;
-  border-left: 6px solid #000;
-  padding: 40px 50px;
-  z-index: 40;
-  transition: right 0.3s ease;
-}
-
-.cart-sidebar {
-  position: fixed;
-  top: 0;
-  right: -700px;
-  width: 600px; /* Slimmed down slightly for better proportions */
-  height: 100vh;
-  background: #2c1e16; /* Dark wood/leather background */
+  background: #2c1e16; 
   border-left: 8px solid #8b6b2a;
   box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
   padding: 0;
@@ -252,7 +227,6 @@
 }
 .cart-close-btn:hover { transform: scale(1.1); color: #ff6666; }
 
-
 .cart-content-scroll {
   flex: 1;
   overflow-y: auto;
@@ -268,7 +242,6 @@
   margin-top: 50px;
   line-height: 2;
 }
-
 
 .cart-item-retro {
   background: #3a230d;
@@ -315,7 +288,6 @@
 .cart-item-remove:hover { background: #8a1a1a; transform: translateY(-2px); }
 .cart-item-remove:active { transform: translateY(2px); }
 
-
 .retro-checkout-form { display: flex; flex-direction: column; }
 .retro-label { color: #d8b45d; font-size: 18px; margin-bottom: 10px; text-shadow: 1px 1px 0 #000; }
 .retro-input {
@@ -343,7 +315,6 @@
 }
 .summary-box .highlight { color: #00ff00; font-size: 24px; margin-left: 10px; }
 
-
 .processing-state, .success-state {
   display: flex;
   flex-direction: column;
@@ -367,7 +338,6 @@
   animation: retroSpin 1s steps(4) infinite;
 }
 @keyframes retroSpin { 100% { transform: rotate(360deg); } }
-
 
 .cart-footer {
   background: #1a0f05;
@@ -419,7 +389,6 @@
 
 .w-full { width: 100%; }
 
-
 @media (max-width: 768px) {
   .cart-sidebar { width: 100vw; right: -100vw; }
   .cart-header { padding: 20px; }
@@ -431,12 +400,6 @@
 }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-@keyframes popUpDialogue {
-  0% { opacity: 0; transform: translateX(-50%) scale(0.6); }
-  60% { opacity: 1; transform: translateX(-50%) scale(1.05); }
-  100% { opacity: 1; transform: translateX(-50%) scale(1); }
-}
 
 @keyframes shirtReveal {
   0% { 
@@ -462,7 +425,6 @@
   }
 }
 
-
 @keyframes panelSlideIn {
   0% { 
     opacity: 0; 
@@ -473,7 +435,6 @@
     transform: translateY(-50%) translateX(0); 
   }
 }
-
 
 @keyframes inventorySlideIn {
   0% { 
