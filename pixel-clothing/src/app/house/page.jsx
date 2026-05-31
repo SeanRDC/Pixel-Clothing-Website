@@ -175,6 +175,19 @@ export default function HousePage() {
         src="/assets/images/inventoryicon.png?v=2" 
         className={`mobile-inventory-icon ${isCartOpen ? 'shifted' : ''}`} 
         onClick={() => {
+          if (isCartOpen) {
+            setIsCartOpen(false);
+            setTimeout(() => {
+              if (dockState === 'docked') {
+                handlePullInventory();
+              } else {
+                setIsInventoryOpen(true);
+                setDockState('none');
+              }
+            }, 400);
+            return;
+          }
+
           if (dockState === 'docked') {
             handlePullInventory();
           } else {
