@@ -511,6 +511,10 @@
 }
 
 @media (max-width: 1570px) {
+  .top-menu { 
+    gap: 100px; 
+  }
+
   .mobile-inventory-icon {
     display: block; 
   }
