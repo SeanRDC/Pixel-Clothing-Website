@@ -142,7 +142,8 @@
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 170px;
+  gap: clamp(15px, 8vw, 170px);
+  justify-content: center;
   z-index: 20;
 }
 .menu-item { font-size: 29px; color: #fff; cursor: pointer; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
@@ -511,9 +512,6 @@
 }
 
 @media (max-width: 1570px) {
-  .top-menu { 
-    gap: 100px; 
-  }
 
   .mobile-inventory-icon {
     display: block; 
