@@ -30,8 +30,9 @@ export default function HousePage() {
 
   // Inventory States
   const [isInventoryOpen, setIsInventoryOpen] = useState(false);
-  const [dockState, setDockState] = useState('none'); // Tracks: 'none', 'docked', or 'returning'
+  const [dockState, setDockState] = useState('none');
   const [isExitingItem, setIsExitingItem] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -64,7 +65,7 @@ export default function HousePage() {
   }, []);
 
   useEffect(() => {
-    if (selectedItem || activePopup || isCartOpen || isLoadingItems) return; 
+    if (selectedItem || activePopup || isCartOpen || isLoadingItems || isTransitioning) return; 
 
     if (hasLookedAtItems) {
       setDialogue("EJ: Have you chosen your choice?");
@@ -167,7 +168,15 @@ export default function HousePage() {
       <img 
         src="/assets/images/kart.png" 
         className={`shopping-cart-icon ${isCartOpen ? 'shifted' : ''}`} 
-        onClick={() => setIsCartOpen(!isCartOpen)} 
+        onClick={() => {
+          if (isInventoryOpen || dockState !== 'none') {
+            setIsInventoryOpen(false);
+            setDockState('none');
+            setIsCartOpen(true);       
+          } else {
+            setIsCartOpen(!isCartOpen);
+          }
+        }} 
         alt="Cart" 
       />
       
@@ -177,14 +186,16 @@ export default function HousePage() {
         onClick={() => {
           if (isCartOpen) {
             setIsCartOpen(false);
+            setIsTransitioning(true);
             setTimeout(() => {
+              setIsTransitioning(false); 
               if (dockState === 'docked') {
                 handlePullInventory();
               } else {
                 setIsInventoryOpen(true);
                 setDockState('none');
               }
-            }, 400);
+            }, 400); 
             return;
           }
 
@@ -247,7 +258,7 @@ export default function HousePage() {
         </div>
       )}
 
-      {!selectedItem && !activePopup && !isInventoryOpen && (
+      {!selectedItem && !activePopup && !isInventoryOpen && !isTransitioning && (
         <div className="merchant-station">
           <div className="dialogue-box">
             <img src="/assets/images/speechbox.png" className="dialogue-bg" alt="Speech Box" />
