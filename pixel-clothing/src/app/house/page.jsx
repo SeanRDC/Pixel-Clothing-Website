@@ -28,6 +28,9 @@ export default function HousePage() {
   const [hasLookedAtItems, setHasLookedAtItems] = useState(false);
   const [dialogue, setDialogue] = useState("");
 
+  // Inventory States
+  const [isInventoryOpen, setIsInventoryOpen] = useState(false);
+
   useEffect(() => {
     const fetchItems = async () => {
       try {
@@ -86,6 +89,7 @@ export default function HousePage() {
     } else {
       setSelectedItem(itemId);
       setPanelMode('desc');
+      setIsInventoryOpen(false);
     }
   };
 
@@ -133,14 +137,24 @@ export default function HousePage() {
       <nav className="top-menu">
         <div className="menu-item" onClick={() => setActivePopup('quest')}>Quest</div>
         <div className="menu-item" onClick={() => setActivePopup('guide')}>Guide</div>
-        <div className="menu-item" onClick={() => setActivePopup('about')}>About</div>
+        <div className="menu-item" onClick={() => setActivePopup('about')}>About Us</div>
         <div className="menu-item" onClick={() => router.push('/')}>Exit</div>
       </nav>
 
       <img src="/assets/images/kart.png" className="shopping-cart-icon" onClick={() => setIsCartOpen(true)} alt="Cart" />
+      
+      <img 
+        src="/assets/images/inventoryicon.png" 
+        className="mobile-inventory-icon" 
+        onClick={() => setIsInventoryOpen(!isInventoryOpen)} 
+        alt="Open Inventory" 
+      />
 
       {!activePopup && (
-        <div className="keepers-inventory">
+        <div className={`keepers-inventory ${isInventoryOpen ? 'open-modal' : ''}`}>
+          {isInventoryOpen && (
+            <button className="close-inventory-btn" onClick={() => setIsInventoryOpen(false)}>[X]</button>
+          )}
           <img src="/assets/images/inventory.png" className="inventory-bg" alt="Inventory" />
           <div className="inventory-items">
             <div className="item-slot slot-1" onClick={() => handleItemClick('iroha')}>
@@ -158,7 +172,7 @@ export default function HousePage() {
         </div>
       )}
 
-      {!selectedItem && !activePopup && (
+      {!selectedItem && !activePopup && !isInventoryOpen && (
         <div className="merchant-station">
           <div className="dialogue-box">
             <img src="/assets/images/speechbox.png" className="dialogue-bg" alt="Speech Box" />
