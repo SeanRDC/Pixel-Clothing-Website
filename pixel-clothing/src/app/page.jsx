@@ -84,7 +84,6 @@ export default function Home() {
         <img src="/assets/images/logo.png" alt="Retro Mc Logo" className="logo" />
       </div>
 
-      {/* We wrap the main content in a visibility check so it doesn't glitch while checking storage */}
       <main className="main-content" style={{ visibility: isInitialized ? 'visible' : 'hidden' }}>
         {!isStarted ? (
           <img 
