@@ -95,10 +95,9 @@ export default function HousePage() {
     setIsExitingItem(true);    
     setDockState('returning'); 
 
-    
     setTimeout(() => {
       setSelectedItem(null);
-      setDockState('none');
+      setDockState('settled');
       setIsExitingItem(false);
     }, 500);
   };
@@ -156,23 +155,29 @@ export default function HousePage() {
       <img 
         src="/assets/images/inventoryicon.png" 
         className="mobile-inventory-icon" 
-        onClick={() => setIsInventoryOpen(!isInventoryOpen)} 
+        onClick={() => {
+          setIsInventoryOpen(!isInventoryOpen);
+          if (!isInventoryOpen) setDockState('none'); 
+        }} 
         alt="Open Inventory" 
       />
 
       {!activePopup && (
-        <div className={`keepers-inventory ${isInventoryOpen ? 'open-modal' : ''} ${dockState === 'docked' ? 'docked' : ''} ${dockState === 'returning' ? 'returning' : ''}`}>
+        <div className={`keepers-inventory ${isInventoryOpen ? 'open-modal' : ''} ${dockState === 'docked' ? 'docked' : ''} ${dockState === 'returning' ? 'returning' : ''} ${dockState === 'settled' ? 'settled' : ''}`}>
           
           {dockState === 'docked' && (
             <button className="pull-inventory-btn" onClick={handlePullInventory}>
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f4c26f" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f4e1c1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
             </button>
           )}
 
           {isInventoryOpen && dockState !== 'docked' && (
-            <button className="close-inventory-btn" onClick={() => setIsInventoryOpen(false)}>[X]</button>
+            <button className="close-inventory-btn" onClick={() => {
+              setIsInventoryOpen(false);
+              setTimeout(() => setDockState('none'), 300); // Cleans up after hiding
+            }}>[X]</button>
           )}
           <img src="/assets/images/inventory.png" className="inventory-bg" alt="Inventory" />
           <div className="inventory-items">

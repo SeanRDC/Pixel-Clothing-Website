@@ -572,6 +572,12 @@
     100% { left: 50%; transform: translate(-50%, -50%) scale(1); }
   }
 
+  .keepers-inventory.open-modal.settled {
+    animation: none;
+    left: 50%; 
+    transform: translate(-50%, -50%) scale(1);
+  }
+
   .keepers-inventory.open-modal .item-slot {
     transition: transform 0.2s ease, top 0.5s cubic-bezier(0.25, 1, 0.5, 1), left 0.5s cubic-bezier(0.25, 1, 0.5, 1);
   }
@@ -593,30 +599,31 @@
   .pull-inventory-btn {
     position: absolute;
     top: 50%;
-    right: -45px;
+    right: -72px; 
     transform: translateY(-50%);
-    background: #1a0f05;
-    border: 3px solid #8b6b2a;
-    border-left: none;
+    background: #8c5a2b;
+    border: 3px solid #3d2314;
+    border-left: none; 
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 15px 5px;
     cursor: pointer;
     z-index: 150;
-    border-radius: 0 8px 8px 0;
+    border-radius: 0 8px 8px 0; 
     box-shadow: 4px 2px 0 rgba(0,0,0,0.8);
     transition: background 0.2s;
   }
-
+  
   .pull-inventory-btn:hover { 
-    background: #3a230d; 
+    background: #6b421c;
   }
-
+  
   .pull-inventory-btn svg { 
+    stroke: #f4e1c1;
     transition: transform 0.2s; 
   }
-
+  
   .pull-inventory-btn:hover svg { 
     transform: scale(1.2); 
   }
