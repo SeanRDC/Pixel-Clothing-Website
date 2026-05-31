@@ -529,3 +529,9 @@
 
 }
 
+@media (max-width: 1200px) {
+  .top-menu {
+    gap: 140px;
+  }
+}
+

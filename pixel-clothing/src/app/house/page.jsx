@@ -137,7 +137,7 @@ export default function HousePage() {
       <nav className="top-menu">
         <div className="menu-item" onClick={() => setActivePopup('quest')}>Quest</div>
         <div className="menu-item" onClick={() => setActivePopup('guide')}>Guide</div>
-        <div className="menu-item" onClick={() => setActivePopup('about')}>About Us</div>
+        <div className="menu-item" onClick={() => setActivePopup('about')}>About</div>
         <div className="menu-item" onClick={() => router.push('/')}>Exit</div>
       </nav>
 
