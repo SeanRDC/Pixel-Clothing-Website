@@ -123,7 +123,7 @@ export default function HousePage() {
   if (isLoadingItems) {
     return (
       <div className="house-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <h1 style={{ color: '#f4c26f', fontFamily: "'Depixel', monospace" }}>Loading Inventory...</h1>
+        <h1 className="loading-text" style={{ color: '#f4c26f', fontFamily: "'Depixel', monospace" }}>Loading Inventory</h1>
       </div>
     );
   }
