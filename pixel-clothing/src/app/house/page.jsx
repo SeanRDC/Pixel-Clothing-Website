@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import './House.css';
 import AudioController from '../../components/AudioController/AudioController';
-import Guide from '../../components/Guide/Guide';
+import Guide from '../../components/Popups/Guide';
 import QuestPopup from '../../components/Popups/QuestPopup';
 import AboutPopup from '../../components/Popups/AboutPopup';
 

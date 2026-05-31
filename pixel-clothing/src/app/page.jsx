@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import AudioController from '../components/AudioController/AudioController';
 import QuestPopup from '../components/Popups/QuestPopup';
 import AboutPopup from '../components/Popups/AboutPopup';
-import Guide from '../components/Guide/Guide';
+import Guide from '../components/Popups/Guide';
 import './StartPage.css';
 
 const backgrounds = [
