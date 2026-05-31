@@ -464,6 +464,19 @@
 }
 .mobile-inventory-icon:hover { transform: scale(1.1); }
 
+.mobile-back-btn {
+  display: none;
+  position: fixed;
+  top: 195px; 
+  right: 19px;
+  width: 83px;
+  cursor: pointer;
+  z-index: 20;
+  transition: transform 0.1s;
+}
+
+.mobile-back-btn:hover { transform: scale(1.1); }
+
 .close-inventory-btn {
   position: absolute;
   top: 15px;
@@ -486,6 +499,10 @@
 @media (max-width: 1570px) {
   .mobile-inventory-icon {
     display: block; 
+  }
+
+  .mobile-back-btn {
+    display: block;
   }
   
   .keepers-inventory {

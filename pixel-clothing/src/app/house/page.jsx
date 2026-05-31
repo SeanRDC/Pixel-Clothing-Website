@@ -167,13 +167,29 @@ export default function HousePage() {
       <img src="/assets/images/kart.png" className="shopping-cart-icon" onClick={() => setIsCartOpen(true)} alt="Cart" />
       
       <img 
-        src="/assets/images/inventoryicon.png" 
+        src="/assets/images/inventoryicon.png?v=2" 
         className="mobile-inventory-icon" 
         onClick={() => {
-          setIsInventoryOpen(!isInventoryOpen);
-          if (!isInventoryOpen) setDockState('none'); 
+          if (dockState === 'docked') {
+            handlePullInventory();
+          } else {
+            setIsInventoryOpen(!isInventoryOpen);
+            if (!isInventoryOpen) setDockState('none');
+          }
         }} 
         alt="Open Inventory" 
+      />
+
+      <img 
+        src="/assets/images/backbtn.png" 
+        className="mobile-back-btn"
+        onClick={() => {
+          setSelectedItem(null);      
+          setIsInventoryOpen(false);   
+          setDockState('none');       
+          setHasLookedAtItems(true);  
+        }}
+        alt="Back"
       />
 
       {!activePopup && (
