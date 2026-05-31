@@ -550,76 +550,85 @@
   }
 
   .keepers-inventory.open-modal.docked {
-    animation: dockRight 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation: dockLeft 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   }
-  @keyframes dockRight {
+
+  @keyframes dockLeft {
     0% { left: 50%; transform: translate(-50%, -50%) scale(1); }
-    100% { left: 100%; transform: translate(-30%, -50%) scale(1); } 
+    100% { left: 0%; transform: translate(-70%, -50%) scale(1); } 
   }
 
   .keepers-inventory.open-modal.returning {
     animation: returnCenter 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   }
+
   @keyframes returnCenter {
-    0% { left: 100%; transform: translate(-30%, -50%) scale(1); }
+    0% { left: 0%; transform: translate(-70%, -50%) scale(1); }
     100% { left: 50%; transform: translate(-50%, -50%) scale(1); }
   }
 
-  .keepers-inventory.open-modal.docked .inventory-items,
-  .keepers-inventory.open-modal.returning .inventory-items {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding-left: 15px;
+  .keepers-inventory.open-modal .item-slot {
+    transition: transform 0.2s ease, top 0.5s cubic-bezier(0.25, 1, 0.5, 1), left 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .keepers-inventory.open-modal.docked .slot-1 { left: 365px; top: 40px; }
+  .keepers-inventory.open-modal.docked .slot-2 { left: 365px; top: 180px; }
+  .keepers-inventory.open-modal.docked .slot-3 { left: 365px; top: 320px; }
+
+  .inventory-items {
     overflow-y: auto;
-    height: 400px;
-    top: 60px;
+    overflow-x: hidden;
+    scrollbar-width: none;
   }
 
-  .keepers-inventory.open-modal.docked .inventory-items::-webkit-scrollbar,
-  .keepers-inventory.open-modal.returning .inventory-items::-webkit-scrollbar {
-    display: none;
-  }
-
-  .keepers-inventory.open-modal.docked .item-slot,
-  .keepers-inventory.open-modal.returning .item-slot {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    margin-bottom: 25px;
+  .inventory-items::-webkit-scrollbar { 
+    display: none; 
   }
 
   .pull-inventory-btn {
     position: absolute;
     top: 50%;
-    left: -2px;
+    right: -45px;
     transform: translateY(-50%);
     background: #1a0f05;
     border: 3px solid #8b6b2a;
     border-left: none;
-    color: #f4c26f;
-    font-size: 16px;
-    padding: 25px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 5px;
     cursor: pointer;
     z-index: 150;
-    font-family: 'Depixel', monospace;
-    writing-mode: vertical-rl; 
-    text-orientation: upright;
-    box-shadow: 2px 2px 0 rgba(0,0,0,0.8);
+    border-radius: 0 8px 8px 0;
+    box-shadow: 4px 2px 0 rgba(0,0,0,0.8);
+    transition: background 0.2s;
   }
-  .pull-inventory-btn:hover { background: #3a230d; color: #fff; }
+
+  .pull-inventory-btn:hover { 
+    background: #3a230d; 
+  }
+
+  .pull-inventory-btn svg { 
+    transition: transform 0.2s; 
+  }
+
+  .pull-inventory-btn:hover svg { 
+    transform: scale(1.2); 
+  }
 
   .item-panel.exiting {
     animation: panelSlideOut 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   }
+
   @keyframes panelSlideOut {
     0% { opacity: 1; transform: translateY(-50%) translateX(0); }
-    100% { opacity: 0; transform: translateY(-50%) translateX(-150px); }
+    100% { opacity: 0; transform: translateY(-50%) translateX(150px); }
   }
 
   .center-display-image.exiting {
     animation: shirtHide 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
   }
+
   @keyframes shirtHide {
     0% { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8)); }
     100% { opacity: 0; transform: translate(-70%, -50%) scale(0.5); filter: drop-shadow(0 0 0px rgba(255, 215, 0, 0)); }

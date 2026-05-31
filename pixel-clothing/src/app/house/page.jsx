@@ -163,10 +163,11 @@ export default function HousePage() {
       {!activePopup && (
         <div className={`keepers-inventory ${isInventoryOpen ? 'open-modal' : ''} ${dockState === 'docked' ? 'docked' : ''} ${dockState === 'returning' ? 'returning' : ''}`}>
           
-          {/* NEW: The Pull-Tab Button that appears when docked */}
           {dockState === 'docked' && (
             <button className="pull-inventory-btn" onClick={handlePullInventory}>
-              PULL
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f4c26f" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
             </button>
           )}
 
