@@ -25,13 +25,24 @@
   position: relative;
 }
 
+.merchant-station {
+  position: absolute;
+  right: 2vw;
+  top: 75px;
+  width: 700px;
+  height: 800px;
+  pointer-events: none; 
+  z-index: 5;
+}
+
 .merchant-character {
   position: absolute;
-  right: 10px;
-  top: 200px;
+  top: 125px;
+  right: 0;
   width: 700px;
   object-fit: contain;
   image-rendering: pixelated;
+  pointer-events: auto; 
 }
 
 .keepers-inventory {

@@ -129,14 +129,6 @@ export default function HousePage() {
   }
   return (
     <div className="house-container">
-      
-      {!selectedItem && !activePopup && (
-        <img 
-          src={hasLookedAtItems ? "/assets/images/ej.png" : "/assets/images/ejexplaining.png"} 
-          className="merchant-character" 
-          alt="EJ" 
-        />
-      )}
 
       <nav className="top-menu">
         <div className="menu-item" onClick={() => setActivePopup('quest')}>Quest</div>
@@ -167,9 +159,17 @@ export default function HousePage() {
       )}
 
       {!selectedItem && !activePopup && (
-        <div className="dialogue-box">
-          <img src="/assets/images/speechbox.png" className="dialogue-bg" alt="Speech Box" />
-          <p className="dialogue-text">{dialogue}</p>
+        <div className="merchant-station">
+          <div className="dialogue-box">
+            <img src="/assets/images/speechbox.png" className="dialogue-bg" alt="Speech Box" />
+            <p className="dialogue-text">{dialogue}</p>
+          </div>
+          
+          <img 
+            src={hasLookedAtItems ? "/assets/images/ej.png" : "/assets/images/ejexplaining.png"} 
+            className="merchant-character" 
+            alt="EJ" 
+          />
         </div>
       )}
 
