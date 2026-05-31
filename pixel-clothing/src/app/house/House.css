@@ -536,6 +536,11 @@
     z-index: 101;
   }
 
+  .keepers-inventory.open-modal.docked .inventory-items {
+    top: 15%;
+    left: -3%;
+  }
+
   .keepers-inventory.open-modal .item-slot {
     margin-top: 0;
     top: 150px; 
@@ -546,7 +551,7 @@
   .keepers-inventory.open-modal .slot-3 { left: 345px; }
 
   .center-display-image {
-    left: 30%;
+    left: 36%;
   }
 
   .keepers-inventory.open-modal.docked {
