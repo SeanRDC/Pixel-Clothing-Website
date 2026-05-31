@@ -164,11 +164,16 @@ export default function HousePage() {
         <div className="menu-item" onClick={() => router.push('/')}>Exit</div>
       </nav>
 
-      <img src="/assets/images/kart.png" className="shopping-cart-icon" onClick={() => setIsCartOpen(true)} alt="Cart" />
+      <img 
+        src="/assets/images/kart.png" 
+        className={`shopping-cart-icon ${isCartOpen ? 'shifted' : ''}`} 
+        onClick={() => setIsCartOpen(!isCartOpen)} 
+        alt="Cart" 
+      />
       
       <img 
         src="/assets/images/inventoryicon.png?v=2" 
-        className="mobile-inventory-icon" 
+        className={`mobile-inventory-icon ${isCartOpen ? 'shifted' : ''}`} 
         onClick={() => {
           if (dockState === 'docked') {
             handlePullInventory();
@@ -182,7 +187,7 @@ export default function HousePage() {
 
       <img 
         src="/assets/images/backbtn.png" 
-        className="mobile-back-btn"
+        className={`mobile-back-btn ${isCartOpen ? 'shifted' : ''}`}
         onClick={() => {
           setSelectedItem(null);      
           setIsInventoryOpen(false);   
