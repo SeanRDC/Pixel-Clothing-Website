@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import './AboutPopup.css';
 import './Guide.css';
 
 const faqData = [
@@ -31,22 +32,17 @@ export default function Guide({ onClose }) {
 
   const triggerClose = () => {
     setIsClosing(true);
-    setTimeout(() => {
-      onClose();
-    }, 700); 
+    setTimeout(() => onClose(), 700); 
   };
 
   const handleOverlayClick = (e) => {
-    if (e.target.classList.contains('guide-overlay')) {
-      triggerClose();
-    }
+    if (e.target.classList.contains('popup-overlay')) triggerClose();
   };
 
   return (
-    <div className={`guide-overlay ${isClosing ? 'closing' : ''}`} onClick={handleOverlayClick}>
-      
-      <div className="guide-paper">
-        <div className="guide-content">
+    <div className={`popup-overlay ${isClosing ? 'closing' : ''}`} onClick={handleOverlayClick}>
+      <div className="popup-paper guide-layout">
+        <div className="popup-content guide-content-spacing">
 
           <div className="guide-speech-box">
             <div className="guide-speech-text">

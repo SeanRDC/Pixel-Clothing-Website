@@ -1,34 +1,24 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import './AboutPopup.css';
 import './QuestPopup.css';
 
 export default function QuestPopup({ onClose }) {
-  const [quests, setQuests] = useState({
-    tiktok: false,
-    ig: false,
-    discord: false,
-    linkedin: false
-  });
+  const [quests, setQuests] = useState({ tiktok: false, ig: false, discord: false, linkedin: false });
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
     const savedQuests = localStorage.getItem('dailyQuests');
-    if (savedQuests) {
-      setQuests(JSON.parse(savedQuests));
-    }
+    if (savedQuests) setQuests(JSON.parse(savedQuests));
   }, []);
 
   const triggerClose = () => {
     setIsClosing(true);
-    setTimeout(() => {
-      onClose();
-    }, 700); 
+    setTimeout(() => onClose(), 700); 
   };
 
   const handleOverlayClick = (e) => {
-    if (e.target.classList.contains('quest-popup')) {
-      triggerClose();
-    }
+    if (e.target.classList.contains('popup-overlay')) triggerClose();
   };
 
   const handleQuest = (platform, url) => {
@@ -39,9 +29,9 @@ export default function QuestPopup({ onClose }) {
   };
 
   return (
-    <div className={`quest-popup ${isClosing ? 'closing' : ''}`} onClick={handleOverlayClick}>
-      <div className="scroll-paper">
-        <div className="quest-content">
+    <div className={`popup-overlay ${isClosing ? 'closing' : ''}`} onClick={handleOverlayClick}>
+      <div className="popup-paper quest-layout">
+        <div className="popup-content quest-content-spacing">
           <div className="quest-list">
             <div className="quest-item" onClick={() => handleQuest('tiktok', 'https://tiktok.com')}>
               <span className={`quest-checkbox ${quests.tiktok ? 'completed' : ''}`}>
