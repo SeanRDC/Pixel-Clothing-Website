@@ -84,6 +84,20 @@ export default function HousePage() {
     return () => clearInterval(timer);
   }, [selectedItem, activePopup, isCartOpen, hasLookedAtItems, isLoadingItems]);
 
+  
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1570) {
+        setIsInventoryOpen(false);
+        setDockState('none');     
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleItemClick = (itemId) => {
     setSelectedItem(itemId);
     setPanelMode('desc');

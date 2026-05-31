@@ -51,8 +51,8 @@
   object-fit: contain;
   image-rendering: pixelated;
   pointer-events: auto;
-  bottom: 180px;
-  left: 50%;
+  bottom: -650px;
+  left: 60%;
   transform: translateX(-50%);
 }
 
