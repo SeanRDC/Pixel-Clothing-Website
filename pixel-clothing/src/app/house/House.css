@@ -599,10 +599,10 @@
   .pull-inventory-btn {
     position: absolute;
     top: 50%;
-    right: -72px; 
+    right: -73px; 
     transform: translateY(-50%);
-    background: #8c5a2b;
-    border: 3px solid #3d2314;
+    background: #86430b;
+    border: 3px solid #4e2302;
     border-left: none; 
     display: flex;
     align-items: center;
@@ -611,7 +611,6 @@
     cursor: pointer;
     z-index: 150;
     border-radius: 0 8px 8px 0; 
-    box-shadow: 4px 2px 0 rgba(0,0,0,0.8);
     transition: background 0.2s;
   }
   
