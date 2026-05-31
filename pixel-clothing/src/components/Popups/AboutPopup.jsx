@@ -16,7 +16,7 @@ export default function AboutPopup({ onClose }) {
 
   return (
     <div className={`popup-overlay ${isClosing ? 'closing' : ''}`} onClick={handleOverlayClick}>
-      {/* We apply the shared base classes, PLUS the specific layout classes! */}
+
       <div className="popup-paper about-layout">
         <div className="popup-content about-content-spacing">
           

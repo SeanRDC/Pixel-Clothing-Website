@@ -74,7 +74,7 @@ export default function QuestPopup({ onClose }) {
             </div>
           </div>
 
-          <button className="quest-return-btn" onClick={triggerClose}>
+          <button className="popup-return-btn" onClick={triggerClose}>
             &lt;-- Return
           </button>
         </div>

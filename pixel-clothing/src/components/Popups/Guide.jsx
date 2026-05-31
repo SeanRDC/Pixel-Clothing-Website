@@ -62,7 +62,7 @@ export default function Guide({ onClose }) {
             ))}
           </div>
 
-          <button className="guide-return-btn" onClick={triggerClose}>
+          <button className="popup-return-btn" onClick={triggerClose}>
             &lt;-- Return
           </button>
         </div>
