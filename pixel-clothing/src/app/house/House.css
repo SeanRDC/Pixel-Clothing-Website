@@ -736,34 +736,33 @@
     transform: translate(-50%, -50%) scale(0.5) !important; 
     pointer-events: none;
   }
-
   
   .item-panel {
     top: auto;
     bottom: 0;
     left: 50%;
     right: auto;
-    animation: none !important;
+    animation: none !important; 
     transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s;
   }
   
   .item-panel.panel-docked {
-    transform: translateX(-50%) translateY(100%);
+    transform: translateX(-50%) translateY(calc(100% - 130px));
   }
   
   .item-panel.panel-open {
-    transform: translateX(-50%) translateY(20px);
+    transform: translateX(-50%) translateY(-40px);
   }
   
   .item-panel.exiting {
-    transform: translateX(-50%) translateY(100%) !important;
+    transform: translateX(-50%) translateY(calc(100% - 130px)) !important;
     opacity: 0;
   }
 
   .pull-panel-btn {
     display: flex;
     position: absolute;
-    top: -42px; 
+    top: 38px; 
     left: 50%;
     transform: translateX(-50%);
     background: #86430b;
