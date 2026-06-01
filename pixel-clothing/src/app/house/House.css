@@ -511,6 +511,10 @@
   display: none;
 }
 
+.mobile-shirt-title { display: none; }
+.pull-panel-btn { display: none; }
+.desktop-only { display: block; }
+
 @media (max-width: 1570px) {
 
   .mobile-inventory-icon {
@@ -687,3 +691,83 @@
   100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
+@media (max-width: 1350px) {
+  .desktop-only { display: none; }
+  
+  .mobile-shirt-title {
+    display: block;
+    position: fixed;
+    top: 130px; 
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 38px;
+    color: #dd7d41;
+    z-index: 15;
+    text-shadow: 2px 2px 0px #000;
+    text-align: center;
+    width: 100%;
+    font-family: 'Depixel', monospace; 
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  }
+  
+  .mobile-shirt-title.hide-for-panel { 
+    opacity: 0; 
+    transform: translateX(-50%) translateY(-20px); 
+    pointer-events: none; 
+  }
+
+ 
+  .center-display-image {
+    left: 50%;
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out, filter 0.4s;
+  }
+  
+  .center-display-image.hide-for-panel {
+    opacity: 0 !important; 
+    transform: translate(-50%, -50%) scale(0.5) !important; 
+    pointer-events: none;
+  }
+
+  
+  .item-panel {
+    top: auto;
+    bottom: 0;
+    left: 50%;
+    right: auto;
+    animation: none !important;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s;
+  }
+  
+  .item-panel.panel-docked {
+    transform: translateX(-50%) translateY(100%);
+  }
+  
+  .item-panel.panel-open {
+    transform: translateX(-50%) translateY(20px);
+  }
+  
+  .item-panel.exiting {
+    transform: translateX(-50%) translateY(100%) !important;
+    opacity: 0;
+  }
+
+  .pull-panel-btn {
+    display: flex;
+    position: absolute;
+    top: -42px; 
+    left: 50%;
+    transform: translateX(-50%);
+    background: #86430b;
+    border: 3px solid #4e2302;
+    border-bottom: none;
+    padding: 5px 25px;
+    cursor: pointer;
+    z-index: 150;
+    border-radius: 8px 8px 0 0;
+    transition: background 0.2s;
+  }
+  
+  .pull-panel-btn:hover { background: #6b421c; }
+  .pull-panel-btn svg { stroke: #f4e1c1; transition: transform 0.2s; }
+  .pull-panel-btn:hover svg { transform: scale(1.2); }
+}

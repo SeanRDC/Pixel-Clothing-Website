@@ -34,6 +34,9 @@ export default function HousePage() {
   const [isExitingItem, setIsExitingItem] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
+  // Description box states
+  const [isItemPanelOpen, setIsItemPanelOpen] = useState(false);
+
   useEffect(() => {
     const fetchItems = async () => {
       try {
@@ -103,7 +106,8 @@ export default function HousePage() {
     setSelectedItem(itemId);
     setPanelMode('desc');
     setDockState('docked'); 
-    setIsExitingItem(false); 
+    setIsExitingItem(false);
+    setIsItemPanelOpen(false); 
   };
 
   const handlePullInventory = () => {
@@ -274,17 +278,29 @@ export default function HousePage() {
       )}
 
       {selectedItem && !activePopup && activeItemData && (
-        <img 
-          src={activeItemData?.img} 
-          className={`center-display-image ${isExitingItem ? 'exiting' : ''}`} 
-          alt="Selected Item" 
-        />
+        <>
+          <h2 className={`mobile-shirt-title ${isExitingItem || isItemPanelOpen ? 'hide-for-panel' : ''}`}>
+            {activeItemData.name}
+          </h2>
+          <img 
+            src={activeItemData?.img} 
+            className={`center-display-image ${isExitingItem ? 'exiting' : ''} ${isItemPanelOpen ? 'hide-for-panel' : ''}`} 
+            alt="Selected Item" 
+          />
+        </>
       )}
 
       {selectedItem && !activePopup && activeItemData && (
-        <div className={`item-panel ${isExitingItem ? 'exiting' : ''}`}>
+        <div className={`item-panel ${isExitingItem ? 'exiting' : ''} ${isItemPanelOpen ? 'panel-open' : 'panel-docked'}`}>
+          
+          <button className="pull-panel-btn" onClick={() => setIsItemPanelOpen(!isItemPanelOpen)}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f4e1c1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points={isItemPanelOpen ? "6 15 12 9 18 15" : "6 9 12 15 18 9"}></polyline>
+            </svg>
+          </button>
+
           <img src="/assets/images/descriptionbox.png" className="panel-bg" alt="Panel Box" />
-          <h2 className="item-title">{activeItemData.name}</h2>
+          <h2 className="item-title desktop-only">{activeItemData.name}</h2>
           
           {panelMode === 'desc' ? (
             <>
