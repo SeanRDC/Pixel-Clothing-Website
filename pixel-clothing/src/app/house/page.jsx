@@ -229,7 +229,11 @@ export default function HousePage() {
         <div className={`keepers-inventory ${isInventoryOpen ? 'open-modal' : ''} ${dockState === 'docked' ? 'docked' : ''} ${dockState === 'returning' ? 'returning' : ''} ${dockState === 'settled' ? 'settled' : ''}`}>
           
           {dockState === 'docked' && (
-            <button className="pull-inventory-btn" onClick={handlePullInventory}>
+            <button 
+              className="pull-inventory-btn" 
+              title="Return to Inventory" 
+              onClick={handlePullInventory}
+            >
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f4e1c1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
@@ -293,9 +297,13 @@ export default function HousePage() {
       {selectedItem && !activePopup && activeItemData && (
         <div className={`item-panel ${isExitingItem ? 'exiting' : ''} ${isItemPanelOpen ? 'panel-open' : 'panel-docked'}`}>
           
-          <button className="pull-panel-btn" onClick={() => setIsItemPanelOpen(!isItemPanelOpen)}>
+          <button 
+            className="pull-panel-btn" 
+            title={isItemPanelOpen ? "Close Description" : "View Description"} 
+            onClick={() => setIsItemPanelOpen(!isItemPanelOpen)}
+          >
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f4e1c1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points={isItemPanelOpen ? "6 15 12 9 18 15" : "6 9 12 15 18 9"}></polyline>
+              <polyline points={isItemPanelOpen ? "6 9 12 15 18 9" : "6 15 12 9 18 15"}></polyline>
             </svg>
           </button>
 
