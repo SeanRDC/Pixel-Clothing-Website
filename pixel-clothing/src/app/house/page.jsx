@@ -239,143 +239,147 @@ export default function HousePage() {
         alt="Back"
       />
 
-      {!activePopup && (
-        <div className={`keepers-inventory ${isInventoryOpen ? 'open-modal' : ''} ${dockState === 'docked' ? 'docked' : ''} ${dockState === 'returning' ? 'returning' : ''} ${dockState === 'settled' ? 'settled' : ''} ${isCartOpen ? 'cart-hidden' : ''}`}>
-          
-          {isInventoryOpen && (
-            <button 
-              className="pull-inventory-btn" 
-              title={dockState === 'docked' ? "Center Inventory" : "Dock Inventory"} 
-              onClick={() => {
-                if (dockState === 'docked') {
-                  handlePullInventory();
-                } else {
-                  setDockState('docked');
-                  if (equippedItem) {
-                    setSelectedItem(equippedItem);
-                    setIsExitingItem(false);
+      <div className={`shop-environment ${isCartOpen ? 'cart-hidden' : ''}`}>
+
+          {!activePopup && (
+            <div className={`keepers-inventory ${isInventoryOpen ? 'open-modal' : ''} ${dockState === 'docked' ? 'docked' : ''} ${dockState === 'returning' ? 'returning' : ''} ${dockState === 'settled' ? 'settled' : ''}`}>
+            
+            {isInventoryOpen && (
+              <button 
+                className="pull-inventory-btn" 
+                title={dockState === 'docked' ? "Center Inventory" : "Dock Inventory"} 
+                onClick={() => {
+                  if (dockState === 'docked') {
+                    handlePullInventory();
+                  } else {
+                    setDockState('docked');
+                    if (equippedItem) {
+                      setSelectedItem(equippedItem);
+                      setIsExitingItem(false);
+                    }
                   }
-                }
-              }}
+                }}
+              >
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f4e1c1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points={dockState === 'docked' ? "9 18 15 12 9 6" : "15 18 9 12 15 6"}></polyline>
+                </svg>
+              </button>
+            )}
+
+            {isInventoryOpen && dockState !== 'docked' && (
+              <button className="close-inventory-btn" onClick={() => {
+                setIsInventoryOpen(false);
+                setTimeout(() => setDockState('none'), 300); // Cleans up after hiding
+              }}>[X]</button>
+            )}
+            <img src="/assets/images/inventory.png" className="inventory-bg" alt="Inventory" />
+            <div className="inventory-items">
+              {/* Slot 1 */}
+              <div className="item-slot slot-1" onClick={() => handleItemClick('iroha')}>
+                <img src="/assets/images/irohapixel.png" alt="Iroha" />
+                {equippedItem === 'iroha' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
+              </div>
+              {/* Slot 2 */}
+              <div className="item-slot slot-2" onClick={() => handleItemClick('wonhee')}>
+                <img src="/assets/images/wonheepixel.png" alt="Wonhee" />
+                {equippedItem === 'wonhee' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
+              </div>
+              {/* Slot 3 */}
+              <div className="item-slot slot-3">
+                <img src="/assets/images/question.png" alt="Mystery" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!selectedItem && !activePopup && !isInventoryOpen && !isTransitioning && (
+          <div className={`merchant-station ${isCartOpen ? 'cart-hidden' : ''}`}>
+            <div className="dialogue-box">
+              <img src="/assets/images/speechbox.png" className="dialogue-bg" alt="Speech Box" />
+              <p className="dialogue-text">{dialogue}</p>
+            </div>
+            
+            <img 
+              src={hasLookedAtItems ? "/assets/images/ej.png" : "/assets/images/ejexplaining.png"} 
+              className="merchant-character" 
+              alt="EJ" 
+            />
+          </div>
+        )}
+
+        {selectedItem && !activePopup && activeItemData && (
+          <>
+            <h2 className={`mobile-shirt-title ${isExitingItem || isItemPanelOpen ? 'hide-for-panel' : ''} ${isCartOpen ? 'cart-hidden' : ''}`}>
+              {activeItemData.name}
+            </h2>
+            <img 
+              src={activeItemData?.img} 
+              className={`center-display-image ${isExitingItem ? 'exiting' : ''} ${isItemPanelOpen ? 'hide-for-panel' : ''} ${isCartOpen ? 'cart-hidden' : ''}`} 
+              alt="Selected Item" 
+            />
+          </>
+        )}
+
+        {selectedItem && !activePopup && activeItemData && (
+          <div className={`item-panel ${isExitingItem ? 'exiting' : ''} ${isItemPanelOpen ? 'panel-open' : 'panel-docked'} ${isCartOpen ? 'cart-hidden' : ''}`}>
+            
+            <button 
+              className="pull-panel-btn" 
+              title={isItemPanelOpen ? "Close Description" : "View Description"} 
+              onClick={() => setIsItemPanelOpen(!isItemPanelOpen)}
             >
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f4e1c1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points={dockState === 'docked' ? "9 18 15 12 9 6" : "15 18 9 12 15 6"}></polyline>
+                <polyline points={isItemPanelOpen ? "6 9 12 15 18 9" : "6 15 12 9 18 15"}></polyline>
               </svg>
             </button>
-          )}
 
-          {isInventoryOpen && dockState !== 'docked' && (
-            <button className="close-inventory-btn" onClick={() => {
-              setIsInventoryOpen(false);
-              setTimeout(() => setDockState('none'), 300); // Cleans up after hiding
-            }}>[X]</button>
-          )}
-          <img src="/assets/images/inventory.png" className="inventory-bg" alt="Inventory" />
-          <div className="inventory-items">
-            {/* Slot 1 */}
-            <div className="item-slot slot-1" onClick={() => handleItemClick('iroha')}>
-              <img src="/assets/images/irohapixel.png" alt="Iroha" />
-              {equippedItem === 'iroha' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
-            </div>
-            {/* Slot 2 */}
-            <div className="item-slot slot-2" onClick={() => handleItemClick('wonhee')}>
-              <img src="/assets/images/wonheepixel.png" alt="Wonhee" />
-              {equippedItem === 'wonhee' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
-            </div>
-            {/* Slot 3 */}
-            <div className="item-slot slot-3">
-              <img src="/assets/images/question.png" alt="Mystery" />
-            </div>
+            <img src="/assets/images/descriptionbox.png" className="panel-bg" alt="Panel Box" />
+            <h2 className="item-title desktop-only">{activeItemData.name}</h2>
+            
+            {panelMode === 'desc' ? (
+              <>
+                <div className="description-section">
+                  <h3 className="section-label">Description</h3>
+                  <p className="item-desc-text">{activeItemData.desc}</p>
+                </div>
+                <div className="passive-section">
+                  <h3 className="section-label">Passive</h3>
+                  <p className="item-desc-text">{activeItemData.passive}</p>
+                </div>
+                <div className="item-actions">
+                  <p className="item-price">₱{activeItemData.price.toFixed(2)}</p>
+                  <button className="panel-btn" onClick={() => setPanelMode('size')}>Size</button>
+                  <button className="panel-btn" onClick={handleAddToCart}>Add to Cart</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="sizes-section">
+                  <h3 className="section-label">Sizes:</h3>
+                  <ul className="size-list">
+                    {['XS', 'S', 'M', 'L'].map((size) => (
+                      <li 
+                        key={size} 
+                        className={selectedSize === size ? 'selected' : ''}
+                        onClick={() => setSelectedSize(size)}
+                      >
+                        {size === 'XS' ? 'Extra Small - 114 x 88' : size === 'S' ? 'Small - 118 x 90' : size === 'M' ? 'Medium - 122 x 92' : 'Large - 126 x 94'}
+                        {selectedSize === size && ' ⭐'}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="item-actions">
+                  <p className="item-price">₱{activeItemData.price.toFixed(2)}</p>
+                  <button className="panel-btn" onClick={() => setPanelMode('desc')}>Prev</button>
+                  <button className="panel-btn" onClick={handleAddToCart}>Add to Cart</button>
+                </div>
+              </>
+            )}
           </div>
-        </div>
-      )}
+        )}
 
-      {!selectedItem && !activePopup && !isInventoryOpen && !isTransitioning && (
-        <div className={`merchant-station ${isCartOpen ? 'cart-hidden' : ''}`}>
-          <div className="dialogue-box">
-            <img src="/assets/images/speechbox.png" className="dialogue-bg" alt="Speech Box" />
-            <p className="dialogue-text">{dialogue}</p>
-          </div>
-          
-          <img 
-            src={hasLookedAtItems ? "/assets/images/ej.png" : "/assets/images/ejexplaining.png"} 
-            className="merchant-character" 
-            alt="EJ" 
-          />
-        </div>
-      )}
-
-      {selectedItem && !activePopup && activeItemData && (
-        <>
-          <h2 className={`mobile-shirt-title ${isExitingItem || isItemPanelOpen ? 'hide-for-panel' : ''} ${isCartOpen ? 'cart-hidden' : ''}`}>
-            {activeItemData.name}
-          </h2>
-          <img 
-            src={activeItemData?.img} 
-            className={`center-display-image ${isExitingItem ? 'exiting' : ''} ${isItemPanelOpen ? 'hide-for-panel' : ''} ${isCartOpen ? 'cart-hidden' : ''}`} 
-            alt="Selected Item" 
-          />
-        </>
-      )}
-
-      {selectedItem && !activePopup && activeItemData && (
-        <div className={`item-panel ${isExitingItem ? 'exiting' : ''} ${isItemPanelOpen ? 'panel-open' : 'panel-docked'} ${isCartOpen ? 'cart-hidden' : ''}`}>
-          
-          <button 
-            className="pull-panel-btn" 
-            title={isItemPanelOpen ? "Close Description" : "View Description"} 
-            onClick={() => setIsItemPanelOpen(!isItemPanelOpen)}
-          >
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f4e1c1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points={isItemPanelOpen ? "6 9 12 15 18 9" : "6 15 12 9 18 15"}></polyline>
-            </svg>
-          </button>
-
-          <img src="/assets/images/descriptionbox.png" className="panel-bg" alt="Panel Box" />
-          <h2 className="item-title desktop-only">{activeItemData.name}</h2>
-          
-          {panelMode === 'desc' ? (
-            <>
-              <div className="description-section">
-                <h3 className="section-label">Description</h3>
-                <p className="item-desc-text">{activeItemData.desc}</p>
-              </div>
-              <div className="passive-section">
-                <h3 className="section-label">Passive</h3>
-                <p className="item-desc-text">{activeItemData.passive}</p>
-              </div>
-              <div className="item-actions">
-                <p className="item-price">₱{activeItemData.price.toFixed(2)}</p>
-                <button className="panel-btn" onClick={() => setPanelMode('size')}>Size</button>
-                <button className="panel-btn" onClick={handleAddToCart}>Add to Cart</button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="sizes-section">
-                <h3 className="section-label">Sizes:</h3>
-                <ul className="size-list">
-                  {['XS', 'S', 'M', 'L'].map((size) => (
-                    <li 
-                      key={size} 
-                      className={selectedSize === size ? 'selected' : ''}
-                      onClick={() => setSelectedSize(size)}
-                    >
-                      {size === 'XS' ? 'Extra Small - 114 x 88' : size === 'S' ? 'Small - 118 x 90' : size === 'M' ? 'Medium - 122 x 92' : 'Large - 126 x 94'}
-                      {selectedSize === size && ' ⭐'}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="item-actions">
-                <p className="item-price">₱{activeItemData.price.toFixed(2)}</p>
-                <button className="panel-btn" onClick={() => setPanelMode('desc')}>Prev</button>
-                <button className="panel-btn" onClick={handleAddToCart}>Add to Cart</button>
-              </div>
-            </>
-          )}
-        </div>
-      )}
+      </div>
 
       <div className={`cart-sidebar ${isCartOpen ? 'open' : ''}`}>
         <div className="cart-header">

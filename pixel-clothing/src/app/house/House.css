@@ -149,20 +149,18 @@
 .menu-item { font-size: 29px; color: #fff; cursor: pointer; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
 .menu-item:hover { transform: scale(1.1); color: #d58f00; }
 
-.cart-hidden,
-.item-panel.cart-hidden,
-.keepers-inventory.cart-hidden,
-.center-display-image.cart-hidden,
-.mobile-shirt-title.cart-hidden {
-  animation: blurAndFade 0.4s ease-out forwards !important;
-  pointer-events: none !important;
+.shop-environment {
+  position: absolute;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  transition: opacity 0.4s ease, filter 0.4s ease;
 }
 
-@keyframes blurAndFade {
-  0% { opacity: 1; filter: blur(0px); }
-  100% { opacity: 0; filter: blur(5px); visibility: hidden; }
+.shop-environment.cart-hidden {
+  opacity: 0;
+  filter: blur(5px);
+  pointer-events: none;
+  transition: opacity 0.3s ease 0.15s, filter 0.3s ease 0.15s;
 }
-
 .shopping-cart-icon {
   position: fixed;
   top: 20px;
