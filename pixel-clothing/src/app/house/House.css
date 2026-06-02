@@ -911,15 +911,15 @@
   }
 
   .keepers-inventory.open-modal.settled {
-    transform: translate(-50%, -50%) scale(0.6) !important;
+    transform: translate(-50%, -45%) scale(0.7) !important;
   }
 
   .keepers-inventory.open-modal.docked {
-    animation: dockLeftFullyMobile 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+    animation: dockBottomMobile 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
   }
 
   .keepers-inventory.open-modal.returning {
-    animation: returnCenterFullyMobile 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+    animation: returnBottomMobile 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
   }
 
   @keyframes popUpCenteredMobile {
@@ -962,21 +962,17 @@
   }
 
   @keyframes dockBottomMobile {
-    0% { top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.6); }
-    100% { top: calc(100% - 50px); left: 50%; transform: translate(-50%, 0) scale(0.6); }
+    0% { top: 50%; left: 50%; transform: translate(-50%, -45%) scale(0.7); }
+    100% { top: 100%; left: 50%; transform: translate(-50%, 0) scale(0.7); }
   }
 
   @keyframes returnBottomMobile {
-    0% { top: calc(100% - 50px); left: 50%; transform: translate(-50%, 0) scale(0.6); }
-    100% { top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.6); }
+    0% { top: 100%; left: 50%; transform: translate(-50%, 0) scale(0.7); }
+    100% { top: 50%; left: 50%; transform: translate(-50%, -45%) scale(0.7); }
   }
 
   .item-panel {
     bottom: 63px !important;
-  }
-
-  .keepers-inventory {
-    bottom: 63px !important; 
   }
 
   .item-panel.panel-docked {
@@ -985,7 +981,7 @@
 
   .pull-panel-btn {
     position: absolute;
-    top: 1px;
+    top: 19px;
     left: 50%;
     transform: translateX(4px); 
     width: 48px;
@@ -1004,7 +1000,7 @@
 
   .pull-inventory-btn {
     position: absolute;
-    top: -176px; 
+    top: -75px; 
     left: 50%;
     right: auto;
     transform: translateX(calc(-100% - 6px)); 
