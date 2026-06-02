@@ -108,10 +108,9 @@ export default function HousePage() {
     setDockState('returning');    
     
     setTimeout(() => {
-      setSelectedItem(null);
+      setSelectedItem(null);      
       setIsExitingItem(false);
-      setDockState('settled');
-      setTimeout(() => setDockState('none'), 50);
+      setDockState('settled');    
     }, 500); 
   };
 
