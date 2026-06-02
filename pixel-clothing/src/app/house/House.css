@@ -963,11 +963,11 @@
 
   @keyframes dockBottomMobile {
     0% { top: 50%; left: 50%; transform: translate(-50%, -45%) scale(0.7); }
-    100% { top: calc(100% - 60px); left: 50%; transform: translate(-50%, 0) scale(0.7); }
+    100% { top: calc(100% - 55px); left: 50%; transform: translate(-50%, 0) scale(0.7); }
   }
 
   @keyframes returnBottomMobile {
-    0% { top: calc(100% - 60px); left: 50%; transform: translate(-50%, 0) scale(0.7); }
+    0% { top: calc(100% - 55px); left: 50%; transform: translate(-50%, 0) scale(0.7); }
     100% { top: 50%; left: 50%; transform: translate(-50%, -45%) scale(0.7); }
   }
 
@@ -981,11 +981,11 @@
 
   .pull-panel-btn {
     position: absolute;
-    top: 19px;
+    top: 15px;
     left: 50%;
     transform: translateX(4px); 
-    width: 48px;
-    height: 45px;
+    width: 100px;
+    height: 50px;
     font-family: 'Depixel', monospace;
     font-size: 20px;
     color: #f4e1c1;
@@ -1000,11 +1000,11 @@
 
   .pull-inventory-btn {
     position: absolute;
-    top: -95px; 
+    top: -102px; 
     left: 50%;
     right: auto;
     transform: translateX(calc(-100% - 6px)); 
-    width: 90px; 
+    width: 150px; 
     height: 75px;
     font-family: 'Depixel', monospace;
     font-size: 34px; 
