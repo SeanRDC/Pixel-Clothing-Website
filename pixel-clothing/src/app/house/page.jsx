@@ -38,6 +38,9 @@ export default function HousePage() {
   // Description box states
   const [isItemPanelOpen, setIsItemPanelOpen] = useState(false);
 
+  // Mobile states
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   useEffect(() => {
     const fetchItems = async () => {
       try {
@@ -174,12 +177,19 @@ export default function HousePage() {
   return (
     <div className="house-container">
 
-      <nav className="top-menu">
+      <nav className={`top-menu ${isMobileMenuOpen && !activePopup ? 'open' : ''}`}>
         <div className="menu-item" onClick={() => setActivePopup('quest')}>Quest</div>
         <div className="menu-item" onClick={() => setActivePopup('guide')}>Guide</div>
         <div className="menu-item" onClick={() => setActivePopup('about')}>About</div>
         <div className="menu-item" onClick={() => router.push('/')}>Exit</div>
       </nav>
+
+      <img 
+        src="/assets/images/settingicon.png" 
+        className={`mobile-settings-icon ${isCartOpen ? 'shifted' : ''}`} 
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+        alt="Settings" 
+      />
 
       <img 
         src="/assets/images/kart.png" 
