@@ -522,7 +522,7 @@ export default function HousePage() {
         <div className="coming-soon-popup">
           <div className="popup-content">
             <button className="close-popup-btn" onClick={() => setIsComingSoonOpen(false)}>[X]</button>
-            <h2>Coming Soon</h2>
+            <h2>Coming Soon!</h2>
             <p>Future content is currently in development. Stay tuned, Traveler!</p>
           </div>
         </div>
