@@ -241,56 +241,56 @@ export default function HousePage() {
 
       <div className={`shop-environment ${isCartOpen || activePopup ? 'cart-hidden' : ''}`}>
 
-          {!activePopup && (
-            <div className={`keepers-inventory ${isInventoryOpen ? 'open-modal' : ''} ${dockState === 'docked' ? 'docked' : ''} ${dockState === 'returning' ? 'returning' : ''} ${dockState === 'settled' ? 'settled' : ''}`}>
-            
-            {isInventoryOpen && (
-              <button 
-                className="pull-inventory-btn" 
-                title={dockState === 'docked' ? "Center Inventory" : "Dock Inventory"} 
-                onClick={() => {
-                  if (dockState === 'docked') {
-                    handlePullInventory();
-                  } else {
-                    setDockState('docked');
-                    if (equippedItem) {
-                      setSelectedItem(equippedItem);
-                      setIsExitingItem(false);
-                    }
+          <div className={`keepers-inventory ${isInventoryOpen ? 'open-modal' : ''} ${dockState === 'docked' ? 'docked' : ''} ${dockState === 'returning' ? 'returning' : ''} ${dockState === 'settled' ? 'settled' : ''}`}>
+          
+          {isInventoryOpen && (
+            <button 
+              className="pull-inventory-btn" 
+              title={dockState === 'docked' ? "Center Inventory" : "Dock Inventory"} 
+              onClick={() => {
+                if (dockState === 'docked') {
+                  handlePullInventory();
+                } else {
+                  setDockState('docked');
+                  if (equippedItem) {
+                    setSelectedItem(equippedItem);
+                    setIsExitingItem(false);
                   }
-                }}
-              >
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f4e1c1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points={dockState === 'docked' ? "9 18 15 12 9 6" : "15 18 9 12 15 6"}></polyline>
-                </svg>
-              </button>
-            )}
+                }
+              }}
+            >
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f4e1c1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points={dockState === 'docked' ? "9 18 15 12 9 6" : "15 18 9 12 15 6"}></polyline>
+              </svg>
+            </button>
+          )}
 
-            {isInventoryOpen && dockState !== 'docked' && (
-              <button className="close-inventory-btn" onClick={() => {
-                setIsInventoryOpen(false);
-                setTimeout(() => setDockState('none'), 300); // Cleans up after hiding
-              }}>[X]</button>
-            )}
-            <img src="/assets/images/inventory.png" className="inventory-bg" alt="Inventory" />
-            <div className="inventory-items">
-              {/* Slot 1 */}
-              <div className="item-slot slot-1" onClick={() => handleItemClick('iroha')}>
-                <img src="/assets/images/irohapixel.png" alt="Iroha" />
-                {equippedItem === 'iroha' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
-              </div>
-              {/* Slot 2 */}
-              <div className="item-slot slot-2" onClick={() => handleItemClick('wonhee')}>
-                <img src="/assets/images/wonheepixel.png" alt="Wonhee" />
-                {equippedItem === 'wonhee' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
-              </div>
-              {/* Slot 3 */}
-              <div className="item-slot slot-3">
-                <img src="/assets/images/question.png" alt="Mystery" />
-              </div>
+          {isInventoryOpen && dockState !== 'docked' && (
+            <button className="close-inventory-btn" onClick={() => {
+              setIsInventoryOpen(false);
+              setTimeout(() => setDockState('none'), 300); // Cleans up after hiding
+            }}>[X]</button>
+          )}
+          
+          <img src="/assets/images/inventory.png" className="inventory-bg" alt="Inventory" />
+          
+          <div className="inventory-items">
+            {/* Slot 1 */}
+            <div className="item-slot slot-1" onClick={() => handleItemClick('iroha')}>
+              <img src="/assets/images/irohapixel.png" alt="Iroha" />
+              {equippedItem === 'iroha' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
+            </div>
+            {/* Slot 2 */}
+            <div className="item-slot slot-2" onClick={() => handleItemClick('wonhee')}>
+              <img src="/assets/images/wonheepixel.png" alt="Wonhee" />
+              {equippedItem === 'wonhee' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
+            </div>
+            {/* Slot 3 */}
+            <div className="item-slot slot-3">
+              <img src="/assets/images/question.png" alt="Mystery" />
             </div>
           </div>
-        )}
+        </div>
 
         {!selectedItem && !isInventoryOpen && !isTransitioning && (
           <div className={`merchant-station ${isCartOpen ? 'cart-hidden' : ''}`}>
