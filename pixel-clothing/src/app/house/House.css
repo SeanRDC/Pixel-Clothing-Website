@@ -128,15 +128,20 @@
 }
 
 .dialogue-bg { width: 90%; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); image-rendering: pixelated; }
+
 .dialogue-text {
   position: absolute;
-  top: 42%;
-  left: 47%;
+  top: 38%; 
+  left: 50%; 
   transform: translate(-50%, -50%);
-  width: 50%;
-  font-size: clamp(14px, 2vw, 22px);
+  width: 75%;
+  height: 45%;
+  font-size: clamp(14px, 2.5vw, 22px);
   color: #000;
   line-height: 1.6;
+  overflow: hidden; 
+  display: flex;
+  align-items: center;
 }
 
 .center-display-image {
