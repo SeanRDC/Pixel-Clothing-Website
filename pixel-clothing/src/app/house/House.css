@@ -14,6 +14,23 @@
   100% { content: ''; }
 }
 
+.merchant-station,
+.merchant-character,
+.dialogue-box,
+.dialogue-text,
+.center-display-image,
+.mobile-shirt-title {
+  transition: 
+    top 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
+    bottom 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
+    left 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
+    right 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
+    width 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
+    max-width 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+    font-size 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
 .house-container {
   background-image: url('/assets/images/merchant.png');
   background-size: cover;
@@ -181,6 +198,7 @@
   height: 640px;
   z-index: 30;
   animation: panelSlideIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  transition: bottom 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 .panel-bg { 
   position: absolute; 
