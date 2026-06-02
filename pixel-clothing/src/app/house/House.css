@@ -648,7 +648,8 @@
     justify-content: center;
     padding: 15px 5px;
     cursor: pointer;
-    z-index: 150;
+    z-index: 250; 
+    pointer-events: auto;
     border-radius: 0 8px 8px 0; 
     transition: background 0.2s;
   }
@@ -701,6 +702,24 @@
   @keyframes dockLeftFully {
     0% { left: 50%; transform: translate(-50%, -50%) scale(1); }
     100% { left: 0%; transform: translate(-100%, -50%) scale(1); } 
+  }
+
+  .keepers-inventory.open-modal.docked {
+    animation: dockLeftFully 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+
+  @keyframes dockLeftFully {
+    0% { left: 50%; transform: translate(-50%, -50%) scale(1); }
+    100% { left: 0%; transform: translate(-100%, -50%) scale(1); } 
+  }
+
+  .keepers-inventory.open-modal.returning {
+    animation: returnCenterFully 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+
+  @keyframes returnCenterFully {
+    0% { left: 0%; transform: translate(-100%, -50%) scale(1); }
+    100% { left: 50%; transform: translate(-50%, -50%) scale(1); }
   }
   
   .mobile-shirt-title {

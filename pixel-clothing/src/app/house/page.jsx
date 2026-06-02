@@ -201,9 +201,13 @@ export default function HousePage() {
           }
 
           if (isInventoryOpen) {
-            setIsInventoryOpen(false);
-          } else { 
-            setIsInventoryOpen(true);       
+            if (dockState === 'docked') {
+              handlePullInventory(); 
+            } else {
+              setIsInventoryOpen(false);
+            }
+          } else {
+            setIsInventoryOpen(true);
             setDockState(selectedItem ? 'docked' : 'none');
           }
         }} 
