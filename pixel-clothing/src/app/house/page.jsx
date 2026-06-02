@@ -246,7 +246,7 @@ export default function HousePage() {
       />
 
       {!activePopup && (
-        <div className={`keepers-inventory ${isInventoryOpen ? 'open-modal' : ''} ${dockState === 'docked' ? 'docked' : ''} ${dockState === 'returning' ? 'returning' : ''} ${dockState === 'settled' ? 'settled' : ''}`}>
+        <div className={`keepers-inventory ${isInventoryOpen ? 'open-modal' : ''} ${dockState === 'docked' ? 'docked' : ''} ${dockState === 'returning' ? 'returning' : ''} ${dockState === 'settled' ? 'settled' : ''} ${isCartOpen ? 'cart-hidden' : ''}`}>
           
           {isInventoryOpen && (
             <button 
@@ -297,7 +297,7 @@ export default function HousePage() {
       )}
 
       {!selectedItem && !activePopup && !isInventoryOpen && !isTransitioning && (
-        <div className="merchant-station">
+        <div className={`merchant-station ${isCartOpen ? 'cart-hidden' : ''}`}>
           <div className="dialogue-box">
             <img src="/assets/images/speechbox.png" className="dialogue-bg" alt="Speech Box" />
             <p className="dialogue-text">{dialogue}</p>
@@ -313,19 +313,19 @@ export default function HousePage() {
 
       {selectedItem && !activePopup && activeItemData && (
         <>
-          <h2 className={`mobile-shirt-title ${isExitingItem || isItemPanelOpen ? 'hide-for-panel' : ''}`}>
+          <h2 className={`mobile-shirt-title ${isExitingItem || isItemPanelOpen ? 'hide-for-panel' : ''} ${isCartOpen ? 'cart-hidden' : ''}`}>
             {activeItemData.name}
           </h2>
           <img 
             src={activeItemData?.img} 
-            className={`center-display-image ${isExitingItem ? 'exiting' : ''} ${isItemPanelOpen ? 'hide-for-panel' : ''}`} 
+            className={`center-display-image ${isExitingItem ? 'exiting' : ''} ${isItemPanelOpen ? 'hide-for-panel' : ''} ${isCartOpen ? 'cart-hidden' : ''}`} 
             alt="Selected Item" 
           />
         </>
       )}
 
       {selectedItem && !activePopup && activeItemData && (
-        <div className={`item-panel ${isExitingItem ? 'exiting' : ''} ${isItemPanelOpen ? 'panel-open' : 'panel-docked'}`}>
+        <div className={`item-panel ${isExitingItem ? 'exiting' : ''} ${isItemPanelOpen ? 'panel-open' : 'panel-docked'} ${isCartOpen ? 'cart-hidden' : ''}`}>
           
           <button 
             className="pull-panel-btn" 
