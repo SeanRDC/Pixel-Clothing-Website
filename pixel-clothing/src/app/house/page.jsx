@@ -195,7 +195,8 @@ export default function HousePage() {
         src="/assets/images/kart.png" 
         className={`shopping-cart-icon ${isCartOpen ? 'shifted' : ''}`} 
         onClick={() => {
-            setIsCartOpen(!isCartOpen);
+          setIsMobileMenuOpen(false);
+          setIsCartOpen(!isCartOpen);
         }} 
         alt="Cart" 
       />

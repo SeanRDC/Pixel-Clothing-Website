@@ -833,12 +833,20 @@
     transition: transform 0.1s, right 0.4s ease-out;
   }
   
-  .mobile-settings-icon:hover { transform: scale(1.1); }
-  .mobile-settings-icon.shifted { right: calc(100vw + 20px); }
+  .mobile-settings-icon:hover { 
+    transform: scale(1.1); 
+  }
 
   .shopping-cart-icon { width: 60px; top: 90px; right: 20px; }
   .mobile-inventory-icon { width: 60px; top: 160px; right: 20px; }
   .mobile-back-btn { width: 60px; top: 230px; right: 20px; }
+
+  .shopping-cart-icon.shifted,
+  .mobile-inventory-icon.shifted,
+  .mobile-back-btn.shifted,
+  .mobile-settings-icon.shifted {
+    right: calc(100vw + 20px);
+  }
 
   .top-menu {
     position: fixed;
