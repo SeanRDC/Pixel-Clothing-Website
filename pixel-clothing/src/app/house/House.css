@@ -881,4 +881,53 @@
     margin: 0;
     font-size: 24px; 
   }
+
+  .merchant-character {
+    left: 100%;
+    transform: translateX(-50%);
+  }
+
+  .dialogue-box {
+    width: 90vw;
+    left: 5vw;
+    right: auto;
+    top: 20px;
+  }
+
+  .dialogue-text {
+    font-size: 16px;
+    width: 75%;
+  }
+
+  .keepers-inventory.open-modal {
+    animation: popUpCenteredMobile 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+  }
+
+  .keepers-inventory.open-modal.settled {
+    transform: translate(-50%, -50%) scale(0.6) !important;
+  }
+
+  .keepers-inventory.open-modal.docked {
+    animation: dockLeftFullyMobile 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+  }
+
+  .keepers-inventory.open-modal.returning {
+    animation: returnCenterFullyMobile 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+  }
+
+  @keyframes popUpCenteredMobile {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+    60% { opacity: 1; transform: translate(-50%, -50%) scale(0.65); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(0.6); }
+  }
+
+  @keyframes dockLeftFullyMobile {
+    0% { left: 50%; transform: translate(-50%, -50%) scale(0.6); }
+    100% { left: 0%; transform: translate(-100%, -50%) scale(0.6); }
+  }
+
+  @keyframes returnCenterFullyMobile {
+    0% { left: 0%; transform: translate(-100%, -50%) scale(0.6); }
+    100% { left: 50%; transform: translate(-50%, -50%) scale(0.6); }
+  }
 }
