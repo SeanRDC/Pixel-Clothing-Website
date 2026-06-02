@@ -962,7 +962,7 @@
   }
 
   @keyframes dockBottomMobile {
-    0% { top: 50%; left: 50%; transform: translate(-50%, -45%) scale(0.7); }
+    0% { top: 80%; left: 50%; transform: translate(-50%, -45%) scale(0.7); }
     100% { top: 100%; left: 50%; transform: translate(-50%, 0) scale(0.7); }
   }
 
@@ -1000,7 +1000,7 @@
 
   .pull-inventory-btn {
     position: absolute;
-    top: -75px; 
+    top: -95px; 
     left: 50%;
     right: auto;
     transform: translateX(calc(-100% - 6px)); 
