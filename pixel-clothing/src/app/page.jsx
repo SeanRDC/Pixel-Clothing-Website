@@ -117,9 +117,16 @@ export default function Home() {
         <Guide onClose={() => setActivePopup(null)} />
       )}
 
-      <div className="developer-credit" style={{ visibility: isInitialized ? 'visible' : 'hidden' }}>
-        Developed by Sean Rhani Dela Cruz
-      </div>
+      <a 
+        href="https://www.linkedin.com/in/sean-rhani-dela-cruz-834573334" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="developer-credit" 
+        style={{ visibility: isInitialized ? 'visible' : 'hidden' }}
+      >
+        <span className="default-text">Developed by Sean Rhani Dela Cruz</span>
+        <span className="hover-text">VISIT LINKEDIN</span>
+      </a>
     </div>
   );
 }

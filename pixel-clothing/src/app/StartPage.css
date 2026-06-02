@@ -170,7 +170,7 @@
 
 .developer-credit {
   position: absolute;
-  bottom: 25px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   font-family: 'Depixel', monospace;
@@ -179,22 +179,55 @@
   text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8);
   z-index: 50;
   text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
   width: 90vw;
-  pointer-events: none;
+}
+
+.default-text {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid #f4e1c1;
+  width: 0; 
   animation: 
-    creditFadeIn 2s ease-in-out forwards, 
-    creditPulse 3s ease-in-out infinite alternate;
-  animation-delay: 0s, 2s;
+    typewriter 2s steps(33) 1.5s forwards,
+    blinkCursor 0.75s step-end infinite;
 }
 
-@keyframes creditFadeIn {
-  0% { opacity: 0; transform: translate(-50%, 10px); }
-  100% { opacity: 0.6; transform: translate(-50%, 0); }
+.hover-text {
+  display: none;
+  color: #00ff00;
+  letter-spacing: 2px;
 }
 
-@keyframes creditPulse {
-  0% { opacity: 0.6; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8); }
-  100% { opacity: 0.9; text-shadow: 0px 0px 8px rgba(244, 225, 193, 0.5), 2px 2px 0px rgba(0, 0, 0, 0.8); }
+.developer-credit:hover .default-text {
+  display: none;
+}
+
+.developer-credit:hover .hover-text {
+  display: inline-block;
+  animation: hologramGlitch 0.15s linear infinite; 
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 33ch; } 
+}
+
+@keyframes blinkCursor {
+  from, to { border-color: transparent; }
+  50% { border-color: #f4e1c1; }
+}
+
+@keyframes hologramGlitch {
+  0% { opacity: 1; transform: skew(0deg); text-shadow: 2px 0px 1px rgba(0, 255, 255, 0.8), -2px 0px 1px rgba(255, 0, 255, 0.8), 0px 0px 8px #00ff00; }
+  25% { opacity: 0.8; transform: skew(-2deg); text-shadow: -2px 0px 1px rgba(0, 255, 255, 0.8), 2px 0px 1px rgba(255, 0, 255, 0.8), 0px 0px 5px #00ff00; }
+  50% { opacity: 0.9; transform: skew(2deg); text-shadow: 2px 0px 1px rgba(0, 255, 255, 0.8), -1px 0px 1px rgba(255, 0, 255, 0.8), 0px 0px 10px #00ff00; }
+  75% { opacity: 0.7; transform: skew(-1deg); text-shadow: none; }
+  100% { opacity: 1; transform: skew(0deg); text-shadow: 2px 0px 1px rgba(0, 255, 255, 0.8), -2px 0px 1px rgba(255, 0, 255, 0.8), 0px 0px 8px #00ff00; }
 }
 
 @media (max-width: 500px) {
