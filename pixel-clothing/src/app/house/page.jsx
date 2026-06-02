@@ -15,6 +15,7 @@ export default function HousePage() {
   const [isLoadingItems, setIsLoadingItems] = useState(true);
 
   const [selectedItem, setSelectedItem] = useState(null);
+  const [equippedItem, setEquippedItem] = useState(null);
   const [panelMode, setPanelMode] = useState('desc'); 
   const [selectedSize, setSelectedSize] = useState('M');
   
@@ -103,22 +104,22 @@ export default function HousePage() {
   }, []);
 
   const handleItemClick = (itemId) => {
+    if (dockState !== 'docked' && equippedItem === itemId) {
+      setEquippedItem(null);
+      return;
+    }
+
+    if (selectedItem === itemId && dockState === 'docked') {
+      handlePullInventory();
+      return;
+    }
+
+    setEquippedItem(itemId);
     setSelectedItem(itemId);
     setPanelMode('desc');
     setDockState('docked'); 
     setIsExitingItem(false);
     setIsItemPanelOpen(false); 
-  };
-
-  const handlePullInventory = () => {
-    setIsExitingItem(true);    
-    setDockState('returning'); 
-
-    setTimeout(() => {
-      setSelectedItem(null);
-      setDockState('settled');
-      setIsExitingItem(false);
-    }, 500);
   };
 
   const handleAddToCart = () => {
@@ -253,12 +254,12 @@ export default function HousePage() {
             {/* Slot 1 */}
             <div className="item-slot slot-1" onClick={() => handleItemClick('iroha')}>
               <img src="/assets/images/irohapixel.png" alt="Iroha" />
-              {selectedItem === 'iroha' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
+              {equippedItem === 'iroha' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
             </div>
             {/* Slot 2 */}
             <div className="item-slot slot-2" onClick={() => handleItemClick('wonhee')}>
               <img src="/assets/images/wonheepixel.png" alt="Wonhee" />
-              {selectedItem === 'wonhee' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
+              {equippedItem === 'wonhee' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
             </div>
             {/* Slot 3 */}
             <div className="item-slot slot-3">
