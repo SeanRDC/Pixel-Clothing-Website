@@ -207,7 +207,11 @@ export default function HousePage() {
             setTimeout(() => {
               setIsTransitioning(false); 
               setIsInventoryOpen(true);
-              setDockState(selectedItem ? 'docked' : 'none'); 
+              setDockState(equippedItem ? 'docked' : 'none'); 
+              if (equippedItem) {
+                setSelectedItem(equippedItem);
+                setIsExitingItem(false);
+              }
             }, 400); 
             return;
           }
@@ -220,7 +224,11 @@ export default function HousePage() {
             }
           } else {
             setIsInventoryOpen(true);
-            setDockState(selectedItem ? 'docked' : 'none');
+            setDockState(equippedItem ? 'docked' : 'none');
+            if (equippedItem) {
+              setSelectedItem(equippedItem);
+              setIsExitingItem(false);
+            }
           }
         }} 
         alt="Open Inventory" 
@@ -250,6 +258,10 @@ export default function HousePage() {
                   handlePullInventory();
                 } else {
                   setDockState('docked');
+                  if (equippedItem) {
+                    setSelectedItem(equippedItem);
+                    setIsExitingItem(false);
+                  }
                 }
               }}
             >
