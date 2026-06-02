@@ -134,7 +134,7 @@
   left: 47%;
   transform: translate(-50%, -50%);
   width: 50%;
-  font-size: 22px;
+  font-size: clamp(14px, 2vw, 22px);
   color: #000;
   line-height: 1.6;
 }
@@ -860,7 +860,6 @@
   }
 
   .dialogue-text {
-    font-size: 18px;
     width: 65%;
   }
 }
@@ -944,7 +943,6 @@
   }
 
   .dialogue-text {
-    font-size: 14.5px;
     width: 50%;
   }
 
