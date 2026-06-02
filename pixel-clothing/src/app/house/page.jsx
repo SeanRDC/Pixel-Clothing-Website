@@ -193,21 +193,17 @@ export default function HousePage() {
             setIsTransitioning(true);
             setTimeout(() => {
               setIsTransitioning(false); 
-              if (dockState === 'docked') {
-                handlePullInventory();
-              } else {
-                setIsInventoryOpen(true);
-                setDockState('none');
-              }
+              setIsInventoryOpen(true);
+              setDockState(selectedItem ? 'docked' : 'none'); 
             }, 400); 
             return;
           }
 
-          if (dockState === 'docked') {
-            handlePullInventory();
-          } else {
-            setIsInventoryOpen(!isInventoryOpen);
-            if (!isInventoryOpen) setDockState('none');
+          if (isInventoryOpen) {
+            setIsInventoryOpen(false);
+          } else { 
+            setIsInventoryOpen(true);       
+            setDockState(selectedItem ? 'docked' : 'none');
           }
         }} 
         alt="Open Inventory" 
