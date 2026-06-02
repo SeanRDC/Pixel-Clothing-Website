@@ -826,8 +826,9 @@
     display: block;
     position: fixed;
     top: 20px;
-    right: 20px;
-    width: 60px;
+    right: 19px;
+    width: 62px;
+    height: 62px;
     cursor: pointer;
     z-index: 50;
     transition: transform 0.1s, right 0.4s ease-out;
@@ -837,9 +838,9 @@
     transform: scale(1.1); 
   }
 
-  .shopping-cart-icon { width: 60px; top: 90px; right: 20px; }
-  .mobile-inventory-icon { width: 60px; top: 160px; right: 20px; }
-  .mobile-back-btn { width: 60px; top: 230px; right: 20px; }
+  .shopping-cart-icon { width: 60px; top: 81px; right: 20px; }
+  .mobile-inventory-icon { width: 63px; height: 61px; top: 143px; right: 20px; }
+  .mobile-back-btn { width: 56px; height: 57px; top: 208px; right: 22px; }
 
   .shopping-cart-icon.shifted,
   .mobile-inventory-icon.shifted,
