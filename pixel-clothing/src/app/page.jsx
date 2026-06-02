@@ -116,6 +116,10 @@ export default function Home() {
       {activePopup === 'guide' && (
         <Guide onClose={() => setActivePopup(null)} />
       )}
+
+      <div className="developer-credit" style={{ visibility: isInitialized ? 'visible' : 'hidden' }}>
+        Developed by Sean Rhani Dela Cruz
+      </div>
     </div>
   );
 }
