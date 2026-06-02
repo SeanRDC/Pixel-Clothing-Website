@@ -263,6 +263,7 @@ export default function HousePage() {
                   handlePullInventory();
                 } else {
                   setDockState('docked');
+                  setIsItemPanelOpen(false); 
                   if (equippedItem) {
                     setSelectedItem(equippedItem);
                     setIsExitingItem(false);
@@ -270,9 +271,12 @@ export default function HousePage() {
                 }
               }}
             >
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f4e1c1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points={dockState === 'docked' ? "9 18 15 12 9 6" : "15 18 9 12 15 6"}></polyline>
-              </svg>
+              <span className="desktop-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f4e1c1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points={dockState === 'docked' ? "9 18 15 12 9 6" : "15 18 9 12 15 6"}></polyline>
+                </svg>
+              </span>
+              <span className="mobile-icon">I</span>
             </button>
           )}
 
@@ -335,14 +339,21 @@ export default function HousePage() {
           <div className={`item-panel ${isExitingItem ? 'exiting' : ''} ${isItemPanelOpen ? 'panel-open' : 'panel-docked'} ${isCartOpen ? 'cart-hidden' : ''}`}>
             
             <button 
-              className="pull-panel-btn" 
-              title={isItemPanelOpen ? "Close Description" : "View Description"} 
-              onClick={() => setIsItemPanelOpen(!isItemPanelOpen)}
-            >
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f4e1c1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points={isItemPanelOpen ? "6 9 12 15 18 9" : "6 15 12 9 18 15"}></polyline>
-              </svg>
-            </button>
+          className="pull-panel-btn" 
+          onClick={() => {
+            setIsItemPanelOpen(!isItemPanelOpen);
+            if (!isItemPanelOpen) {
+              setDockState('docked'); 
+            }
+          }}
+        >
+          <span className="desktop-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f4e1c1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points={isItemPanelOpen ? "6 9 12 15 18 9" : "6 15 12 9 18 15"}></polyline>
+            </svg>
+          </span>
+          <span className="mobile-icon">D</span>
+        </button>
 
             <img src="/assets/images/descriptionbox.png" className="panel-bg" alt="Panel Box" />
             <h2 className="item-title desktop-only">{activeItemData.name}</h2>
