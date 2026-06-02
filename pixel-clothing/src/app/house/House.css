@@ -947,8 +947,9 @@
   }
 
   .mobile-shirt-title {
+    top: auto;
+    bottom: 130px;
     font-size: 22px;
-    top: 70px;
     width: 90vw;
   }
 
@@ -962,43 +963,27 @@
 
   @keyframes dockBottomMobile {
     0% { top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.6); }
-    100% { top: 100%; left: 50%; transform: translate(-50%, 0) scale(0.6); }
+    100% { top: calc(100% - 50px); left: 50%; transform: translate(-50%, 0) scale(0.6); }
   }
 
   @keyframes returnBottomMobile {
-    0% { top: 100%; left: 50%; transform: translate(-50%, 0) scale(0.6); }
+    0% { top: calc(100% - 50px); left: 50%; transform: translate(-50%, 0) scale(0.6); }
     100% { top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.6); }
+  }
+
+  .item-panel {
+    bottom: 50px !important;
   }
 
   .item-panel.panel-docked {
     transform: translateX(-50%) translateY(100%);
   }
 
-  .pull-inventory-btn {
-    position: absolute;
-    top: -150px; 
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 75px;
-    font-family: 'Depixel', monospace;
-    font-size: 34px;
-    color: #f4e1c1;
-    border-radius: 12px 12px 0 0;
-    border: 5px solid #4e2302;
-    border-bottom: none;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
   .pull-panel-btn {
     position: absolute;
     top: -45px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(4px); 
     width: 48px;
     height: 45px;
     font-family: 'Depixel', monospace;
@@ -1006,6 +991,26 @@
     color: #f4e1c1;
     border-radius: 8px 8px 0 0;
     border: 3px solid #4e2302;
+    border-bottom: none;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pull-inventory-btn {
+    position: absolute;
+    top: -75px; 
+    left: 50%;
+    right: auto;
+    transform: translateX(calc(-100% - 6px)); 
+    width: 80px; 
+    height: 75px;
+    font-family: 'Depixel', monospace;
+    font-size: 34px; 
+    color: #f4e1c1;
+    border-radius: 13px 13px 0 0;
+    border: 5px solid #4e2302;
     border-bottom: none;
     line-height: 1;
     display: flex;
