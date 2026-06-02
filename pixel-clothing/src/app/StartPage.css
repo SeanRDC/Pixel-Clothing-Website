@@ -171,3 +171,24 @@
     50% { transform: translateY(-4px) scale(1); opacity: 1; }
   }
 }
+
+@media (max-width: 500px) {
+  .logo-container { padding-top: 60px; }
+  .logo { width: 240px; }
+  .start-button { width: 180px; }
+  
+  .menu-text { 
+    gap: 25px; 
+    font-size: 1.6rem; 
+  }
+  
+  .menu-text p {
+    padding: 12px 25px; 
+    margin: 0;
+  }
+  
+  @keyframes startFloat {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 1; }
+    50% { transform: translateY(-4px) scale(1); opacity: 1; }
+  }
+}
