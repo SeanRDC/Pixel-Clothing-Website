@@ -867,6 +867,16 @@
   .dialogue-text {
     width: 52%;
   }
+
+  .mobile-shirt-title {
+    top: calc(100vh - 250px); 
+    font-size: clamp(22px, 4vw, 32px);
+  }
+
+  .center-display-image {
+    width: 60vw !important;
+    max-width: 450px;
+  }
 }
 
 @media (max-width: 500px) {
@@ -992,8 +1002,8 @@
   }
 
   .mobile-shirt-title {
-    top: auto;
-    bottom: 180px;
+    top: calc(100vh - 180px); 
+    bottom: auto;
     font-size: 22px;
     width: 90vw;
   }
