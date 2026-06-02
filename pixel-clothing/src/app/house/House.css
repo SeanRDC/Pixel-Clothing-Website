@@ -841,6 +841,30 @@
   .pull-panel-btn:hover svg { transform: scale(1.2); }
 }
 
+@media (max-width: 950px) {
+  .merchant-station {
+    width: 100vw;
+    right: 0;
+    left: 0;
+  }
+
+  .merchant-character {
+    left: 85%;
+    transform: translateX(-50%);
+  }
+
+  .dialogue-box {
+    width: 70vw;
+    right: 15vw;
+    top: 50px;
+  }
+
+  .dialogue-text {
+    font-size: 18px;
+    width: 65%;
+  }
+}
+
 @media (max-width: 500px) {
   .mobile-settings-icon {
     display: block;
