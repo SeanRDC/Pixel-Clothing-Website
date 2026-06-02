@@ -239,7 +239,7 @@ export default function HousePage() {
         alt="Back"
       />
 
-      <div className={`shop-environment ${isCartOpen ? 'cart-hidden' : ''}`}>
+      <div className={`shop-environment ${isCartOpen || activePopup ? 'cart-hidden' : ''}`}>
 
           {!activePopup && (
             <div className={`keepers-inventory ${isInventoryOpen ? 'open-modal' : ''} ${dockState === 'docked' ? 'docked' : ''} ${dockState === 'returning' ? 'returning' : ''} ${dockState === 'settled' ? 'settled' : ''}`}>
@@ -292,7 +292,7 @@ export default function HousePage() {
           </div>
         )}
 
-        {!selectedItem && !activePopup && !isInventoryOpen && !isTransitioning && (
+        {!selectedItem && !isInventoryOpen && !isTransitioning && (
           <div className={`merchant-station ${isCartOpen ? 'cart-hidden' : ''}`}>
             <div className="dialogue-box">
               <img src="/assets/images/speechbox.png" className="dialogue-bg" alt="Speech Box" />
@@ -307,7 +307,7 @@ export default function HousePage() {
           </div>
         )}
 
-        {selectedItem && !activePopup && activeItemData && (
+        {selectedItem && activeItemData && (
           <>
             <h2 className={`mobile-shirt-title ${isExitingItem || isItemPanelOpen ? 'hide-for-panel' : ''} ${isCartOpen ? 'cart-hidden' : ''}`}>
               {activeItemData.name}
@@ -320,7 +320,7 @@ export default function HousePage() {
           </>
         )}
 
-        {selectedItem && !activePopup && activeItemData && (
+        {selectedItem && activeItemData && (
           <div className={`item-panel ${isExitingItem ? 'exiting' : ''} ${isItemPanelOpen ? 'panel-open' : 'panel-docked'} ${isCartOpen ? 'cart-hidden' : ''}`}>
             
             <button 
