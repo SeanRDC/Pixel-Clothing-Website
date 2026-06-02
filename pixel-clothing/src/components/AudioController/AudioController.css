@@ -27,10 +27,19 @@
 }
 
 @media (max-width: 500px) {
-  
+
+  .sound-toggle-container {
+    width: 55px;
+    height: 55px;
+    bottom: 15px; 
+    right: 15px;
+  }
+
   .sound-icon {
-    transform: scale(0.7); 
-    
-    transform-origin: bottom right; 
+    transform: none; 
+  }
+  
+  .sound-icon:hover {
+    transform: scale(1.1);
   }
 }
