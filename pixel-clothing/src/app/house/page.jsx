@@ -228,14 +228,20 @@ export default function HousePage() {
       {!activePopup && (
         <div className={`keepers-inventory ${isInventoryOpen ? 'open-modal' : ''} ${dockState === 'docked' ? 'docked' : ''} ${dockState === 'returning' ? 'returning' : ''} ${dockState === 'settled' ? 'settled' : ''}`}>
           
-          {dockState === 'docked' && (
+          {isInventoryOpen && (
             <button 
               className="pull-inventory-btn" 
-              title="Return to Inventory" 
-              onClick={handlePullInventory}
+              title={dockState === 'docked' ? "Center Inventory" : "Dock Inventory"} 
+              onClick={() => {
+                if (dockState === 'docked') {
+                  handlePullInventory();
+                } else {
+                  setDockState('docked');
+                }
+              }}
             >
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f4e1c1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
+                <polyline points={dockState === 'docked' ? "9 18 15 12 9 6" : "15 18 9 12 15 6"}></polyline>
               </svg>
             </button>
           )}
