@@ -34,6 +34,7 @@ export default function HousePage() {
   const [dockState, setDockState] = useState('none');
   const [isExitingItem, setIsExitingItem] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
 
   // Description box states
   const [isItemPanelOpen, setIsItemPanelOpen] = useState(false);
@@ -301,7 +302,7 @@ export default function HousePage() {
               {equippedItem === 'wonhee' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
             </div>
             {/* Slot 3 */}
-            <div className="item-slot slot-3">
+            <div className="item-slot slot-3" onClick={() => setIsComingSoonOpen(true)}>
               <img src="/assets/images/question.png" alt="Mystery" />
             </div>
           </div>
@@ -516,6 +517,16 @@ export default function HousePage() {
       {activePopup === 'quest' && <QuestPopup onClose={() => setActivePopup(null)} />}
       {activePopup === 'guide' && <Guide onClose={() => setActivePopup(null)} />}
       {activePopup === 'about' && <AboutPopup onClose={() => setActivePopup(null)} />}
+
+      {isComingSoonOpen && (
+        <div className="coming-soon-popup">
+          <div className="popup-content">
+            <button className="close-popup-btn" onClick={() => setIsComingSoonOpen(false)}>[X]</button>
+            <h2>Coming Soon</h2>
+            <p>Future content is currently in development. Stay tuned, Traveler!</p>
+          </div>
+        </div>
+      )}
 
     </div>
   );
