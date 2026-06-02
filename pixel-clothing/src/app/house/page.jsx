@@ -103,6 +103,18 @@ export default function HousePage() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const handlePullInventory = () => {
+    setIsExitingItem(true);       
+    setDockState('returning');    
+    
+    setTimeout(() => {
+      setSelectedItem(null);
+      setIsExitingItem(false);
+      setDockState('settled');
+      setTimeout(() => setDockState('none'), 50);
+    }, 500); 
+  };
+
   const handleItemClick = (itemId) => {
     if (dockState !== 'docked' && equippedItem === itemId) {
       setEquippedItem(null);

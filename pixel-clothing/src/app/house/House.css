@@ -170,7 +170,13 @@
   z-index: 30;
   animation: panelSlideIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
-.panel-bg { position: absolute; width: 100%; height: 100%; image-rendering: pixelated; }
+.panel-bg { 
+  position: absolute; 
+  width: 100%; 
+  height: 100%; 
+  image-rendering: pixelated; 
+  pointer-events: none;
+}
 .item-title { position: absolute; top: 10px; left: 70px; right: 70px; text-align: center; font-size: 26px; color: #dd7d41; }
 .description-section, .passive-section, .sizes-section { position: absolute; left: 180px; right: 180px; }
 .description-section { top: 150px; }
@@ -694,15 +700,6 @@
 
 @media (max-width: 1350px) {
   .desktop-only { display: none; }
-
-  .keepers-inventory.open-modal.docked {
-    animation: dockLeftFully 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-  }
-
-  @keyframes dockLeftFully {
-    0% { left: 50%; transform: translate(-50%, -50%) scale(1); }
-    100% { left: 0%; transform: translate(-100%, -50%) scale(1); } 
-  }
 
   .keepers-inventory.open-modal.docked {
     animation: dockLeftFully 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
