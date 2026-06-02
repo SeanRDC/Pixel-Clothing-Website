@@ -25,3 +25,12 @@
 .sound-icon:hover {
   transform: scale(1.1);
 }
+
+@media (max-width: 500px) {
+  
+  .sound-icon {
+    transform: scale(0.7); 
+    
+    transform-origin: bottom right; 
+  }
+}
