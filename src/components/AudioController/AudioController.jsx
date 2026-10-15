@@ -1,9 +1,10 @@
 "use client";
 import React, { useState, useRef, useEffect } from 'react';
 import useHydrated from '../../lib/useHydrated';
-import './AudioController.css';
+import IconButton from '../ui/IconButton';
+import styles from './AudioController.module.css';
 
-export default function AudioController({ isVisible }) {
+export default function AudioController({ isVisible, className = '' }) {
   const isHydrated = useHydrated();
   // null until the user toggles; until then fall back to the saved preference
   const [mutedChoice, setMutedChoice] = useState(null);
@@ -20,7 +21,11 @@ export default function AudioController({ isVisible }) {
     const newMuteState = !isMuted;
     setMutedChoice(newMuteState);
 
-    localStorage.setItem('musicMuted', newMuteState);
+    try {
+      localStorage.setItem('musicMuted', newMuteState);
+    } catch {
+      // preference just won't persist
+    }
 
     if (newMuteState) {
       audioRef.current.pause();
@@ -28,13 +33,14 @@ export default function AudioController({ isVisible }) {
   };
 
   return (
-    <div className={`sound-toggle-container ${isVisible ? 'visible' : ''}`}>
+    <div className={`${styles.toggle} ${isVisible ? styles.visible : ''} ${className}`}>
       <audio ref={audioRef} src="/assets/audio/song.m4a" loop preload="none" />
-      <img
-        src={isMuted ? "/assets/images/soundoff.png" : "/assets/images/sound.png"}
-        alt={isMuted ? "Mute Icon" : "Sound Icon"}
-        className="sound-icon"
+      <IconButton
+        icon={isMuted ? 'soundOff' : 'sound'}
+        label={isMuted ? 'Unmute music' : 'Mute music'}
+        aria-pressed={isMuted}
         onClick={toggleSound}
+        tabIndex={isVisible ? 0 : -1}
       />
     </div>
   );

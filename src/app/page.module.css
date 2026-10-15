@@ -1,0 +1,184 @@
+.page {
+  position: relative;
+  height: 100dvh;
+  overflow: hidden;
+  animation: bootUp 1.6s ease-out both;
+}
+
+.leaving {
+  animation: leave 0.45s ease-in forwards;
+}
+
+@keyframes bootUp {
+  from { opacity: 0; filter: brightness(0); }
+}
+
+@keyframes leave {
+  to { opacity: 0; filter: brightness(0); }
+}
+
+/* Dims and blurs the scene until the player presses start */
+.veil {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background: rgba(12, 8, 28, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: backdrop-filter 0.8s ease, background 0.8s ease;
+  pointer-events: none;
+}
+
+.veilLifted {
+  background: radial-gradient(ellipse at center, rgba(12, 8, 28, 0.15) 30%, rgba(12, 8, 28, 0.55) 100%);
+  backdrop-filter: blur(0);
+  -webkit-backdrop-filter: blur(0);
+}
+
+.main {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(28px, 7vh, 64px);
+  padding: 24px 16px 96px;
+}
+
+.logoWrap {
+  animation: dropIn 0.9s var(--ease-pop) 0.4s both, float 5s ease-in-out 1.3s infinite;
+}
+
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-60px); }
+}
+
+@keyframes float {
+  50% { transform: translateY(-8px); }
+}
+
+/* ---------- Start prompt ---------- */
+.start {
+  font-family: var(--font-pixel);
+  font-size: clamp(18px, 3.2vw, 26px);
+  color: var(--cream);
+  text-shadow: 3px 3px 0 var(--outline);
+  padding: 12px 20px;
+  animation: fadeUp 0.6s ease-out 1.2s both, blink 1.4s steps(2, jump-none) 1.8s infinite;
+}
+
+.start:hover {
+  color: var(--gold);
+}
+
+@keyframes blink {
+  50% { opacity: 0.25; }
+}
+
+/* ---------- Menu ---------- */
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1.6vh, 14px);
+}
+
+.menuItem {
+  position: relative;
+  padding: 6px 28px;
+  font-family: var(--font-pixel);
+  font-size: clamp(18px, 3vw, 28px);
+  color: var(--cream);
+  text-shadow: 3px 3px 0 var(--outline);
+  animation: fadeUp 0.45s var(--ease-out) both;
+  transition: color 0.12s ease, transform 0.12s ease;
+}
+
+.menuItem::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  border: 8px solid transparent;
+  border-left: 10px solid var(--gold);
+  transform: translateY(-50%);
+  opacity: 0;
+  filter: drop-shadow(2px 2px 0 var(--outline));
+  transition: opacity 0.12s ease, left 0.12s ease;
+}
+
+.menuItem:hover,
+.menuItem:focus-visible {
+  color: var(--gold);
+  transform: translateX(6px);
+}
+
+.menuItem:hover::before,
+.menuItem:focus-visible::before {
+  opacity: 1;
+  left: 0;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+}
+
+/* ---------- Corners ---------- */
+.sound {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 3;
+}
+
+.credit {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  z-index: 3;
+  display: grid;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: var(--cream);
+  text-decoration: none;
+  text-shadow: 2px 2px 0 var(--outline);
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
+.creditDefault,
+.creditHover {
+  grid-area: 1 / 1;
+  text-align: center;
+  transition: opacity 0.2s ease;
+}
+
+.creditHover {
+  opacity: 0;
+  color: var(--gold);
+}
+
+.credit:hover .creditDefault,
+.credit:focus-visible .creditDefault {
+  opacity: 0;
+}
+
+.credit:hover .creditHover,
+.credit:focus-visible .creditHover {
+  opacity: 1;
+}
+
+@media (max-width: 600px) {
+  .sound {
+    right: 12px;
+    bottom: 12px;
+    --icon-btn: 52px;
+  }
+
+  .credit {
+    bottom: 76px;
+    font-size: 9px;
+  }
+}

@@ -1,128 +1,99 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useHydrated from '../lib/useHydrated';
+import Scene from '../components/Scene/Scene';
+import Logo from '../components/ui/Logo';
 import AudioController from '../components/AudioController/AudioController';
 import QuestPopup from '../components/Popups/QuestPopup';
 import AboutPopup from '../components/Popups/AboutPopup';
 import Guide from '../components/Popups/Guide';
-import './StartPage.css';
+import styles from './page.module.css';
 
-const backgrounds = [
-  'bg.png',
-  'bgimg2.png',
-  'bgimg3.png',
-  'bgimg4.png',
-  'bgimg5.png',
-  'bgimg6.png',
-  'bgimg7.png'
+const MENU = [
+  { key: 'house', label: 'Enter House' },
+  { key: 'quest', label: 'Quest' },
+  { key: 'guide', label: 'Guide' },
+  { key: 'about', label: 'About Us' },
 ];
 
 export default function Home() {
   const router = useRouter();
   const [hasClickedStart, setHasClickedStart] = useState(false);
   const [activePopup, setActivePopup] = useState(null);
-  const [isHidingButton, setIsHidingButton] = useState(false);
-  const [bgIndex, setBgIndex] = useState(0);
-  const [isNavigating, setIsNavigating] = useState(false);
+  const [isLeaving, setIsLeaving] = useState(false);
 
-  // Hidden until hydrated so the "Start" button doesn't flash when returning
+  // Hidden until hydrated so the "Start" prompt doesn't flash when returning
   const isInitialized = useHydrated();
 
-  // 1. Check if the user is returning from the house!
+  // Returning from the house skips the start prompt
   const isReturning = isInitialized && sessionStorage.getItem('hasStarted') === 'true';
   const isStarted = hasClickedStart || isReturning;
 
-  useEffect(() => {
-    backgrounds.forEach((bg) => {
-      const img = new Image();
-      img.src = `/assets/images/${bg}`;
-    });
-  }, []);
-
-  useEffect(() => {
-    if (isNavigating) return;
-    const interval = setInterval(() => {
-      setBgIndex((prev) => (prev + 1) % backgrounds.length);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, [isNavigating]);
-
   const handleStart = () => {
-    setIsHidingButton(true);
-    
-    // 2. Save their progress so they don't have to click start again!
     sessionStorage.setItem('hasStarted', 'true');
-    
-    setTimeout(() => {
-      setHasClickedStart(true);
-    }, 400);
+    setHasClickedStart(true);
   };
 
-  const navigateToHouse = () => {
-    setIsNavigating(true);
-    router.push('/house');
+  const handleMenu = (key) => {
+    if (key !== 'house') {
+      setActivePopup(key);
+      return;
+    }
+    setIsLeaving(true);
+    router.prefetch('/house');
+    setTimeout(() => router.push('/house'), 450);
   };
+
+  const closePopup = () => setActivePopup(null);
 
   return (
-    <div className="start-page-container">
-      {backgrounds.map((bg, index) => (
-        <div
-          key={bg}
-          className={`bg-layer ${index === bgIndex ? 'active' : ''}`}
-          style={{ backgroundImage: `url('/assets/images/${bg}')` }}
-        />
-      ))}
+    <div className={`${styles.page} ${isLeaving ? styles.leaving : ''}`}>
+      <Scene />
+      <div className={`${styles.veil} ${isStarted && !activePopup ? styles.veilLifted : ''}`} />
 
-      <div className={`blur-overlay ${isStarted && !activePopup ? 'remove-blur' : ''}`}></div>
+      <main className={styles.main} style={{ visibility: isInitialized ? 'visible' : 'hidden' }}>
+        <h1 className={styles.logoWrap}>
+          <Logo />
+        </h1>
 
-      <div className="logo-container">
-        <img src="/assets/images/logo.png" alt="Retro Mc Logo" className="logo" />
-      </div>
-
-      <main className="main-content" style={{ visibility: isInitialized ? 'visible' : 'hidden' }}>
         {!isStarted ? (
-          <img 
-            src="/assets/images/start.png" 
-            alt="Touch to Start" 
-            className="start-button"
-            onClick={handleStart} 
-            style={{ opacity: isHidingButton ? 0 : '', transition: 'opacity 0.4s ease' }}
-          />
+          <button type="button" className={styles.start} onClick={handleStart}>
+            Press to Start
+          </button>
         ) : (
-          <div className={`menu-text ${isStarted ? 'show' : ''}`}>
-            <p onClick={navigateToHouse}>Enter House</p>
-            <p onClick={() => setActivePopup('quest')}>Quest</p>
-            <p onClick={() => setActivePopup('guide')}>Guide</p>
-            <p onClick={() => setActivePopup('about')}>About Us</p>
-          </div>
+          <nav className={styles.menu} aria-label="Main menu">
+            {MENU.map((item, i) => (
+              <button
+                key={item.key}
+                type="button"
+                className={styles.menuItem}
+                style={{ animationDelay: `${i * 70}ms` }}
+                onClick={() => handleMenu(item.key)}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
         )}
       </main>
 
-      <AudioController isVisible={isStarted} />
+      <AudioController isVisible={isStarted} className={styles.sound} />
 
-      {activePopup === 'quest' && (
-        <QuestPopup onClose={() => setActivePopup(null)} />
-      )}
-      
-      {activePopup === 'about' && (
-        <AboutPopup onClose={() => setActivePopup(null)} />
-      )}
-
-      {activePopup === 'guide' && (
-        <Guide onClose={() => setActivePopup(null)} />
-      )}
-
-      <a 
-        href="https://www.linkedin.com/in/sean-rhani-dela-cruz-834573334" 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="developer-credit" 
+      <a
+        href="https://www.linkedin.com/in/sean-rhani-dela-cruz-834573334"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.credit}
         style={{ visibility: isInitialized ? 'visible' : 'hidden' }}
       >
-        <span className="default-text">Developed by Sean Rhani Dela Cruz</span>
-        <span className="hover-text">VISIT LINKEDIN</span>
+        <span className={styles.creditDefault}>Developed by Sean Rhani Dela Cruz</span>
+        <span className={styles.creditHover} aria-hidden="true">Visit LinkedIn</span>
       </a>
+
+      {activePopup === 'quest' && <QuestPopup onClose={closePopup} />}
+      {activePopup === 'about' && <AboutPopup onClose={closePopup} />}
+      {activePopup === 'guide' && <Guide onClose={closePopup} />}
     </div>
   );
 }
