@@ -3,6 +3,7 @@ import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import AudioController from '../../components/AudioController/AudioController';
 import ScrollPopup from '../../components/Popups/ScrollPopup';
+import HouseScene from '../../components/House/HouseScene';
 import PixelIcon from '../../components/ui/PixelIcon';
 import useHydrated from '../../lib/useHydrated';
 import { readCart, writeCart } from '../../lib/cart';
@@ -47,6 +48,8 @@ export default function CheckoutPage() {
   };
 
   return (
+    <>
+    <HouseScene showEJ={false} />
     <div className={styles.page}>
       <h1 className={styles.title}>Items Checkout</h1>
 
@@ -152,5 +155,6 @@ export default function CheckoutPage() {
 
       <AudioController isVisible={true} className={styles.sound} />
     </div>
+    </>
   );
 }
