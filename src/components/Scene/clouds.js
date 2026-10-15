@@ -1,8 +1,8 @@
 // Procedural pixel clouds. Each layer is a strip that wraps around horizontally,
 // so two copies side by side can scroll forever without a seam.
 
-export const STRIP_W = 352;
-export const STRIP_H = 80;
+export const STRIP_W = 320;
+export const STRIP_H = 72;
 
 function rng(seed) {
   let s = seed >>> 0;

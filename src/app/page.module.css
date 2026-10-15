@@ -83,6 +83,9 @@
   flex-direction: column;
   align-items: center;
   gap: clamp(6px, 1.6vh, 14px);
+  padding: 18px 36px;
+  /* soft shadow so the menu stays readable over the bright house */
+  background: radial-gradient(ellipse at center, rgba(12, 8, 28, 0.6) 0%, rgba(12, 8, 28, 0.35) 45%, transparent 72%);
 }
 
 .menuItem {
