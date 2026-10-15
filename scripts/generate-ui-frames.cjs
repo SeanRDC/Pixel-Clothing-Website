@@ -134,4 +134,75 @@ function notched(g, x, y, w, h, c) {
   [[14, 10], [4, 5]].forEach(([x, y]) => g.px(x, y, 'L'));
   fs.writeFileSync(out + '/paper-texture.svg', toSvg(g).replace('<svg ', '<svg opacity="0.55" '));
 }
+// Mouse cursors: grids drawn at 2x so each art pixel is 2 screen pixels
+function cursorSvg(rows, palette) {
+  const g = fromRows(rows);
+  const h = g.length, w = g[0].length;
+  let body = '';
+  g.forEach((row, y) => row.forEach((c, x) => {
+    if (c) body += `<rect x="${x}" y="${y}" width="1" height="1" fill="${palette[c]}"/>`;
+  }));
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w * 2}" height="${h * 2}" shape-rendering="crispEdges">${body}</svg>
+`;
+}
+const cursorPalette = { K: '#24120a', W: '#fff1d2', S: '#e0b878' };
+fs.writeFileSync(out + '/cursor.svg', cursorSvg([
+  'K...........',
+  'KK..........',
+  'KWK.........',
+  'KWWK........',
+  'KWWWK.......',
+  'KWWWWK......',
+  'KWWWWWK.....',
+  'KWWWWWWK....',
+  'KWWWWWWWK...',
+  'KWWWWWWWSK..',
+  'KWWWWWWSSSK.',
+  'KWWWWWWKKKKK',
+  'KWWWKWWK....',
+  'KWWKKSWK....',
+  'KWK..KSWK...',
+  'KK...KSWK...',
+  'K.....KSWK..',
+  '......KSSK..',
+  '.......KK...',
+], cursorPalette));
+fs.writeFileSync(out + '/cursor-click.svg', cursorSvg([
+  '.....KK.......',
+  '....KWWK......',
+  '....KWWK......',
+  '....KWWK......',
+  '....KWWKKK....',
+  '....KWWKWWKKK.',
+  '.KK.KWWKWWKWWK',
+  'KWWKKWWWWWWWWK',
+  'KWWWKWWWWWWWSK',
+  '.KWWWWWWWWWWSK',
+  '..KWWWWWWWWWSK',
+  '..KWWWWWWWWSK.',
+  '...KWWWWWWSSK.',
+  '....KWWWWWSK..',
+  '....KKKKKKKK..',
+], cursorPalette));
+
+// Favicon: a little teal tee
+// Usage adds the favicon path: node scripts/generate-ui-frames.cjs public/assets/ui src/app/icon.svg
+fs.writeFileSync(process.argv[3] || out + '/../../../src/app/icon.svg', cursorSvg([
+  '................',
+  '....KKK..KKK....',
+  '..KKTTTKKTTTKK..',
+  '.KTTTTTTTTTTTTK.',
+  'KTTTTTTTTTTTTTTK',
+  'KTTTTTTTTTTTTTTK',
+  '.KKTTTTTTTTTTKK.',
+  '...KTTTTTTTTK...',
+  '...KTTGGGGTTK...',
+  '...KTTGTTGTTK...',
+  '...KTTGGGGTTK...',
+  '...KTTTTTTTTK...',
+  '...KDTTTTTTDK...',
+  '...KDDDDDDDDK...',
+  '...KKKKKKKKKK...',
+  '................',
+], { K: '#24120a', T: '#2e6a74', D: '#1f4a52', G: '#f4c26f' }));
 console.log('ok');

@@ -5,10 +5,10 @@ import PixelIcon from '../ui/PixelIcon';
 import styles from './Popups.module.css';
 
 const QUESTS = [
-  { key: 'tiktok', label: 'Follow on TikTok', url: 'https://tiktok.com', icon: '/assets/images/tiktok.png' },
-  { key: 'ig', label: 'Follow on IG', url: 'https://instagram.com', icon: '/assets/images/instagram.png' },
-  { key: 'discord', label: 'Join Discord', url: 'https://discord.com', icon: '/assets/images/discord.png' },
-  { key: 'linkedin', label: 'Connect on LinkedIn', url: 'https://linkedin.com', icon: '/assets/images/linkedin-logo.png' },
+  { key: 'tiktok', label: 'Follow on TikTok', url: 'https://tiktok.com', icon: 'tiktok' },
+  { key: 'ig', label: 'Follow on IG', url: 'https://instagram.com', icon: 'instagram' },
+  { key: 'discord', label: 'Join Discord', url: 'https://discord.com', icon: 'discord' },
+  { key: 'linkedin', label: 'Connect on LinkedIn', url: 'https://linkedin.com', icon: 'linkedin' },
 ];
 
 const defaultQuests = { tiktok: false, ig: false, discord: false, linkedin: false };
@@ -58,7 +58,7 @@ export default function QuestPopup({ onClose }) {
                 {quest.label}
                 {quests[quest.key] && <span className="visually-hidden"> (completed)</span>}
               </span>
-              <img className={styles.social} src={quest.icon} alt="" />
+              <PixelIcon name={quest.icon} size={40} className={styles.social} />
             </a>
           </li>
         ))}

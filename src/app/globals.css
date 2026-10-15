@@ -36,8 +36,8 @@
   --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  --cursor: url('/assets/images/mousecursor.png') 0 0, auto;
-  --cursor-click: url('/assets/images/mouseclick.png') 12 5, pointer;
+  --cursor: url('/assets/ui/cursor.svg') 0 0, auto;
+  --cursor-click: url('/assets/ui/cursor-click.svg') 10 1, pointer;
 }
 
 @media (max-width: 600px) {
