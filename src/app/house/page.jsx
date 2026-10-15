@@ -307,6 +307,8 @@ export default function HousePage() {
 
       {/* ---------- Shop ---------- */}
       <main className={`${styles.shop} ${activeItem ? styles.hasItem : ''}`}>
+        {/* the scrim must share the shop's stacking context, or it covers the sheet */}
+        {isInventoryOpen && <div className={styles.sheetScrim} onClick={() => setIsInventoryOpen(false)} aria-hidden="true" />}
         {inventoryPanel}
 
         <section className={styles.stage}>
@@ -391,7 +393,6 @@ export default function HousePage() {
         )}
       </main>
 
-      {isInventoryOpen && <div className={styles.sheetScrim} onClick={() => setIsInventoryOpen(false)} aria-hidden="true" />}
 
       {/* ---------- Cart drawer ---------- */}
       <div className={`${styles.cartScrim} ${isCartOpen ? styles.cartScrimOpen : ''}`} onClick={closeCart} aria-hidden="true" />
