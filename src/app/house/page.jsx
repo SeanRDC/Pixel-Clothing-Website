@@ -448,7 +448,7 @@ export default function HousePage() {
           )}
 
           {checkoutStep === 'details' && (
-            <form className="retro-checkout-form" onSubmit={handlePlaceOrder}>
+            <form id="shipping-form" className="retro-checkout-form" onSubmit={handlePlaceOrder}>
               <label className="retro-label">Hero&apos;s Name</label>
               <input 
                 type="text" 
@@ -507,7 +507,7 @@ export default function HousePage() {
           {checkoutStep === 'details' && (
             <div className="checkout-actions">
               <button className="retro-btn-secondary" onClick={() => setCheckoutStep('cart')}>&lt; Back</button>
-              <button className="retro-btn-primary" onClick={handlePlaceOrder}>Confirm Payment</button>
+              <button type="submit" form="shipping-form" className="retro-btn-primary">Confirm Payment</button>
             </div>
           )}
 
