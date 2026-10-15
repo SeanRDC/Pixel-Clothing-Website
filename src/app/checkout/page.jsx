@@ -1,150 +1,156 @@
 "use client";
 import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import './Checkout.css';
 import AudioController from '../../components/AudioController/AudioController';
+import ScrollPopup from '../../components/Popups/ScrollPopup';
+import PixelIcon from '../../components/ui/PixelIcon';
 import useHydrated from '../../lib/useHydrated';
 import { readCart, writeCart } from '../../lib/cart';
+import styles from './Checkout.module.css';
+
+const SHIPPING = [
+  { id: 'swift', label: 'Swift Horse', eta: '2–3 days', cost: 100 },
+  { id: 'dragon', label: 'Dragon Express', eta: 'Next day', cost: 150 },
+  { id: 'merchant', label: 'Merchant Walk', eta: '5–7 days', cost: 50 },
+];
+
+const PROVINCES = ['Northern Realm', 'Eastern Sands', 'Western Peaks'];
+
+const formatPrice = (value) => `₱${value.toFixed(2)}`;
 
 export default function CheckoutPage() {
   const router = useRouter();
   const isHydrated = useHydrated();
 
   const cart = useMemo(() => (isHydrated ? readCart() : []), [isHydrated]);
-  const [shippingCost, setShippingCost] = useState(0);
-  const [selectedShipping, setSelectedShipping] = useState(null);
+  const [shippingId, setShippingId] = useState(null);
+  const [error, setError] = useState('');
   const [isQuestComplete, setIsQuestComplete] = useState(false);
 
+  const shippingCost = SHIPPING.find((s) => s.id === shippingId)?.cost ?? 0;
   const subtotal = cart.reduce((total, item) => total + item.price, 0);
   const total = subtotal + shippingCost;
 
-  // Handlers
-  const handleShippingSelect = (option, cost) => {
-    setSelectedShipping(option);
-    setShippingCost(cost);
-  };
-
-  const handleCompleteQuest = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (cart.length === 0) {
-      alert("Your inventory bag is empty!");
+      setError('Your inventory bag is empty!');
       return;
     }
-    
+    if (!shippingId) {
+      setError('Choose how your gear should travel.');
+      return;
+    }
+    setError('');
     setIsQuestComplete(true);
     writeCart([]);
   };
 
-  const handleReturnToMerchant = () => {
-    router.push('/house');
-  };
-
   return (
-    <div className="checkout-wrapper">
-      <h1 className="page-title">Items Checkout</h1>
+    <div className={styles.page}>
+      <h1 className={styles.title}>Items Checkout</h1>
 
-      <div className="checkout-content">
-        <div className="left-side">
-          
-          <div className="section player-scroll">
-            <h2>PLAYER SCROLL</h2>
-            <div className="form-row">
-              <label>Full Name</label>
-              <input type="text" className="checkout-input" placeholder="Enter thy name..." />
-              <label>(Email)</label>
-              <input type="email" className="checkout-input" placeholder="hero@realm.com" />
+      <form className={styles.layout} onSubmit={handleSubmit}>
+        <div className={styles.forms}>
+          <section className={`${styles.section} frame-wood`}>
+            <h2 className={styles.heading}>Player Scroll</h2>
+            <div className={styles.grid}>
+              <label className={styles.field}>
+                <span>Full Name</span>
+                <input type="text" required autoComplete="name" placeholder="Enter thy name..." />
+              </label>
+              <label className={styles.field}>
+                <span>Email</span>
+                <input type="email" required autoComplete="email" placeholder="hero@realm.com" />
+              </label>
+              <label className={`${styles.field} ${styles.wide}`}>
+                <span>Address</span>
+                <input type="text" required autoComplete="street-address" placeholder="123 Castle Lane, Kingdom City" />
+              </label>
+              <label className={styles.field}>
+                <span>Province</span>
+                <select defaultValue={PROVINCES[0]}>
+                  {PROVINCES.map((p) => <option key={p}>{p}</option>)}
+                </select>
+              </label>
+              <label className={styles.field}>
+                <span>Postal Code</span>
+                <input type="text" required inputMode="numeric" autoComplete="postal-code" placeholder="12345" />
+              </label>
             </div>
-            <div className="form-row">
-              <label>(Address)</label>
-              <input type="text" className="checkout-input address-input" placeholder="123 Castle Lane, Kingdom City" />
-            </div>
-            <div className="form-row">
-              <label>Province</label>
-              <select className="checkout-select">
-                <option>Northern Realm</option>
-                <option>Eastern Sands</option>
-                <option>Western Peaks</option>
-              </select>
-              <label>Postal Code</label>
-              <input type="text" className="checkout-input" placeholder="12345" />
-            </div>
-          </div>
+          </section>
 
-          <div className="section shipping-speed">
-            <h2>Shipping Speed</h2>
-            <div className="shipping-options">
-              <div 
-                className={`ship-option ${selectedShipping === 'swift' ? 'selected' : ''}`}
-                onClick={() => handleShippingSelect('swift', 100)}
-              >
-                SWIFT HORSE<br/><small>2–3 DAYS (₱100)</small>
-              </div>
-              <div 
-                className={`ship-option ${selectedShipping === 'dragon' ? 'selected' : ''}`}
-                onClick={() => handleShippingSelect('dragon', 150)}
-              >
-                DRAGON EXPRESS<br/><small>NEXT DAY (₱150)</small>
-              </div>
-              <div 
-                className={`ship-option ${selectedShipping === 'merchant' ? 'selected' : ''}`}
-                onClick={() => handleShippingSelect('merchant', 50)}
-              >
-                MERCHANT WALK<br/><small>5–7 DAYS (₱50)</small>
-              </div>
+          <section className={`${styles.section} frame-wood`}>
+            <h2 className={styles.heading}>Shipping Speed</h2>
+            <div className={styles.shipping} role="radiogroup" aria-label="Shipping speed">
+              {SHIPPING.map((option) => (
+                <label key={option.id} className={`${styles.ship} ${shippingId === option.id ? styles.shipSelected : ''}`}>
+                  <input
+                    type="radio"
+                    name="shipping"
+                    value={option.id}
+                    checked={shippingId === option.id}
+                    onChange={() => setShippingId(option.id)}
+                  />
+                  <strong>{option.label}</strong>
+                  <small>{option.eta} ({formatPrice(option.cost)})</small>
+                </label>
+              ))}
             </div>
-          </div>
+          </section>
 
-          <div className="section payment">
-            <h2>💰 Payment</h2>
-            <div className="payment-box">
-              <label>GCASH NUMBER</label>
-              <input type="text" className="checkout-input" placeholder="1234 5678 9012 3456" />
-              <label>GCASH NAME</label>
-              <input type="text" className="checkout-input" placeholder="Hero of the Realm" />
+          <section className={`${styles.section} frame-wood`}>
+            <h2 className={styles.heading}>Payment</h2>
+            <div className={styles.grid}>
+              <label className={styles.field}>
+                <span>GCash Number</span>
+                <input type="text" required inputMode="numeric" autoComplete="off" placeholder="0917 123 4567" />
+              </label>
+              <label className={styles.field}>
+                <span>GCash Name</span>
+                <input type="text" required autoComplete="off" placeholder="Hero of the Realm" />
+              </label>
             </div>
-          </div>
-
+          </section>
         </div>
 
-        <div className="right-side">
-          <div className="inventory-bag">
-            <h2>INVENTORY BAG</h2>
-            <div className="checkout-items">
-              {cart.length === 0 ? (
-                <p>No items found in your inventory.</p>
-              ) : (
-                cart.map((item, index) => (
-                  <div key={index} className="checkout-item">
-                    <span>{item.name} ({item.size})</span>
-                    <span>₱{item.price.toFixed(2)}</span>
-                  </div>
-                ))
-              )}
-            </div>
-            <div className="totals">
-              <p>Subtotal: <span>₱{subtotal.toFixed(2)}</span></p>
-              <p>Delivery: <span>₱{shippingCost.toFixed(2)}</span></p>
-              <p className="total">TOTAL: <span>₱{total.toFixed(2)}</span></p>
-            </div>
-            <button className="complete-btn" onClick={handleCompleteQuest}>
-              ⚔️ COMPLETE QUEST
-            </button>
-          </div>
-        </div>
-      </div>
+        <aside className={`${styles.bag} frame-plank`}>
+          <h2 className={styles.bagTitle}>Inventory Bag</h2>
+          <ul className={styles.items}>
+            {cart.length === 0 ? (
+              <li className={styles.empty}>No items found in your inventory.</li>
+            ) : (
+              cart.map((item, index) => (
+                <li key={`${item.id}-${index}`} className={styles.item}>
+                  <span>{item.name} ({item.size})</span>
+                  <span>{formatPrice(item.price)}</span>
+                </li>
+              ))
+            )}
+          </ul>
+          <dl className={styles.totals}>
+            <div><dt>Subtotal</dt><dd>{formatPrice(subtotal)}</dd></div>
+            <div><dt>Delivery</dt><dd>{formatPrice(shippingCost)}</dd></div>
+            <div className={styles.grand}><dt>Total</dt><dd>{formatPrice(total)}</dd></div>
+          </dl>
+          {error && <p className={styles.error} role="alert">{error}</p>}
+          <button type="submit" className="btn btn-green">Complete Quest</button>
+          <button type="button" className="btn btn-wood" onClick={() => router.push('/house')}>
+            <PixelIcon name="back" size={20} />
+            Back to Shop
+          </button>
+        </aside>
+      </form>
 
       {isQuestComplete && (
-        <div className="quest-complete-overlay">
-          <div className="complete-box">
-            <h2>📜 Quest Complete!</h2>
-            <p>Your item is now getting ready to be shipped. Check your email to track shipping and item.</p>
-            <button className="return-btn" onClick={handleReturnToMerchant}>
-              🚶 Return to Merchant
-            </button>
-          </div>
-        </div>
+        <ScrollPopup title="Quest Complete!" returnLabel="Return to Merchant" onClose={() => router.push('/house')}>
+          <p className={styles.complete}>
+            Your item is now getting ready to be shipped. Check your email to track shipping and item.
+          </p>
+        </ScrollPopup>
       )}
 
-      <AudioController isVisible={true} />
+      <AudioController isVisible={true} className={styles.sound} />
     </div>
   );
 }
