@@ -9,6 +9,7 @@ import ScrollPopup from '../../components/Popups/ScrollPopup';
 import IconButton from '../../components/ui/IconButton';
 import PixelIcon from '../../components/ui/PixelIcon';
 import Logo from '../../components/ui/Logo';
+import HouseScene from '../../components/House/HouseScene';
 import { readCart, writeCart } from '../../lib/cart';
 import styles from './House.module.css';
 
@@ -52,8 +53,11 @@ export default function HousePage() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [panelTab, setPanelTab] = useState('desc');
   const [selectedSize, setSelectedSize] = useState('M');
-  const [hasLookedAtItems, setHasLookedAtItems] = useState(false);
-  const [typedChars, setTypedChars] = useState(0);
+  // EJ's current line; `id` restarts the typewriter even when she repeats herself
+  const [line, setLine] = useState({ id: 0, text: '', chars: 0 });
+  const [isWaving, setIsWaving] = useState(false);
+  const [isHappy, setIsHappy] = useState(false);
+  const moodTimers = useRef([]);
 
   // Cart & checkout. Safe to read storage here: the server render only shows the loading screen
   const [cartItems, setCartItems] = useState(() => (typeof window === 'undefined' ? [] : readCart()));
@@ -80,9 +84,15 @@ export default function HousePage() {
         if (cancelled) return;
         setShopItems(Object.fromEntries(data.map((item) => [item.id, item])));
         setLoadState('ready');
+        say(introDialogue);
+        // wave hello as the shop opens
+        setIsWaving(true);
+        moodTimers.current.push(setTimeout(() => setIsWaving(false), 2600));
       } catch (error) {
         console.error("Failed to load shop items:", error);
-        if (!cancelled) setLoadState('error');
+        if (cancelled) return;
+        setLoadState('error');
+        say(errorDialogue);
       }
     };
     fetchItems();
@@ -91,21 +101,22 @@ export default function HousePage() {
     };
   }, []);
 
-  // Typewriter intro, played once after the shop loads
-  const introText = loadState === 'error' ? errorDialogue : introDialogue;
+  // Typewriter for whatever EJ is currently saying
   useEffect(() => {
-    if (loadState === 'loading') return;
+    if (!line.text) return;
     let i = 0;
     const timer = setInterval(() => {
       i++;
-      setTypedChars(i);
-      if (i >= introText.length) clearInterval(timer);
-    }, 35);
+      setLine((l) => (l.id === line.id ? { ...l, chars: i } : l));
+      if (i >= line.text.length) clearInterval(timer);
+    }, 32);
     return () => clearInterval(timer);
-  }, [loadState, introText]);
+  }, [line.id, line.text]);
 
-  const dialogue = hasLookedAtItems && loadState === 'ready' ? returnDialogue : introText.slice(0, typedChars);
-  const isTyping = !hasLookedAtItems && typedChars < introText.length;
+  useEffect(() => () => moodTimers.current.forEach(clearTimeout), []);
+
+  const dialogue = line.text.slice(0, line.chars);
+  const isTyping = line.chars < line.text.length;
 
   // Keep the cart across reloads; the /checkout page reads the same storage key
   useEffect(() => {
@@ -126,6 +137,10 @@ export default function HousePage() {
   const activeItem = selectedItem ? shopItems[selectedItem] : null;
   const cartTotal = cartItems.reduce((total, item) => total + item.price, 0);
 
+  function say(text) {
+    setLine((l) => ({ id: l.id + 1, text, chars: 0 }));
+  }
+
   const showToast = (message) => {
     clearTimeout(toastTimer.current);
     setToast(message);
@@ -135,7 +150,7 @@ export default function HousePage() {
   const deselect = () => {
     setSelectedItem(null);
     setIsPanelExpanded(false);
-    setHasLookedAtItems(true);
+    say(returnDialogue);
   };
 
   const handleSlotClick = (itemId) => {
@@ -144,10 +159,11 @@ export default function HousePage() {
       return;
     }
     if (!shopItems[itemId]) {
-      showToast('This item is not in stock yet.');
+      say("Sorry, that one hasn't arrived from the weavers yet!");
       return;
     }
     setSelectedItem(itemId);
+    say(`Ah, the ${shopItems[itemId].name}! Here, take a closer look. Pick a size and it's yours.`);
     setPanelTab('desc');
     setIsInventoryOpen(false);
     setIsPanelExpanded(false);
@@ -157,6 +173,9 @@ export default function HousePage() {
     if (!activeItem) return;
     setCartItems((items) => [...items, { ...activeItem, size: selectedSize }]);
     showToast(`${activeItem.name} (${selectedSize}) added to your satchel!`);
+    say(`Wonderful! One ${activeItem.name} in size ${selectedSize}, coming right up!`);
+    setIsHappy(true);
+    moodTimers.current.push(setTimeout(() => setIsHappy(false), 1400));
   };
 
   const removeCartItem = (indexToRemove) => {
@@ -242,7 +261,12 @@ export default function HousePage() {
 
   return (
     <div className={styles.house}>
-      <div className={styles.backdrop} aria-hidden="true" />
+      <HouseScene
+        pose={activeItem ? 'present' : isWaving ? 'wave' : 'idle'}
+        talking={isTyping}
+        happy={isHappy}
+        shirt={activeItem ? { src: activeItem.img, alt: `EJ holding up the ${activeItem.name}` } : null}
+      />
 
       {/* ---------- Top bar ---------- */}
       <header className={styles.topbar}>
@@ -285,29 +309,17 @@ export default function HousePage() {
       <main className={`${styles.shop} ${activeItem ? styles.hasItem : ''}`}>
         {inventoryPanel}
 
-        <section className={styles.stage} aria-live="polite">
-          {activeItem ? (
-            <div key={activeItem.id} className={styles.showcase}>
-              <IconButton icon="back" label="Back to the merchant" className={styles.backBtn} onClick={deselect} />
-              <img className={styles.shirt} src={activeItem.img} alt={activeItem.name} />
-              <h2 className={styles.shirtName}>{activeItem.name}</h2>
-            </div>
-          ) : (
-            <div className={styles.merchant}>
-              <div className={`${styles.bubble} frame-wood`}>
-                <span className={styles.speaker}>EJ</span>
-                <p className={styles.bubbleText}>
-                  {dialogue}
-                  {isTyping && <span className={styles.caret} aria-hidden="true" />}
-                </p>
-              </div>
-              <img
-                className={styles.ej}
-                src={hasLookedAtItems ? '/assets/images/ej.png' : '/assets/images/ejexplaining.png'}
-                alt="EJ the merchant"
-              />
-            </div>
+        <section className={styles.stage}>
+          {activeItem && (
+            <IconButton icon="back" label="Back to the merchant" className={styles.backBtn} onClick={deselect} />
           )}
+          <div className={`${styles.dialogue} frame-wood`} aria-live="polite">
+            <span className={styles.speaker}>EJ</span>
+            <p className={styles.dialogueText}>
+              {dialogue}
+              {isTyping && <span className={styles.caret} aria-hidden="true" />}
+            </p>
+          </div>
         </section>
 
         {activeItem && (

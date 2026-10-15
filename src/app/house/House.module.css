@@ -9,22 +9,6 @@
   animation: fadeIn 0.6s ease-out both;
 }
 
-.backdrop {
-  position: absolute;
-  inset: 0;
-  background: #120a06 url('/assets/images/merchant.png') center / cover no-repeat;
-  image-rendering: pixelated;
-}
-
-.backdrop::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 50% 45%, transparent 35%, rgba(10, 5, 2, 0.65) 100%),
-    linear-gradient(to bottom, rgba(10, 5, 2, 0.55), transparent 18%);
-}
-
 @keyframes fadeIn {
   from { opacity: 0; }
 }
@@ -225,54 +209,36 @@
   display: none;
 }
 
-/* ---------- Stage ---------- */
+/* ---------- Stage: EJ lives in the scene; this column holds her dialogue ---------- */
 .stage {
   position: relative;
   min-height: 0;
   min-width: 0;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
 }
 
-/* EJ is sized from the stage height (cqh) so the bubble can sit right beside them */
-.merchant {
-  position: absolute;
-  inset: 0 0 -24px;
-  container-type: size;
-}
-
-.bubble {
-  position: absolute;
-  top: 8cqh;
-  right: calc(2% + 40cqh);
-  width: min(460px, 100cqw - 44cqh);
+/* Centred under EJ, across the counter front; narrows to fit between the side panels */
+.dialogue {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 15;
+  width: min(620px, max(300px, 100vw - 2 * (300px + 52px)));
   padding: 14px 10px 6px;
+  transform: translateX(-50%);
   filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.45));
-  animation: popIn 0.5s var(--ease-pop) 0.2s both;
+  animation: dialogueIn 0.45s var(--ease-pop) 0.3s both;
 }
 
-/* wooden tail pointing at EJ */
-.bubble::before,
-.bubble::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  right: 8%;
-  clip-path: polygon(0 0, 100% 0, 85% 100%);
+.hasItem .dialogue {
+  width: min(620px, max(300px, 100vw - 2 * (420px + 52px)));
 }
 
-.bubble::before {
-  width: calc(var(--px) * 10);
-  height: calc(var(--px) * 9);
-  margin-top: calc(var(--px) * 6);
-  background: var(--outline);
-}
-
-.bubble::after {
-  width: calc(var(--px) * 7);
-  height: calc(var(--px) * 6);
-  margin-top: calc(var(--px) * 6);
-  right: calc(8% + var(--px) * 2);
-  background: var(--wood);
+@keyframes dialogueIn {
+  from { opacity: 0; transform: translateX(-50%) scale(0.85); }
 }
 
 .speaker {
@@ -287,10 +253,10 @@
   box-shadow: 0 -3px 0 var(--outline), 0 3px 0 var(--outline), -3px 0 0 var(--outline), 3px 0 0 var(--outline);
 }
 
-.bubbleText {
+.dialogueText {
   min-height: calc(1.2em * 3);
   font-family: var(--font-read);
-  font-size: clamp(21px, 2vw, 27px);
+  font-size: clamp(21px, 1.7vw, 27px);
   line-height: 1.2;
   color: var(--ink);
 }
@@ -309,88 +275,13 @@
   50% { opacity: 0; }
 }
 
-.ej {
-  position: absolute;
-  right: 2%;
-  bottom: 0;
-  height: 96cqh;
-  width: auto;
-  max-width: none;
-  object-fit: contain;
-  image-rendering: pixelated;
-  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.5));
-  animation: ejIn 0.6s var(--ease-out) both;
-}
-
-@keyframes ejIn {
-  from { opacity: 0; transform: translateX(40px); }
-}
-
-/* ---------- Selected shirt ---------- */
-.showcase {
-  position: relative;
-  min-height: 0;
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-  justify-items: center;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 0;
-}
-
-.showcase::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 45%;
-  width: min(560px, 90%);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(255, 215, 0, 0.42) 0%, rgba(255, 140, 0, 0.16) 40%, transparent 68%);
-  animation: glow 2.4s ease-in-out infinite alternate;
-  pointer-events: none;
-}
-
-@keyframes glow {
-  from { opacity: 0.6; transform: translate(-50%, -50%) scale(0.92); }
-  to { opacity: 1; transform: translate(-50%, -50%) scale(1.04); }
-}
-
-.shirt {
-  position: relative;
-  max-width: min(520px, 100%);
-  max-height: 100%;
-  object-fit: contain;
-  image-rendering: pixelated;
-  filter: drop-shadow(0 12px 0 rgba(0, 0, 0, 0.35));
-  animation: reveal 0.6s var(--ease-pop) both, hover 3s ease-in-out 0.6s infinite;
-}
-
-@keyframes reveal {
-  from { opacity: 0; transform: translateY(30px) scale(0.6); }
-}
-
-@keyframes hover {
-  50% { transform: translateY(-10px); }
-}
-
-.shirtName {
-  position: relative;
-  font-family: var(--font-title);
-  font-weight: 700;
-  font-size: clamp(24px, 3vw, 34px);
-  text-align: center;
-  color: var(--gold);
-  text-shadow: 3px 0 0 var(--outline), -3px 0 0 var(--outline), 0 3px 0 var(--outline), 0 -3px 0 var(--outline), 0 6px 0 rgba(0, 0, 0, 0.5);
-  animation: popIn 0.4s var(--ease-pop) 0.15s both;
-}
-
 .backBtn {
   position: absolute;
   top: 8px;
   left: 0;
   z-index: 1;
   --icon-btn: 52px;
+  animation: popIn 0.3s var(--ease-pop) both;
 }
 
 /* ---------- Item panel ---------- */
@@ -992,15 +883,6 @@
     animation: fadeIn 0.25s ease-out both;
   }
 
-  .hasItem .stage {
-    padding-bottom: 180px;
-  }
-
-  /* the details sheet already shows the name */
-  .shirtName {
-    display: none;
-  }
-
   .itemPanel {
     --peek: 196px;
     position: fixed;
@@ -1041,29 +923,31 @@
   .tabs { order: 3; }
   .panelBody { order: 4; }
 
-  .merchant {
-    inset: 0 -12px -12px;
+  .stage {
+    justify-content: flex-start;
   }
 
-  .bubble {
-    top: 26px;
-    left: 50%;
-    right: auto;
-    width: min(460px, 100cqw - 32px);
-    transform: translateX(-50%);
-    animation-name: popInCentered;
+  .dialogue,
+  .hasItem .dialogue {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: min(560px, 100%);
+    margin-top: 18px;
+    transform: none;
+    animation-name: popIn;
   }
 
-  @keyframes popInCentered {
-    from { opacity: 0; transform: translateX(-50%) scale(0.85); }
+  .dialogueText {
+    min-height: calc(1.2em * 2);
+    font-size: 20px;
   }
 
-  .bubble::before { right: 20%; }
-  .bubble::after { right: calc(20% + var(--px) * 2); }
-
-  .ej {
-    right: -4%;
-    height: min(72cqh, 150cqw);
+  .backBtn {
+    position: fixed;
+    top: auto;
+    left: 12px;
+    bottom: 220px;
   }
 }
 
@@ -1109,10 +993,6 @@
   .navItem {
     padding: 8px 16px;
     text-align: right;
-  }
-
-  .shirt {
-    max-width: 88%;
   }
 
   .itemPanel {
