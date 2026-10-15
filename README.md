@@ -69,13 +69,13 @@ You can interact with the merchant, browse the pixel-art inventory, and experien
 ## Key Features
 
 ### Gamified Storefront
-* **RPG Merchant Interaction:** Users interact with a shopkeeper ("EJ") featuring dynamic, typewriter-effect dialogue that reacts to user browsing states.
+* **RPG Merchant Interaction:** EJ, the shopkeeper, stands behind the counter as an animated pixel sprite: she breathes, blinks, waves when you arrive, talks while her typewriter dialogue plays, holds up the tee you pick, and cheers when you add it to your cart.
 * **Keeper's Inventory:** A stylized UI where users "equip" clothing items to view their high-res pixel art, descriptions, and "passive stats" before adding them to their cart.
 
 ### Immersive Retro UI/UX
-* **Code-Drawn Pixel Art:** Wooden frames, parchment scrolls, icons, and the logo wordmark are drawn in code (9-slice SVG frames and grid-based SVG icons), so they stay crisp at any screen size and weigh a few KB instead of megabytes.
-* **Living Title Scene:** Procedurally generated pixel clouds drift across the night sky, with twinkling stars and a glowing moon, all GPU-composited for smooth motion.
-* **Authentic Aesthetics:** Pixel fonts (`Depixel`, `Pixelify Sans`, `Jersey 10`), custom cursor sprites, and 8-bit background audio with a persistent mute toggle.
+* **Everything Drawn in Code:** Apart from the tee product photos, every visual is generated in code: both scenes, EJ, the UI frames, icons, cursors, the logo, and the favicon. A small pixel engine (`src/lib/pixel`) paints the scenes onto low-resolution canvases that scale up crisply.
+* **Living Scenes:** Pixel clouds drift over the riverside title screen, with twinkling stars, fireflies, and a flickering lantern; inside the shop, lamplight flickers and dust motes float.
+* **Authentic Aesthetics:** Pixel fonts (`Depixel`, `Pixelify Sans`, `Jersey 10`), pixel cursors, and 8-bit background audio with a persistent mute toggle.
 * **Responsive Everywhere:** A three-column shop on desktop that turns into bottom sheets on tablets and phones, plus scroll popups (About, Guide, Quests) that fit any screen and close with Escape.
 
 ### Full-Stack Architecture
@@ -91,10 +91,10 @@ You can interact with the merchant, browse the pixel-art inventory, and experien
 ├── public/
 │   └── assets/
 │       ├── audio/              # 8-bit background music
-│       ├── images/             # Scene paintings, characters, and product art
-│       └── ui/                 # Generated 9-slice pixel frames (SVG)
+│       ├── images/             # Tee product images (the only raster art)
+│       └── ui/                 # Generated pixel frames and cursors (SVG)
 ├── scripts/
-│   └── generate-ui-frames.cjs  # Draws the UI frames in public/assets/ui
+│   └── generate-ui-frames.cjs  # Draws the UI frames, cursors, and favicon
 ├── src/
 │   ├── app/                    # Next.js App Router (Pages & API)
 │   │   ├── api/items/route.js  # Product catalog endpoint (MongoDB)
@@ -105,10 +105,11 @@ You can interact with the merchant, browse the pixel-art inventory, and experien
 │   │   └── page.jsx            # Title screen
 │   ├── components/
 │   │   ├── AudioController/    # Background music toggle
+│   │   ├── House/              # Shop interior and the animated EJ sprite
 │   │   ├── Popups/             # ScrollPopup plus About, Guide, Quest
-│   │   ├── Scene/              # Animated night sky (clouds, stars, moon)
+│   │   ├── Scene/              # Title screen riverside scene and night sky
 │   │   └── ui/                 # PixelIcon, IconButton, Logo
-│   ├── lib/                    # MongoDB connection, cart storage, hooks
+│   ├── lib/                    # Pixel engine, MongoDB connection, cart storage, hooks
 │   └── models/Item.js          # Mongoose schema for clothing items
 ├── eslint.config.mjs
 ├── jsconfig.json
