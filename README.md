@@ -73,9 +73,10 @@ You can interact with the merchant, browse the pixel-art inventory, and experien
 * **Keeper's Inventory:** A stylized UI where users "equip" clothing items to view their high-res pixel art, descriptions, and "passive stats" before adding them to their cart.
 
 ### Immersive Retro UI/UX
-* **Authentic Aesthetics:** Utilizes custom pixel fonts (`Depixel`, `Jersey 10`), custom cursor sprites, and 8-bit background audio with a built-in persistent mute controller.
-* **Cinematic Animations:** Features deep CSS keyframe usage for boot-up sequences, floating elements, hologram glitches, and sliding modal panels.
-* **Responsive Modals:** Thematic "Scroll" menus for the About Us page, FAQ Guide, and interactive Daily Quests (social links).
+* **Code-Drawn Pixel Art:** Wooden frames, parchment scrolls, icons, and the logo wordmark are drawn in code (9-slice SVG frames and grid-based SVG icons), so they stay crisp at any screen size and weigh a few KB instead of megabytes.
+* **Living Title Scene:** Procedurally generated pixel clouds drift across the night sky, with twinkling stars and a glowing moon, all GPU-composited for smooth motion.
+* **Authentic Aesthetics:** Pixel fonts (`Depixel`, `Pixelify Sans`, `Jersey 10`), custom cursor sprites, and 8-bit background audio with a persistent mute toggle.
+* **Responsive Everywhere:** A three-column shop on desktop that turns into bottom sheets on tablets and phones, plus scroll popups (About, Guide, Quests) that fit any screen and close with Escape.
 
 ### Full-Stack Architecture
 * **MongoDB Integration:** The product catalog (names, prices, descriptions, images) is fetched dynamically from a MongoDB cluster via custom API routes.
@@ -88,45 +89,30 @@ You can interact with the merchant, browse the pixel-art inventory, and experien
 
 ```text
 ├── public/
-│   └── assets/                 # Static images, icons, and 8-bit audio files
+│   └── assets/
+│       ├── audio/              # 8-bit background music
+│       ├── images/             # Scene paintings, characters, and product art
+│       └── ui/                 # Generated 9-slice pixel frames (SVG)
+├── scripts/
+│   └── generate-ui-frames.cjs  # Draws the UI frames in public/assets/ui
 ├── src/
 │   ├── app/                    # Next.js App Router (Pages & API)
-│   │   ├── api/items/          # Serverless API endpoints for MongoDB
-│   │   │   └── route.js
-│   │   ├── checkout/           # Checkout flow routes and styles
-│   │   │   ├── Checkout.css
-│   │   │   └── page.jsx
-│   │   ├── house/              # Main RPG Merchant Storefront
-│   │   │   ├── House.css
-│   │   │   ├── layout.jsx
-│   │   │   └── page.jsx
-│   │   ├── globals.css         # Global styles & custom cursor definitions
-│   │   ├── icon.png            # Application favicon
-│   │   ├── layout.jsx          # Root application layout
-│   │   ├── page.jsx            # Landing page sequence component
-│   │   ├── page.module.css     # Landing page CSS modules
-│   │   └── StartPage.css       # Boot-up animation styles
-│   ├── components/             # Reusable React components
-│   │   ├── AudioController/    # Background music manager
-│   │   │   ├── AudioController.css
-│   │   │   └── AudioController.jsx
-│   │   └── Popups/             # Interactive UI modals
-│   │       ├── AboutPopup.css
-│   │       ├── AboutPopup.jsx  # Lore and brand info
-│   │       ├── Guide.css
-│   │       ├── Guide.jsx       # FAQ system
-│   │       ├── QuestPopup.css
-│   │       └── QuestPopup.jsx  # Daily quests (social links)
-│   ├── lib/
-│   │   └── mongodb.js          # Database connection utility
-│   └── models/
-│       └── Item.js             # Mongoose schema for clothing items
-├── .gitignore
-├── eslint.config.mjs           # Linter configuration
-├── jsconfig.json               # Path alias configuration
-├── package-lock.json
-├── package.json                # Project scripts and dependencies
-└── README.md                   # Project documentation
+│   │   ├── api/items/route.js  # Product catalog endpoint (MongoDB)
+│   │   ├── checkout/           # Standalone checkout page
+│   │   ├── house/              # Merchant House storefront
+│   │   ├── globals.css         # Design tokens, pixel frames, buttons
+│   │   ├── layout.jsx          # Root layout and fonts
+│   │   └── page.jsx            # Title screen
+│   ├── components/
+│   │   ├── AudioController/    # Background music toggle
+│   │   ├── Popups/             # ScrollPopup plus About, Guide, Quest
+│   │   ├── Scene/              # Animated night sky (clouds, stars, moon)
+│   │   └── ui/                 # PixelIcon, IconButton, Logo
+│   ├── lib/                    # MongoDB connection, cart storage, hooks
+│   └── models/Item.js          # Mongoose schema for clothing items
+├── eslint.config.mjs
+├── jsconfig.json
+└── package.json
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
