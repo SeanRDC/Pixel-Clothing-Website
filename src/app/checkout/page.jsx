@@ -1,22 +1,19 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import './Checkout.css';
 import AudioController from '../../components/AudioController/AudioController';
+import useHydrated from '../../lib/useHydrated';
+import { readCart, writeCart } from '../../lib/cart';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  
+  const isHydrated = useHydrated();
 
-  const [cart, setCart] = useState([]);
+  const cart = useMemo(() => (isHydrated ? readCart() : []), [isHydrated]);
   const [shippingCost, setShippingCost] = useState(0);
   const [selectedShipping, setSelectedShipping] = useState(null);
   const [isQuestComplete, setIsQuestComplete] = useState(false);
-
-  useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCart(savedCart);
-  }, []);
 
   const subtotal = cart.reduce((total, item) => total + item.price, 0);
   const total = subtotal + shippingCost;
@@ -34,7 +31,7 @@ export default function CheckoutPage() {
     }
     
     setIsQuestComplete(true);
-    localStorage.removeItem("cart"); 
+    writeCart([]);
   };
 
   const handleReturnToMerchant = () => {

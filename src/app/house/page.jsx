@@ -6,6 +6,9 @@ import AudioController from '../../components/AudioController/AudioController';
 import Guide from '../../components/Popups/Guide';
 import QuestPopup from '../../components/Popups/QuestPopup';
 import AboutPopup from '../../components/Popups/AboutPopup';
+import { readCart, writeCart } from '../../lib/cart';
+
+const introDialogue = "EJ: Oh, Would you like to see these clothes? I'm actually selling these, I'm happy if you would pick one.";
 
 export default function HousePage() {
   const router = useRouter();
@@ -20,14 +23,15 @@ export default function HousePage() {
   const [selectedSize, setSelectedSize] = useState('M');
   
   // Cart & Checkout States
-  const [cartItems, setCartItems] = useState([]);
+  // Safe to read storage here: the server render only shows the loading screen
+  const [cartItems, setCartItems] = useState(() => (typeof window === 'undefined' ? [] : readCart()));
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState('cart'); 
   const [shippingInfo, setShippingInfo] = useState({ name: '', address: '', realm: 'Earth' });
 
   const [activePopup, setActivePopup] = useState(null);
   const [hasLookedAtItems, setHasLookedAtItems] = useState(false);
-  const [dialogue, setDialogue] = useState("");
+  const [typedChars, setTypedChars] = useState(0);
 
   // Inventory States
   const [isInventoryOpen, setIsInventoryOpen] = useState(false);
@@ -72,26 +76,28 @@ export default function HousePage() {
     fetchItems();
   }, []);
 
+  // Typewriter intro, played once after the shop loads
   useEffect(() => {
-    if (selectedItem || activePopup || isCartOpen || isLoadingItems || isTransitioning) return; 
+    if (isLoadingItems) return;
 
-    if (hasLookedAtItems) {
-      setDialogue("EJ: Have you chosen your choice?");
-      return; 
-    }
-    
-    const initialText = "EJ: Oh, Would you like to see these clothes? I'm actually selling these, I'm happy if you would pick one.";
     let i = 0;
-    setDialogue("");
-    
     const timer = setInterval(() => {
-      setDialogue((prev) => prev + initialText.charAt(i));
       i++;
-      if (i === initialText.length) clearInterval(timer);
+      setTypedChars(i);
+      if (i >= introDialogue.length) clearInterval(timer);
     }, 40);
-    
+
     return () => clearInterval(timer);
-  }, [selectedItem, activePopup, isCartOpen, hasLookedAtItems, isLoadingItems]);
+  }, [isLoadingItems]);
+
+  const dialogue = hasLookedAtItems
+    ? "EJ: Have you chosen your choice?"
+    : introDialogue.slice(0, typedChars);
+
+  // Keep the cart across reloads; the /checkout page reads the same storage key
+  useEffect(() => {
+    writeCart(cartItems);
+  }, [cartItems]);
 
   
   useEffect(() => {
@@ -443,7 +449,7 @@ export default function HousePage() {
 
           {checkoutStep === 'details' && (
             <form className="retro-checkout-form" onSubmit={handlePlaceOrder}>
-              <label className="retro-label">Hero's Name</label>
+              <label className="retro-label">Hero&apos;s Name</label>
               <input 
                 type="text" 
                 className="retro-input" 

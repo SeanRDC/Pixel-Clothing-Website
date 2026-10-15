@@ -1,36 +1,35 @@
 "use client";
 import React, { useState, useRef, useEffect } from 'react';
+import useHydrated from '../../lib/useHydrated';
 import './AudioController.css';
 
 export default function AudioController({ isVisible }) {
-  const [isMuted, setIsMuted] = useState(false);
+  const isHydrated = useHydrated();
+  // null until the user toggles; until then fall back to the saved preference
+  const [mutedChoice, setMutedChoice] = useState(null);
+  const isMuted = mutedChoice ?? (isHydrated && localStorage.getItem('musicMuted') === 'true');
   const audioRef = useRef(null);
 
   useEffect(() => {
-    const savedMuteState = localStorage.getItem('musicMuted') === 'true';
-    setIsMuted(savedMuteState);
-
-    if (isVisible && audioRef.current && !savedMuteState) {
-      audioRef.current.play().catch(() => {}); 
+    if (isVisible && isHydrated && audioRef.current && !isMuted) {
+      audioRef.current.play().catch(() => {});
     }
-  }, [isVisible]);
+  }, [isVisible, isHydrated, isMuted]);
 
   const toggleSound = () => {
     const newMuteState = !isMuted;
-    setIsMuted(newMuteState);
-    
+    setMutedChoice(newMuteState);
+
     localStorage.setItem('musicMuted', newMuteState);
 
     if (newMuteState) {
       audioRef.current.pause();
-    } else {
-      audioRef.current.play().catch(() => {});
     }
   };
 
   return (
     <div className={`sound-toggle-container ${isVisible ? 'visible' : ''}`}>
-      <audio ref={audioRef} src="/assets/audio/song.m4a" loop />
+      <audio ref={audioRef} src="/assets/audio/song.m4a" loop preload="none" />
       <img
         src={isMuted ? "/assets/images/soundoff.png" : "/assets/images/sound.png"}
         alt={isMuted ? "Mute Icon" : "Sound Icon"}

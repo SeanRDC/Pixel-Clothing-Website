@@ -1,16 +1,22 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './AboutPopup.css';
 import './QuestPopup.css';
 
-export default function QuestPopup({ onClose }) {
-  const [quests, setQuests] = useState({ tiktok: false, ig: false, discord: false, linkedin: false });
-  const [isClosing, setIsClosing] = useState(false);
+const defaultQuests = { tiktok: false, ig: false, discord: false, linkedin: false };
 
-  useEffect(() => {
-    const savedQuests = localStorage.getItem('dailyQuests');
-    if (savedQuests) setQuests(JSON.parse(savedQuests));
-  }, []);
+// The popup only mounts after a click, so it's safe to read storage on first render.
+function loadQuests() {
+  try {
+    return { ...defaultQuests, ...JSON.parse(localStorage.getItem('dailyQuests')) };
+  } catch {
+    return defaultQuests;
+  }
+}
+
+export default function QuestPopup({ onClose }) {
+  const [quests, setQuests] = useState(loadQuests);
+  const [isClosing, setIsClosing] = useState(false);
 
   const triggerClose = () => {
     setIsClosing(true);
@@ -22,7 +28,7 @@ export default function QuestPopup({ onClose }) {
   };
 
   const handleQuest = (platform, url) => {
-    window.open(url, '_blank');
+    window.open(url, '_blank', 'noopener,noreferrer');
     const updatedQuests = { ...quests, [platform]: true };
     setQuests(updatedQuests);
     localStorage.setItem('dailyQuests', JSON.stringify(updatedQuests));

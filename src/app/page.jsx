@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import useHydrated from '../lib/useHydrated';
 import AudioController from '../components/AudioController/AudioController';
 import QuestPopup from '../components/Popups/QuestPopup';
 import AboutPopup from '../components/Popups/AboutPopup';
@@ -19,25 +20,20 @@ const backgrounds = [
 
 export default function Home() {
   const router = useRouter();
-  const [isStarted, setIsStarted] = useState(false);
+  const [hasClickedStart, setHasClickedStart] = useState(false);
   const [activePopup, setActivePopup] = useState(null);
   const [isHidingButton, setIsHidingButton] = useState(false);
   const [bgIndex, setBgIndex] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
-  
-  // New state to prevent the "Start" button from flashing on the screen for a millisecond when returning
-  const [isInitialized, setIsInitialized] = useState(false); 
+
+  // Hidden until hydrated so the "Start" button doesn't flash when returning
+  const isInitialized = useHydrated();
+
+  // 1. Check if the user is returning from the house!
+  const isReturning = isInitialized && sessionStorage.getItem('hasStarted') === 'true';
+  const isStarted = hasClickedStart || isReturning;
 
   useEffect(() => {
-    // 1. Check if the user is returning from the house!
-    if (sessionStorage.getItem('hasStarted') === 'true') {
-      setIsStarted(true);
-      setIsHidingButton(true);
-    }
-    
-    // Tell React it's safe to show the UI
-    setIsInitialized(true);
-
     backgrounds.forEach((bg) => {
       const img = new Image();
       img.src = `/assets/images/${bg}`;
@@ -59,8 +55,8 @@ export default function Home() {
     sessionStorage.setItem('hasStarted', 'true');
     
     setTimeout(() => {
-      setIsStarted(true);
-    }, 400); 
+      setHasClickedStart(true);
+    }, 400);
   };
 
   const navigateToHouse = () => {
