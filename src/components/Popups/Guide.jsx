@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
-import './AboutPopup.css';
-import './Guide.css';
+import ScrollPopup from './ScrollPopup';
+import styles from './Popups.module.css';
 
 const faqData = [
   {
@@ -26,48 +26,34 @@ const faqData = [
   }
 ];
 
+const greeting = "You seem like you need help. What is it that you need to ask?";
+
 export default function Guide({ onClose }) {
   const [activeQuestion, setActiveQuestion] = useState(null);
-  const [isClosing, setIsClosing] = useState(false);
-
-  const triggerClose = () => {
-    setIsClosing(true);
-    setTimeout(() => onClose(), 700); 
-  };
-
-  const handleOverlayClick = (e) => {
-    if (e.target.classList.contains('popup-overlay')) triggerClose();
-  };
+  const answer = activeQuestion !== null ? faqData[activeQuestion].answer : greeting;
 
   return (
-    <div className={`popup-overlay ${isClosing ? 'closing' : ''}`} onClick={handleOverlayClick}>
-      <div className="popup-paper guide-layout">
-        <div className="popup-content guide-content-spacing">
-
-          <div className="guide-speech-box">
-            <div className="guide-speech-text">
-              {activeQuestion !== null ? faqData[activeQuestion].answer : "EJ: You seem that you needed help. What is it that you need to ask?"}
-            </div>
-          </div>
-
-          <div className="guide-faq-questions">
-            {faqData.map((faq, index) => (
-              <div 
-                key={faq.id}
-                className={`guide-faq-question ${activeQuestion === index ? 'active' : ''}`}
-                onClick={() => setActiveQuestion(index)}
-              >
-                {faq.question}
-              </div>
-            ))}
-          </div>
-
-          <button className="popup-return-btn" onClick={triggerClose}>
-            &lt;-- Return
-          </button>
-        </div>
+    <ScrollPopup title="Guide" onClose={onClose}>
+      <div className={styles.speech} aria-live="polite">
+        <span className={styles.speaker}>EJ</span>
+        <p key={answer} className={styles.speechText}>{answer}</p>
       </div>
 
-    </div>
+      <ul className={styles.list}>
+        {faqData.map((faq, index) => (
+          <li key={faq.id}>
+            <button
+              type="button"
+              className={`${styles.card} ${activeQuestion === index ? styles.active : ''}`}
+              aria-pressed={activeQuestion === index}
+              onClick={() => setActiveQuestion(index)}
+            >
+              <span className={styles.marker} aria-hidden="true">{activeQuestion === index ? '▶' : '>'}</span>
+              <span className={styles.question}>{faq.question}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </ScrollPopup>
   );
 }

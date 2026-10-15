@@ -1,7 +1,15 @@
 "use client";
 import React, { useState } from 'react';
-import './AboutPopup.css';
-import './QuestPopup.css';
+import ScrollPopup from './ScrollPopup';
+import PixelIcon from '../ui/PixelIcon';
+import styles from './Popups.module.css';
+
+const QUESTS = [
+  { key: 'tiktok', label: 'Follow on TikTok', url: 'https://tiktok.com', icon: '/assets/images/tiktok.png' },
+  { key: 'ig', label: 'Follow on IG', url: 'https://instagram.com', icon: '/assets/images/instagram.png' },
+  { key: 'discord', label: 'Join Discord', url: 'https://discord.com', icon: '/assets/images/discord.png' },
+  { key: 'linkedin', label: 'Connect on LinkedIn', url: 'https://linkedin.com', icon: '/assets/images/linkedin-logo.png' },
+];
 
 const defaultQuests = { tiktok: false, ig: false, discord: false, linkedin: false };
 
@@ -16,75 +24,45 @@ function loadQuests() {
 
 export default function QuestPopup({ onClose }) {
   const [quests, setQuests] = useState(loadQuests);
-  const [isClosing, setIsClosing] = useState(false);
+  const doneCount = QUESTS.filter((q) => quests[q.key]).length;
 
-  const triggerClose = () => {
-    setIsClosing(true);
-    setTimeout(() => onClose(), 700); 
-  };
-
-  const handleOverlayClick = (e) => {
-    if (e.target.classList.contains('popup-overlay')) triggerClose();
-  };
-
-  const handleQuest = (platform, url) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
-    const updatedQuests = { ...quests, [platform]: true };
+  const completeQuest = (key) => {
+    const updatedQuests = { ...quests, [key]: true };
     setQuests(updatedQuests);
-    localStorage.setItem('dailyQuests', JSON.stringify(updatedQuests));
+    try {
+      localStorage.setItem('dailyQuests', JSON.stringify(updatedQuests));
+    } catch {
+      // progress just won't persist
+    }
   };
 
   return (
-    <div className={`popup-overlay ${isClosing ? 'closing' : ''}`} onClick={handleOverlayClick}>
-      <div className="popup-paper quest-layout">
-        <div className="popup-content quest-content-spacing">
-          <div className="quest-list">
-            <div className="quest-item" onClick={() => handleQuest('tiktok', 'https://tiktok.com')}>
-              <span className={`quest-checkbox ${quests.tiktok ? 'completed' : ''}`}>
-                {quests.tiktok ? '[X]' : '[ ]'}
+    <ScrollPopup title="Quest" onClose={onClose}>
+      <p className={styles.progress}>
+        Daily quests <strong>{doneCount}/{QUESTS.length}</strong>
+      </p>
+      <ul className={styles.list}>
+        {QUESTS.map((quest) => (
+          <li key={quest.key}>
+            <a
+              className={`${styles.card} ${quests[quest.key] ? styles.done : ''}`}
+              href={quest.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => completeQuest(quest.key)}
+            >
+              <span className={styles.checkbox} aria-hidden="true">
+                {quests[quest.key] && <PixelIcon name="check" size={24} />}
               </span>
-              <span className="quest-text">Follow on TikTok</span>
-              <div className="social-icon-btn">
-                <img src="/assets/images/tiktok.png" alt="TikTok" />
-              </div>
-            </div>
-
-            <div className="quest-item" onClick={() => handleQuest('ig', 'https://instagram.com')}>
-              <span className={`quest-checkbox ${quests.ig ? 'completed' : ''}`}>
-                {quests.ig ? '[X]' : '[ ]'}
+              <span className={styles.questText}>
+                {quest.label}
+                {quests[quest.key] && <span className="visually-hidden"> (completed)</span>}
               </span>
-              <span className="quest-text">Follow on IG</span>
-              <div className="social-icon-btn">
-                <img src="/assets/images/instagram.png" alt="Instagram" />
-              </div>
-            </div>
-
-            <div className="quest-item" onClick={() => handleQuest('discord', 'https://discord.com')}>
-              <span className={`quest-checkbox ${quests.discord ? 'completed' : ''}`}>
-                {quests.discord ? '[X]' : '[ ]'}
-              </span>
-              <span className="quest-text">Join Discord</span>
-              <div className="social-icon-btn">
-                <img src="/assets/images/discord.png" alt="Discord" />
-              </div>
-            </div>
-
-            <div className="quest-item" onClick={() => handleQuest('linkedin', 'https://linkedin.com')}>
-              <span className={`quest-checkbox ${quests.linkedin ? 'completed' : ''}`}>
-                {quests.linkedin ? '[X]' : '[ ]'}
-              </span>
-              <span className="quest-text">Connect on LinkedIn</span>
-              <div className="social-icon-btn">
-                <img src="/assets/images/linkedin-logo.png" alt="LinkedIn" />
-              </div>
-            </div>
-          </div>
-
-          <button className="popup-return-btn" onClick={triggerClose}>
-            &lt;-- Return
-          </button>
-        </div>
-      </div>
-    </div>
+              <img className={styles.social} src={quest.icon} alt="" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </ScrollPopup>
   );
 }
