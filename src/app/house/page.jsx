@@ -1,491 +1,468 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import './House.css';
 import AudioController from '../../components/AudioController/AudioController';
 import Guide from '../../components/Popups/Guide';
 import QuestPopup from '../../components/Popups/QuestPopup';
 import AboutPopup from '../../components/Popups/AboutPopup';
+import ScrollPopup from '../../components/Popups/ScrollPopup';
+import IconButton from '../../components/ui/IconButton';
+import PixelIcon from '../../components/ui/PixelIcon';
+import Logo from '../../components/ui/Logo';
 import { readCart, writeCart } from '../../lib/cart';
+import styles from './House.module.css';
 
-const introDialogue = "EJ: Oh, Would you like to see these clothes? I'm actually selling these, I'm happy if you would pick one.";
+const introDialogue = "Oh, would you like to see these clothes? I'm actually selling these, I'd be happy if you would pick one.";
+const returnDialogue = "Have you made your choice?";
+const errorDialogue = "Hmm, my stock ledger won't open right now. Please come back a little later, traveler!";
+
+const SLOTS = [
+  { id: 'iroha', thumb: '/assets/images/irohapixel.png', label: 'Iroha' },
+  { id: 'wonhee', thumb: '/assets/images/wonheepixel.png', label: 'Wonhee' },
+];
+
+const SIZES = [
+  { id: 'XS', label: 'Extra Small', measure: '114 x 88' },
+  { id: 'S', label: 'Small', measure: '118 x 90' },
+  { id: 'M', label: 'Medium', measure: '122 x 92' },
+  { id: 'L', label: 'Large', measure: '126 x 94' },
+];
+
+const NAV = [
+  { key: 'quest', label: 'Quest' },
+  { key: 'guide', label: 'Guide' },
+  { key: 'about', label: 'About' },
+];
+
+const CART_TITLES = {
+  cart: "Merchant's Ledger",
+  details: 'Shipping Manifest',
+  processing: 'Communicating...',
+  success: 'Transaction Complete',
+};
+
+const formatPrice = (value) => `₱${value.toFixed(2)}`;
 
 export default function HousePage() {
   const router = useRouter();
-  
-  // --- NEW: Database States ---
+
   const [shopItems, setShopItems] = useState({});
-  const [isLoadingItems, setIsLoadingItems] = useState(true);
+  const [loadState, setLoadState] = useState('loading');
 
   const [selectedItem, setSelectedItem] = useState(null);
-  const [equippedItem, setEquippedItem] = useState(null);
-  const [panelMode, setPanelMode] = useState('desc'); 
+  const [panelTab, setPanelTab] = useState('desc');
   const [selectedSize, setSelectedSize] = useState('M');
-  
-  // Cart & Checkout States
-  // Safe to read storage here: the server render only shows the loading screen
-  const [cartItems, setCartItems] = useState(() => (typeof window === 'undefined' ? [] : readCart()));
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [checkoutStep, setCheckoutStep] = useState('cart'); 
-  const [shippingInfo, setShippingInfo] = useState({ name: '', address: '', realm: 'Earth' });
-
-  const [activePopup, setActivePopup] = useState(null);
   const [hasLookedAtItems, setHasLookedAtItems] = useState(false);
   const [typedChars, setTypedChars] = useState(0);
 
-  // Inventory States
+  // Cart & checkout. Safe to read storage here: the server render only shows the loading screen
+  const [cartItems, setCartItems] = useState(() => (typeof window === 'undefined' ? [] : readCart()));
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [checkoutStep, setCheckoutStep] = useState('cart');
+  const [shippingInfo, setShippingInfo] = useState({ name: '', address: '' });
+
+  // Popups and small-screen sheets
+  const [activePopup, setActivePopup] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isInventoryOpen, setIsInventoryOpen] = useState(false);
-  const [dockState, setDockState] = useState('none');
-  const [isExitingItem, setIsExitingItem] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
-
-  // Description box states
-  const [isItemPanelOpen, setIsItemPanelOpen] = useState(false);
-
-  // Mobile states
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isPanelExpanded, setIsPanelExpanded] = useState(false);
+  const [toast, setToast] = useState(null);
+  const toastTimer = useRef(null);
 
   useEffect(() => {
+    let cancelled = false;
     const fetchItems = async () => {
       try {
         const res = await fetch('/api/items');
         const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error || 'Server returned an error');
-        }
-        if (!Array.isArray(data)) {
-          throw new Error('Expected an array of items but got something else.');
-        }
-        
-        const itemsMap = data.reduce((acc, item) => {
-          acc[item.id] = item;
-          return acc;
-        }, {});
-        
-        setShopItems(itemsMap);
-        setIsLoadingItems(false);
+        if (!res.ok) throw new Error(data.error || 'Server returned an error');
+        if (!Array.isArray(data)) throw new Error('Expected an array of items.');
+        if (cancelled) return;
+        setShopItems(Object.fromEntries(data.map((item) => [item.id, item])));
+        setLoadState('ready');
       } catch (error) {
         console.error("Failed to load shop items:", error);
-        setShopItems({});
-        setIsLoadingItems(false);
+        if (!cancelled) setLoadState('error');
       }
     };
-    
     fetchItems();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Typewriter intro, played once after the shop loads
+  const introText = loadState === 'error' ? errorDialogue : introDialogue;
   useEffect(() => {
-    if (isLoadingItems) return;
-
+    if (loadState === 'loading') return;
     let i = 0;
     const timer = setInterval(() => {
       i++;
       setTypedChars(i);
-      if (i >= introDialogue.length) clearInterval(timer);
-    }, 40);
-
+      if (i >= introText.length) clearInterval(timer);
+    }, 35);
     return () => clearInterval(timer);
-  }, [isLoadingItems]);
+  }, [loadState, introText]);
 
-  const dialogue = hasLookedAtItems
-    ? "EJ: Have you chosen your choice?"
-    : introDialogue.slice(0, typedChars);
+  const dialogue = hasLookedAtItems && loadState === 'ready' ? returnDialogue : introText.slice(0, typedChars);
+  const isTyping = !hasLookedAtItems && typedChars < introText.length;
 
   // Keep the cart across reloads; the /checkout page reads the same storage key
   useEffect(() => {
     writeCart(cartItems);
   }, [cartItems]);
 
-  
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 1570) {
-        setIsInventoryOpen(false);
-        setDockState('none');     
-      }
+    if (!isCartOpen) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') closeCart();
     };
-    
-    window.addEventListener('resize', handleResize);
-    
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isCartOpen]);
 
-  const handlePullInventory = () => {
-    setIsExitingItem(true);       
-    setDockState('returning');    
-    
-    setTimeout(() => {
-      setSelectedItem(null);      
-      setIsExitingItem(false);
-      setDockState('settled');    
-    }, 500); 
+  useEffect(() => () => clearTimeout(toastTimer.current), []);
+
+  const activeItem = selectedItem ? shopItems[selectedItem] : null;
+  const cartTotal = cartItems.reduce((total, item) => total + item.price, 0);
+
+  const showToast = (message) => {
+    clearTimeout(toastTimer.current);
+    setToast(message);
+    toastTimer.current = setTimeout(() => setToast(null), 2200);
   };
 
-  const handleItemClick = (itemId) => {
-    if (dockState !== 'docked' && equippedItem === itemId) {
-      setEquippedItem(null);
+  const deselect = () => {
+    setSelectedItem(null);
+    setIsPanelExpanded(false);
+    setHasLookedAtItems(true);
+  };
+
+  const handleSlotClick = (itemId) => {
+    if (selectedItem === itemId) {
+      deselect();
       return;
     }
-
-    if (selectedItem === itemId && dockState === 'docked') {
-      handlePullInventory();
+    if (!shopItems[itemId]) {
+      showToast('This item is not in stock yet.');
       return;
     }
-
-    setEquippedItem(itemId);
     setSelectedItem(itemId);
-    setPanelMode('desc');
-    setDockState('docked'); 
-    setIsExitingItem(false);
-    setIsItemPanelOpen(false); 
+    setPanelTab('desc');
+    setIsInventoryOpen(false);
+    setIsPanelExpanded(false);
   };
 
   const handleAddToCart = () => {
-    const item = shopItems[selectedItem];
-    setCartItems([...cartItems, { ...item, size: selectedSize }]);
-    setIsCartOpen(true); 
-    setCheckoutStep('cart'); 
+    if (!activeItem) return;
+    setCartItems((items) => [...items, { ...activeItem, size: selectedSize }]);
+    showToast(`${activeItem.name} (${selectedSize}) added to your satchel!`);
   };
 
   const removeCartItem = (indexToRemove) => {
-    setCartItems(cartItems.filter((_, idx) => idx !== indexToRemove));
+    setCartItems((items) => items.filter((_, idx) => idx !== indexToRemove));
   };
-
-  const calculateTotal = () => cartItems.reduce((total, item) => total + item.price, 0);
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
     setCheckoutStep('processing');
-    
     setTimeout(() => {
       setCheckoutStep('success');
-      setCartItems([]); 
+      setCartItems([]);
     }, 2500);
   };
 
-  const closeCart = () => {
-    setIsCartOpen(false);
-    setTimeout(() => setCheckoutStep('cart'), 300); 
+  const openCart = () => {
+    setToast(null);
+    setIsMenuOpen(false);
+    setIsInventoryOpen(false);
+    setIsCartOpen(true);
   };
 
-  const activeItemData = selectedItem ? shopItems[selectedItem] : null;
+  function closeCart() {
+    setIsCartOpen(false);
+    setTimeout(() => setCheckoutStep((step) => (step === 'processing' ? step : 'cart')), 300);
+  }
 
-  
-  if (isLoadingItems) {
+  const openPopup = (key) => {
+    setIsMenuOpen(false);
+    setActivePopup(key);
+  };
+
+  if (loadState === 'loading') {
     return (
-      <div className="house-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <h1 className="loading-text" style={{ color: '#f4c26f', fontFamily: "'Depixel', monospace" }}>Loading Inventory</h1>
+      <div className={styles.loading}>
+        <p className={styles.loadingText}>
+          Loading Inventory
+          <span className={styles.dots} aria-hidden="true"><i /><i /><i /></span>
+        </p>
       </div>
     );
   }
-  return (
-    <div className="house-container">
 
-      <nav className={`top-menu ${isMobileMenuOpen && !activePopup ? 'open' : ''}`}>
-        <div className="menu-item" onClick={() => setActivePopup('quest')}>Quest</div>
-        <div className="menu-item" onClick={() => setActivePopup('guide')}>Guide</div>
-        <div className="menu-item" onClick={() => setActivePopup('about')}>About</div>
-        <div className="menu-item" onClick={() => router.push('/')}>Exit</div>
-      </nav>
-
-      <img 
-        src="/assets/images/settingicon.png" 
-        className={`mobile-settings-icon ${isCartOpen ? 'shifted' : ''}`} 
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-        alt="Settings" 
-      />
-
-      <img 
-        src="/assets/images/kart.png" 
-        className={`shopping-cart-icon ${isCartOpen ? 'shifted' : ''}`} 
-        onClick={() => {
-          setIsMobileMenuOpen(false);
-          setIsCartOpen(!isCartOpen);
-        }} 
-        alt="Cart" 
-      />
-      
-      <img 
-        src="/assets/images/inventoryicon.png?v=2" 
-        className={`mobile-inventory-icon ${isCartOpen ? 'shifted' : ''}`} 
-        onClick={() => {
-          if (isCartOpen) {
-            setIsCartOpen(false);
-            setIsTransitioning(true);
-            setTimeout(() => {
-              setIsTransitioning(false); 
-              setIsInventoryOpen(true);
-              setDockState(equippedItem ? 'docked' : 'none'); 
-              if (equippedItem) {
-                setSelectedItem(equippedItem);
-                setIsExitingItem(false);
-              }
-            }, 400); 
-            return;
-          }
-
-          if (isInventoryOpen) {
-            if (dockState === 'docked') {
-              handlePullInventory(); 
-            } else {
-              setIsInventoryOpen(false);
-            }
-          } else {
-            setIsInventoryOpen(true);
-            setDockState(equippedItem ? 'docked' : 'none');
-            if (equippedItem) {
-              setSelectedItem(equippedItem);
-              setIsExitingItem(false);
-            }
-          }
-        }} 
-        alt="Open Inventory" 
-      />
-
-      <img 
-        src="/assets/images/backbtn.png" 
-        className={`mobile-back-btn ${isCartOpen ? 'shifted' : ''}`}
-        onClick={() => {
-          setSelectedItem(null);      
-          setIsInventoryOpen(false);   
-          setDockState('none');       
-          setHasLookedAtItems(true);  
-        }}
-        alt="Back"
-      />
-
-      <div className={`shop-environment ${isCartOpen || activePopup ? 'cart-hidden' : ''}`}>
-
-          <div className={`keepers-inventory ${isInventoryOpen ? 'open-modal' : ''} ${dockState === 'docked' ? 'docked' : ''} ${dockState === 'returning' ? 'returning' : ''} ${dockState === 'settled' ? 'settled' : ''}`}>
-          
-          {isInventoryOpen && (
-            <button 
-              className="pull-inventory-btn" 
-              title={dockState === 'docked' ? "Center Inventory" : "Dock Inventory"} 
-              onClick={() => {
-                if (dockState === 'docked') {
-                  handlePullInventory();
-                } else {
-                  setDockState('docked');
-                  setIsItemPanelOpen(false); 
-                  if (equippedItem) {
-                    setSelectedItem(equippedItem);
-                    setIsExitingItem(false);
-                  }
-                }
-              }}
+  const inventoryPanel = (
+    <section
+      id="inventory"
+      className={`${styles.inventory} ${isInventoryOpen ? styles.sheetOpen : ''} frame-wood`}
+      aria-label="Keeper's Inventory"
+    >
+      <h2 className={styles.panelTitle}>Keeper&apos;s Inventory</h2>
+      <p className={styles.hint}>Pick a garment to inspect it.</p>
+      <div className={styles.slots}>
+        {SLOTS.map((slot) => {
+          const isSelected = selectedItem === slot.id;
+          return (
+            <button
+              key={slot.id}
+              type="button"
+              className={`${styles.slot} ${isSelected ? styles.slotSelected : ''} frame-slot`}
+              aria-pressed={isSelected}
+              aria-label={shopItems[slot.id]?.name || slot.label}
+              onClick={() => handleSlotClick(slot.id)}
             >
-              <span className="desktop-icon">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f4e1c1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points={dockState === 'docked' ? "9 18 15 12 9 6" : "15 18 9 12 15 6"}></polyline>
-                </svg>
-              </span>
-              <span className="mobile-icon">I</span>
+              <img src={slot.thumb} alt="" />
+              {isSelected && <span className={styles.equipBadge}>E</span>}
             </button>
-          )}
-
-          {isInventoryOpen && dockState !== 'docked' && (
-            <button className="close-inventory-btn" onClick={() => {
-              setIsInventoryOpen(false);
-              setTimeout(() => setDockState('none'), 300); // Cleans up after hiding
-            }}>[X]</button>
-          )}
-          
-          <img src="/assets/images/inventory.png" className="inventory-bg" alt="Inventory" />
-          
-          <div className="inventory-items">
-            {/* Slot 1 */}
-            <div className="item-slot slot-1" onClick={() => handleItemClick('iroha')}>
-              <img src="/assets/images/irohapixel.png" alt="Iroha" />
-              {equippedItem === 'iroha' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
-            </div>
-            {/* Slot 2 */}
-            <div className="item-slot slot-2" onClick={() => handleItemClick('wonhee')}>
-              <img src="/assets/images/wonheepixel.png" alt="Wonhee" />
-              {equippedItem === 'wonhee' && <img src="/assets/images/Equip.png" className="equip-badge" alt="Equip" />}
-            </div>
-            {/* Slot 3 */}
-            <div className="item-slot slot-3" onClick={() => setIsComingSoonOpen(true)}>
-              <img src="/assets/images/question.png" alt="Mystery" />
-            </div>
-          </div>
-        </div>
-
-        {!selectedItem && !isInventoryOpen && !isTransitioning && (
-          <div className={`merchant-station ${isCartOpen ? 'cart-hidden' : ''}`}>
-            <div className="dialogue-box">
-              <img src="/assets/images/speechbox.png" className="dialogue-bg" alt="Speech Box" />
-              <p className="dialogue-text">{dialogue}</p>
-            </div>
-            
-            <img 
-              src={hasLookedAtItems ? "/assets/images/ej.png" : "/assets/images/ejexplaining.png"} 
-              className="merchant-character" 
-              alt="EJ" 
-            />
-          </div>
-        )}
-
-        {selectedItem && activeItemData && (
-          <>
-            <h2 className={`mobile-shirt-title ${isExitingItem || isItemPanelOpen ? 'hide-for-panel' : ''} ${isCartOpen ? 'cart-hidden' : ''}`}>
-              {activeItemData.name}
-            </h2>
-            <img 
-              src={activeItemData?.img} 
-              className={`center-display-image ${isExitingItem ? 'exiting' : ''} ${isItemPanelOpen ? 'hide-for-panel' : ''} ${isCartOpen ? 'cart-hidden' : ''}`} 
-              alt="Selected Item" 
-            />
-          </>
-        )}
-
-        {selectedItem && activeItemData && (
-          <div className={`item-panel ${isExitingItem ? 'exiting' : ''} ${isItemPanelOpen ? 'panel-open' : 'panel-docked'} ${isCartOpen ? 'cart-hidden' : ''}`}>
-            
-            <button 
-          className="pull-panel-btn" 
-          onClick={() => {
-            setIsItemPanelOpen(!isItemPanelOpen);
-            if (!isItemPanelOpen) {
-              setDockState('docked'); 
-            }
-          }}
+          );
+        })}
+        <button
+          type="button"
+          className={`${styles.slot} ${styles.mystery} frame-slot`}
+          aria-label="Mystery item, coming soon"
+          onClick={() => openPopup('soon')}
         >
-          <span className="desktop-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f4e1c1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points={isItemPanelOpen ? "6 9 12 15 18 9" : "6 15 12 9 18 15"}></polyline>
-            </svg>
-          </span>
-          <span className="mobile-icon">D</span>
+          <span aria-hidden="true">?</span>
+        </button>
+      </div>
+      <button type="button" className={`btn btn-wood btn-small ${styles.sheetClose}`} onClick={() => setIsInventoryOpen(false)}>
+        Close
+      </button>
+    </section>
+  );
+
+  return (
+    <div className={styles.house}>
+      <div className={styles.backdrop} aria-hidden="true" />
+
+      {/* ---------- Top bar ---------- */}
+      <header className={styles.topbar}>
+        <button type="button" className={styles.home} onClick={() => router.push('/')} aria-label="Back to title screen">
+          <Logo size="small" />
         </button>
 
-            <img src="/assets/images/descriptionbox.png" className="panel-bg" alt="Panel Box" />
-            <h2 className="item-title desktop-only">{activeItemData.name}</h2>
-            
-            {panelMode === 'desc' ? (
-              <>
-                <div className="description-section">
-                  <h3 className="section-label">Description</h3>
-                  <p className="item-desc-text">{activeItemData.desc}</p>
-                </div>
-                <div className="passive-section">
-                  <h3 className="section-label">Passive</h3>
-                  <p className="item-desc-text">{activeItemData.passive}</p>
-                </div>
-                <div className="item-actions">
-                  <p className="item-price">₱{activeItemData.price.toFixed(2)}</p>
-                  <button className="panel-btn" onClick={() => setPanelMode('size')}>Size</button>
-                  <button className="panel-btn" onClick={handleAddToCart}>Add to Cart</button>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="sizes-section">
-                  <h3 className="section-label">Sizes:</h3>
-                  <ul className="size-list">
-                    {['XS', 'S', 'M', 'L'].map((size) => (
-                      <li 
-                        key={size} 
-                        className={selectedSize === size ? 'selected' : ''}
-                        onClick={() => setSelectedSize(size)}
-                      >
-                        {size === 'XS' ? 'Extra Small - 114 x 88' : size === 'S' ? 'Small - 118 x 90' : size === 'M' ? 'Medium - 122 x 92' : 'Large - 126 x 94'}
-                        {selectedSize === size && ' ⭐'}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="item-actions">
-                  <p className="item-price">₱{activeItemData.price.toFixed(2)}</p>
-                  <button className="panel-btn" onClick={() => setPanelMode('desc')}>Prev</button>
-                  <button className="panel-btn" onClick={handleAddToCart}>Add to Cart</button>
-                </div>
-              </>
-            )}
-          </div>
+        <nav id="house-menu" className={`${styles.nav} ${isMenuOpen ? styles.navOpen : ''} frame-plank`} aria-label="House menu">
+          {NAV.map((item) => (
+            <button key={item.key} type="button" className={styles.navItem} onClick={() => openPopup(item.key)}>
+              {item.label}
+            </button>
+          ))}
+          <button type="button" className={styles.navItem} onClick={() => router.push('/')}>Exit</button>
+        </nav>
+
+        <div className={styles.actions}>
+          <IconButton
+            icon="gear"
+            label="Menu"
+            className={styles.menuToggle}
+            aria-expanded={isMenuOpen}
+            aria-controls="house-menu"
+            onClick={() => setIsMenuOpen((open) => !open)}
+          />
+          <IconButton
+            icon="backpack"
+            label="Inventory"
+            className={styles.inventoryToggle}
+            aria-expanded={isInventoryOpen}
+            aria-controls="inventory"
+            onClick={() => setIsInventoryOpen((open) => !open)}
+          />
+          <AudioController isVisible={true} />
+          <IconButton icon="cart" label={`Cart (${cartItems.length} items)`} badge={cartItems.length || null} onClick={openCart} />
+        </div>
+      </header>
+
+      {/* ---------- Shop ---------- */}
+      <main className={`${styles.shop} ${activeItem ? styles.hasItem : ''}`}>
+        {inventoryPanel}
+
+        <section className={styles.stage} aria-live="polite">
+          {activeItem ? (
+            <div key={activeItem.id} className={styles.showcase}>
+              <IconButton icon="back" label="Back to the merchant" className={styles.backBtn} onClick={deselect} />
+              <img className={styles.shirt} src={activeItem.img} alt={activeItem.name} />
+              <h2 className={styles.shirtName}>{activeItem.name}</h2>
+            </div>
+          ) : (
+            <div className={styles.merchant}>
+              <div className={`${styles.bubble} frame-wood`}>
+                <span className={styles.speaker}>EJ</span>
+                <p className={styles.bubbleText}>
+                  {dialogue}
+                  {isTyping && <span className={styles.caret} aria-hidden="true" />}
+                </p>
+              </div>
+              <img
+                className={styles.ej}
+                src={hasLookedAtItems ? '/assets/images/ej.png' : '/assets/images/ejexplaining.png'}
+                alt="EJ the merchant"
+              />
+            </div>
+          )}
+        </section>
+
+        {activeItem && (
+          <section
+            key={activeItem.id}
+            className={`${styles.itemPanel} ${isPanelExpanded ? styles.panelExpanded : ''} frame-wood`}
+            aria-label={`${activeItem.name} details`}
+          >
+            <button
+              type="button"
+              className={styles.panelHandle}
+              aria-expanded={isPanelExpanded}
+              onClick={() => setIsPanelExpanded((open) => !open)}
+            >
+              <PixelIcon name={isPanelExpanded ? 'chevronDown' : 'chevronUp'} size={24} />
+              <span className="visually-hidden">{isPanelExpanded ? 'Collapse details' : 'Expand details'}</span>
+            </button>
+
+            <h2 className={styles.itemTitle}>{activeItem.name}</h2>
+
+            <div className={styles.tabs} role="tablist">
+              <button type="button" role="tab" aria-selected={panelTab === 'desc'} className={styles.tab} onClick={() => setPanelTab('desc')}>
+                Details
+              </button>
+              <button type="button" role="tab" aria-selected={panelTab === 'size'} className={styles.tab} onClick={() => setPanelTab('size')}>
+                Size: {selectedSize}
+              </button>
+            </div>
+
+            <div className={styles.panelBody}>
+              {panelTab === 'desc' ? (
+                <>
+                  <h3 className={styles.label}>Description</h3>
+                  <p className={styles.text}>{activeItem.desc}</p>
+                  <h3 className={styles.label}>Passive</h3>
+                  <p className={`${styles.text} ${styles.passive}`}>{activeItem.passive}</p>
+                </>
+              ) : (
+                <fieldset className={styles.sizes}>
+                  <legend className={styles.label}>Choose a size</legend>
+                  {SIZES.map((size) => (
+                    <label key={size.id} className={`${styles.size} ${selectedSize === size.id ? styles.sizeSelected : ''}`}>
+                      <input
+                        type="radio"
+                        name="size"
+                        value={size.id}
+                        checked={selectedSize === size.id}
+                        onChange={() => setSelectedSize(size.id)}
+                      />
+                      <span className={styles.sizeId}>{size.id}</span>
+                      <span className={styles.sizeLabel}>{size.label}</span>
+                      <span className={styles.sizeMeasure}>{size.measure}</span>
+                    </label>
+                  ))}
+                </fieldset>
+              )}
+            </div>
+
+            <div className={styles.buyRow}>
+              <p className={styles.price}>
+                <PixelIcon name="coin" size={24} />
+                {formatPrice(activeItem.price)}
+              </p>
+              <button type="button" className="btn btn-green" onClick={handleAddToCart}>
+                Add to Cart
+              </button>
+            </div>
+          </section>
         )}
+      </main>
 
-      </div>
+      {isInventoryOpen && <div className={styles.sheetScrim} onClick={() => setIsInventoryOpen(false)} aria-hidden="true" />}
 
-      <div className={`cart-sidebar ${isCartOpen ? 'open' : ''}`}>
-        <div className="cart-header">
-          <h2 className="cart-title">
-            {checkoutStep === 'cart' ? "MERCHANT'S LEDGER" : 
-             checkoutStep === 'details' ? "SHIPPING MANIFEST" : 
-             checkoutStep === 'processing' ? "COMMUNICATING..." : "TRANSACTION COMPLETE"}
-          </h2>
-          <button className="cart-close-btn" onClick={closeCart}>[X]</button>
+      {/* ---------- Cart drawer ---------- */}
+      <div className={`${styles.cartScrim} ${isCartOpen ? styles.cartScrimOpen : ''}`} onClick={closeCart} aria-hidden="true" />
+      <aside
+        className={`${styles.cart} ${isCartOpen ? styles.cartOpen : ''} frame-plank`}
+        aria-label="Cart"
+        aria-hidden={!isCartOpen}
+        inert={!isCartOpen}
+      >
+        <div className={styles.cartHeader}>
+          <h2 className={styles.cartTitle}>{CART_TITLES[checkoutStep]}</h2>
+          <IconButton icon="close" label="Close cart" onClick={closeCart} className={styles.cartClose} />
         </div>
 
-        <div className="cart-content-scroll">
-          
-          {checkoutStep === 'cart' && (
-            <>
-              {cartItems.length === 0 ? (
-                <div className="empty-cart-msg">
-                  <p>Your satchel is empty.</p>
-                  <p>Equip some gear before departing!</p>
-                </div>
-              ) : (
-                <div className="cart-items-list">
-                  {cartItems.map((item, idx) => (
-                    <div key={idx} className="cart-item-retro">
-                      <img src={item.img} alt={item.name} className="cart-item-thumb" />
-                      <div className="cart-item-details">
-                        <strong className="cart-item-name">{item.name}</strong>
-                        <span className="cart-item-size">Size: {item.size}</span>
-                        <span className="cart-item-price">₱{item.price.toFixed(2)}</span>
-                      </div>
-                      <button className="cart-item-remove" onClick={() => removeCartItem(idx)}>Drop</button>
+        <div className={styles.cartBody}>
+          {checkoutStep === 'cart' &&
+            (cartItems.length === 0 ? (
+              <div className={styles.empty}>
+                <PixelIcon name="backpack" size={64} />
+                <p>Your satchel is empty.</p>
+                <p>Equip some gear before departing!</p>
+              </div>
+            ) : (
+              <ul className={styles.cartList}>
+                {cartItems.map((item, idx) => (
+                  <li key={`${item.id}-${idx}`} className={styles.cartItem}>
+                    <div className={`${styles.thumb} frame-slot`}>
+                      <img src={item.img} alt="" />
                     </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
+                    <div className={styles.cartInfo}>
+                      <strong>{item.name}</strong>
+                      <span>Size: {item.size}</span>
+                      <span className={styles.cartPrice}>{formatPrice(item.price)}</span>
+                    </div>
+                    <button type="button" className="btn btn-red btn-small" onClick={() => removeCartItem(idx)}>
+                      Drop
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ))}
 
           {checkoutStep === 'details' && (
-            <form id="shipping-form" className="retro-checkout-form" onSubmit={handlePlaceOrder}>
-              <label className="retro-label">Hero&apos;s Name</label>
-              <input 
-                type="text" 
-                className="retro-input" 
-                required 
-                placeholder="Enter your name..."
-                value={shippingInfo.name}
-                onChange={(e) => setShippingInfo({...shippingInfo, name: e.target.value})}
-              />
-
-              <label className="retro-label">Delivery Coordinates (Address)</label>
-              <textarea 
-                className="retro-input textarea" 
-                required 
-                placeholder="Where should the courier pigeon fly?"
-                value={shippingInfo.address}
-                onChange={(e) => setShippingInfo({...shippingInfo, address: e.target.value})}
-              ></textarea>
-
-              <div className="summary-box">
+            <form id="shipping-form" className={styles.form} onSubmit={handlePlaceOrder}>
+              <label className={styles.field}>
+                <span>Hero&apos;s Name</span>
+                <input
+                  type="text"
+                  required
+                  autoComplete="name"
+                  placeholder="Enter your name..."
+                  value={shippingInfo.name}
+                  onChange={(e) => setShippingInfo({ ...shippingInfo, name: e.target.value })}
+                />
+              </label>
+              <label className={styles.field}>
+                <span>Delivery Coordinates (Address)</span>
+                <textarea
+                  required
+                  autoComplete="street-address"
+                  placeholder="Where should the courier pigeon fly?"
+                  value={shippingInfo.address}
+                  onChange={(e) => setShippingInfo({ ...shippingInfo, address: e.target.value })}
+                />
+              </label>
+              <div className={styles.summary}>
                 <p>Items: {cartItems.length}</p>
-                <p>Total Due: <span className="highlight">₱{calculateTotal().toFixed(2)}</span></p>
+                <p>Total Due: <strong>{formatPrice(cartTotal)}</strong></p>
               </div>
             </form>
           )}
 
           {checkoutStep === 'processing' && (
-            <div className="processing-state">
-              <div className="pixel-spinner"></div>
+            <div className={styles.status}>
+              <div className={styles.spinner} aria-hidden="true" />
               <p>Forging your order...</p>
               <p>Consulting the Guild Bank...</p>
             </div>
           )}
 
           {checkoutStep === 'success' && (
-            <div className="success-state">
-              <img src="/assets/images/Equip.png" className="success-icon" alt="Success" />
+            <div className={styles.status}>
+              <PixelIcon name="check" size={88} className={styles.successIcon} />
               <h3>Purchase Successful!</h3>
               <p>Thank you, {shippingInfo.name || 'Traveler'}.</p>
               <p>Your gear will arrive shortly.</p>
@@ -493,47 +470,47 @@ export default function HousePage() {
           )}
         </div>
 
-        <div className="cart-footer">
+        <div className={styles.cartFooter}>
           {checkoutStep === 'cart' && cartItems.length > 0 && (
             <>
-              <div className="cart-total-retro">
-                <span>Total Due:</span>
-                <span className="cart-total-price">₱{calculateTotal().toFixed(2)}</span>
+              <div className={styles.total}>
+                <span>Total Due</span>
+                <strong>{formatPrice(cartTotal)}</strong>
               </div>
-              <button className="retro-btn-primary" onClick={() => setCheckoutStep('details')}>Proceed to Checkout</button>
+              <button type="button" className="btn btn-green" onClick={() => setCheckoutStep('details')}>
+                Proceed to Checkout
+              </button>
             </>
           )}
-
+          {checkoutStep === 'cart' && cartItems.length === 0 && (
+            <button type="button" className="btn btn-wood" onClick={closeCart}>Keep Browsing</button>
+          )}
           {checkoutStep === 'details' && (
-            <div className="checkout-actions">
-              <button className="retro-btn-secondary" onClick={() => setCheckoutStep('cart')}>&lt; Back</button>
-              <button type="submit" form="shipping-form" className="retro-btn-primary">Confirm Payment</button>
+            <div className={styles.footerRow}>
+              <button type="button" className="btn btn-wood" onClick={() => setCheckoutStep('cart')}>Back</button>
+              <button type="submit" form="shipping-form" className="btn btn-green">Confirm Payment</button>
             </div>
           )}
-
           {checkoutStep === 'success' && (
-            <button className="retro-btn-primary w-full" onClick={closeCart}>Return to Shop</button>
+            <button type="button" className="btn btn-green" onClick={closeCart}>Return to Shop</button>
           )}
         </div>
-      </div>
+      </aside>
 
-      <AudioController isVisible={true} />
-      
-      {/* Popups */}
-      {activePopup === 'quest' && <QuestPopup onClose={() => setActivePopup(null)} />}
-      {activePopup === 'guide' && <Guide onClose={() => setActivePopup(null)} />}
-      {activePopup === 'about' && <AboutPopup onClose={() => setActivePopup(null)} />}
-
-      {isComingSoonOpen && (
-        <div className="coming-soon-popup">
-          <div className="popup-content">
-            <button className="close-popup-btn" onClick={() => setIsComingSoonOpen(false)}>[X]</button>
-            <h2>Coming Soon</h2>
-            <p>Future content is currently in development. Stay tuned, Traveler!</p>
-          </div>
+      {toast && (
+        <div className={styles.toast} role="status">
+          {toast}
         </div>
       )}
 
+      {activePopup === 'quest' && <QuestPopup onClose={() => setActivePopup(null)} />}
+      {activePopup === 'guide' && <Guide onClose={() => setActivePopup(null)} />}
+      {activePopup === 'about' && <AboutPopup onClose={() => setActivePopup(null)} />}
+      {activePopup === 'soon' && (
+        <ScrollPopup title="Coming Soon" onClose={() => setActivePopup(null)}>
+          <p className={styles.soonText}>Future content is currently in development. Stay tuned, Traveler!</p>
+        </ScrollPopup>
+      )}
     </div>
   );
 }
