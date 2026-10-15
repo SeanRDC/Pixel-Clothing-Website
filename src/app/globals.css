@@ -1,60 +1,239 @@
 @import url('https://fonts.cdnfonts.com/css/depixel');
 
-* {
+/* =======================================
+   Design tokens
+   ======================================= */
+:root {
+  /* one "art pixel" for frames and outlines */
+  --px: 4px;
+
+  --outline: #24120a;
+  --wood-dark: #4a2814;
+  --wood: #7a4422;
+  --wood-light: #a8642e;
+  --night: #1b1530;
+  --panel-dark: #2c1e16;
+  --panel-darker: #1a0f05;
+
+  --parchment: #efcd92;
+  --parchment-shade: #d4a362;
+  --parchment-light: #f7e0b4;
+  --cream: #fff1d2;
+  --ink: #3a1e05;
+  --ink-soft: #6b4520;
+
+  --gold: #f4c26f;
+  --amber: #d58f00;
+  --ember: #dd7d41;
+  --green: #4f8f38;
+  --green-light: #9be070;
+  --red: #b8321f;
+
+  --font-pixel: 'Depixel', monospace;
+  --font-title: var(--font-title-face), 'Depixel', monospace;
+  --font-read: var(--font-jersey), sans-serif;
+
+  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --cursor: url('/assets/images/mousecursor.png') 0 0, auto;
+  --cursor-click: url('/assets/images/mouseclick.png') 12 5, pointer;
+}
+
+@media (max-width: 600px) {
+  :root { --px: 3px; }
+}
+
+/* =======================================
+   Base
+   ======================================= */
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  caret-color: transparent;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
-/* Form fields still need a visible caret and selectable text */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-pixel);
+  color: var(--cream);
+  background-color: #000;
+  cursor: var(--cursor);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-font-smoothing: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
 input,
 textarea,
 select {
-  caret-color: auto;
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+}
+
+button,
+a,
+[role='button'],
+select,
+label[for] {
+  cursor: var(--cursor-click);
+}
+
+input,
+textarea {
   user-select: text;
   -webkit-user-select: text;
 }
 
-body {
-  min-height: 100vh;
-  width: 100vw;
+:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* =======================================
+   Pixel frames (9-slice SVGs in /assets/ui)
+   ======================================= */
+.frame-wood {
+  border-style: solid;
+  border-width: calc(var(--px) * 7);
+  border-image: url('/assets/ui/frame-wood.svg') 7 fill / calc(var(--px) * 7) stretch;
+  image-rendering: pixelated;
+  color: var(--ink);
+}
+
+.frame-plank {
+  border-style: solid;
+  border-width: calc(var(--px) * 7);
+  border-image: url('/assets/ui/frame-plank.svg') 7 fill / calc(var(--px) * 7) stretch;
+  image-rendering: pixelated;
+}
+
+.frame-slot {
+  border-style: solid;
+  border-width: calc(var(--px) * 6);
+  border-image: url('/assets/ui/frame-slot.svg') 6 fill / calc(var(--px) * 6) stretch;
+  image-rendering: pixelated;
+}
+
+.paper-texture {
+  background-image: url('/assets/ui/paper-texture.svg');
+  background-size: calc(var(--px) * 16);
+  image-rendering: pixelated;
+}
+
+/* =======================================
+   Pixel buttons
+   Notched corners come from four outline box-shadows.
+   ======================================= */
+.btn {
+  --btn-face: var(--gold);
+  --btn-light: #ffe2a6;
+  --btn-dark: #b8862f;
+  --btn-text: var(--ink);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 10px 22px;
+  font-family: var(--font-pixel);
+  font-size: 16px;
+  line-height: 1.1;
+  text-align: center;
+  color: var(--btn-text);
+  background: var(--btn-face);
+  margin: var(--px);
+  box-shadow:
+    inset 0 var(--px) 0 var(--btn-light),
+    inset 0 calc(var(--px) * -1.5) 0 var(--btn-dark),
+    0 calc(var(--px) * -1) 0 var(--outline),
+    0 var(--px) 0 var(--outline),
+    calc(var(--px) * -1) 0 0 var(--outline),
+    var(--px) 0 0 var(--outline),
+    0 calc(var(--px) * 2.5) 0 rgba(0, 0, 0, 0.35);
+  transition: transform 0.1s ease, filter 0.1s ease;
+}
+
+.btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(2px);
+}
+
+.btn:disabled {
+  filter: grayscale(0.7) brightness(0.8);
+  cursor: not-allowed;
+}
+
+.btn-green {
+  --btn-face: #5b9a42;
+  --btn-light: #8fd16a;
+  --btn-dark: #2f5f1f;
+  --btn-text: #fff;
+  text-shadow: 2px 2px 0 var(--outline);
+}
+
+.btn-wood {
+  --btn-face: var(--wood);
+  --btn-light: var(--wood-light);
+  --btn-dark: var(--wood-dark);
+  --btn-text: var(--cream);
+  text-shadow: 2px 2px 0 var(--outline);
+}
+
+.btn-red {
+  --btn-face: #9c2a1a;
+  --btn-light: #e8665a;
+  --btn-dark: #5a1208;
+  --btn-text: #fff;
+  text-shadow: 2px 2px 0 var(--outline);
+}
+
+.btn-small {
+  min-height: 36px;
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
   overflow: hidden;
-  font-family: 'Depixel', monospace;
-  background-color: #000; 
-  /* Hotspot set to top-left (0, 0) assuming your arrow tip is there */
-  cursor: url('/assets/images/mousecursor.png') 0 0, auto;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
-.remove-blur {
-  backdrop-filter: blur(0px) !important;
-  background: rgba(0, 0, 0, 0) !important;
-}
-
-/* Custom Click Cursor:
-  Change "12 5" to the exact pixel coordinates of the finger's tip!
-*/
-button, 
-a, 
-p,
-.start-button, 
-.menu-item, 
-.item-slot, 
-.social-icon-btn, 
-.quest-item,
-.shopping-cart-icon,
-.quest-return-btn,
-.guide-return-btn,
-.about-return-btn,
-.checkout-btn,
-.panel-btn,
-.size-list li,
-.guide-faq-question,
-.cart-item-remove,
-.sound-icon,
-.mobile-inventory-icon,
-.mobile-back-btn {
-  cursor: url('/assets/images/mouseclick.png') 12 5, pointer !important;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,0 +1,52 @@
+.button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--icon-btn, 60px);
+  height: var(--icon-btn, 60px);
+  padding: 0;
+  border: 0;
+  /* the frame is drawn over the padding area so the icon gets most of the space */
+  border-image: url('/assets/ui/frame-slot.svg') 6 fill / calc(var(--icon-btn, 60px) * 0.24) stretch;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.45));
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.45)) brightness(1.08);
+}
+
+.button:active {
+  transform: translateY(2px);
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.45));
+}
+
+.icon {
+  width: 62%;
+  height: 62%;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 5px;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--cream);
+  background: var(--red);
+  box-shadow: 0 -2px 0 var(--outline), 0 2px 0 var(--outline), -2px 0 0 var(--outline), 2px 0 0 var(--outline);
+  animation: badgePop 0.3s var(--ease-pop);
+}
+
+@keyframes badgePop {
+  from { transform: scale(0.4); }
+}

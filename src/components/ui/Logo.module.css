@@ -1,0 +1,21 @@
+.plate {
+  --unit: 4px;
+  display: inline-flex;
+  border-style: solid;
+  border-width: calc(var(--unit) * 7);
+  border-image: url('/assets/ui/frame-plank.svg') 7 fill / calc(var(--unit) * 7) stretch;
+  image-rendering: pixelated;
+  padding: calc(var(--unit) * 1) calc(var(--unit) * 2);
+  filter: drop-shadow(0 calc(var(--unit) * 2) 0 rgba(0, 0, 0, 0.5));
+}
+
+.wordmark {
+  height: auto;
+}
+
+/* the wordmark is 36 art-pixels wide; whole-pixel multiples keep the pixels square */
+.large { --unit: clamp(3px, 0.45vw, 5px); }
+.large .wordmark { width: calc(36 * clamp(6px, 0.6vw, 9px)); }
+
+.small { --unit: 2px; padding: 2px 4px; }
+.small .wordmark { width: 72px; }
