@@ -10,10 +10,10 @@
   <h3 align="center">Retro MC | Pixel Clothing</h3>
 
   <p align="center">
-    An immersive, retro-gaming-inspired e-commerce platform where fashion is forged in pixels. Features a gamified 2D RPG merchant storefront, interactive inventory UI, and custom CSS animations.
+    An immersive, retro-gaming-inspired e-commerce platform where fashion is forged in pixels, built to showcase visual design done entirely in code. Every scene, character, and UI element is drawn and animated programmatically, with no image editor involved.
     <br />
     <br />
-    <strong>Tags:</strong> <code>nextjs</code>, <code>react</code>, <code>ecommerce</code>, <code>mongodb</code>, <code>retro-ui</code>, <code>pixel-art</code>, <code>gamified-ui</code>, <code>css-animations</code>, <code>full-stack</code>
+    <strong>Tags:</strong> <code>nextjs</code>, <code>react</code>, <code>ecommerce</code>, <code>mongodb</code>, <code>retro-ui</code>, <code>pixel-art</code>, <code>gamified-ui</code>, <code>css-animations</code>, <code>creative-coding</code>, <code>generative-pixel-art</code>, <code>full-stack</code>
     <br />
     <br />
     <a href="https://pixel-clothing-website.vercel.app/"><strong>View Live Demo »</strong></a>
@@ -42,6 +42,8 @@
 
 Retro MC reimagines the traditional e-commerce shopping experience as a classic 8-bit RPG adventure. Instead of scrolling through a standard grid of products, users enter a "Merchant House," interact with the shopkeeper, and browse items through a gamified inventory UI. Built with Next.js and MongoDB, the application pairs robust full-stack architecture with a highly stylized, nostalgic frontend.
 
+This project was built to demonstrate my skills in **designing with code**. Apart from the product photos of the tees, there are no image files behind the visuals: the riverside title scene, the shop interior, EJ the animated shopkeeper, the wooden frames and parchment scrolls, the icons, the cursors, and the logo are all drawn programmatically, pixel by pixel. A small custom pixel-art engine paints the scenes, procedural techniques (noise, dithering, seeded randomness) add texture, and CSS and canvas animation bring everything to life.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
@@ -50,6 +52,7 @@ Retro MC reimagines the traditional e-commerce shopping experience as a classic 
 * **Backend Runtime:** Next.js Serverless API Routes
 * **Database:** MongoDB Atlas (Mongoose ODM)
 * **Styling & Animation:** Native CSS (Custom Keyframe Animations, Pixel Fonts)
+* **Code-Drawn Art:** Custom pixel-art engine on the Canvas API, procedurally generated SVG frames, icons, and cursors
 * **Deployment:** Vercel
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -123,7 +126,7 @@ You can interact with the merchant, browse the pixel-art inventory, and experien
 
 Sean Rhani Jarin Dela Cruz
 
-Project Link: https://github.com/SeanRDC/beaded-by-unknown <br />
+Project Link: https://github.com/SeanRDC/Pixel-Clothing-Website <br />
 LinkedIn Link: https://www.linkedin.com/in/sean-rhani-dela-cruz-834573334/
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
